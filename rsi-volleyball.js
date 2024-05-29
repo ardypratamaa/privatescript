@@ -3034,34 +3034,41 @@ room.onPlayerActivity = function (player) {
 
 room.onPlayerBallKick = function (player) {
   var playerTeam = player.team;
-  var opposingTeam = (playerTeam === 1) ? 2 : 1; // Determine the opposing team
-
+  var opposingTeam = (playerTeam === 1) ? 2 : 1;
+  var defaultBallColor = 0xFFFFFF; 
+  
   // Increment kick count for the team
   teamKickCounts[playerTeam]++;
-
+  
   // Reset the kick count for the opposing team if they kicked last
   if (teamKickCounts[opposingTeam] > 0) {
     resetKickCounts(opposingTeam);
+    room.setDiscProperties(0, { color: defaultBallColor }); // Reset the ball color to default
   }
-
+  
   // Check if the team has exceeded their kick limit
   if (teamKickCounts[playerTeam] > 3) {
     // Determine the color of the last team touched
     var lastTeamColor = (lastPlayersTouched[0].team === 1) ? "Red" : "Blue";
-
+  
     // Teleport the ball to the respective team's position
     var ballPosition = (playerTeam === 1) ? blueTeamBallPosition : redTeamBallPosition;
     room.setDiscProperties(0, ballPosition);
-
+  
     // Set the ball to be invisible and radius 0
     room.setDiscProperties(0, ballInvisible);
-
+  
     // Announce the foul, specifying the team color and player name
     announce("[FOUL] 🤚 " + lastTeamColor + " Team Foul by: " + lastPlayersTouched[0].name + " Reason: 4 touch", null, Cor.White, "bold");
-
+  
     // Reset the kick count for the team
     resetKickCounts(playerTeam);
-  } 
+    room.setDiscProperties(0, { color: defaultBallColor }); // Reset the ball color to default
+  } else if (teamKickCounts[playerTeam] === 3) {
+    room.setDiscProperties(0, { color: "0xFB0000" }); // Change the ball color to red after 3 touches
+  } else if (teamKickCounts[playerTeam] === 2) {
+    room.setDiscProperties(0, { color: "0xFFFF00" }); // Change the ball color to yellow after 2 touches
+  }
 
   if (lastPlayersTouched[0] == null || player.id != lastPlayersTouched[0].id) {
     !activePlay ? (activePlay = true) : null;
