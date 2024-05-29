@@ -289,19 +289,19 @@ var practiceMap =
     "bg" : { "type" : "grass", "width" : 1270, "height" : 720, "kickOffRadius" : 180, "cornerRadius" : 0, "color" : "454955" },
   
     "playerPhysics" : {
-      "bCoef" : 0,
+      "bCoef" : 0.05,
       "invMass" : 0.5,
       "damping" : 0.95,
-      "acceleration" : 0.143,
+      "acceleration" : 0.1424,
       "kickingAcceleration" : 0.08,
       "kickingDamping" : 0.96,
-      "kickStrength" : 6.14
+      "kickStrength" : 6.9
 
     },
 
     "ballPhysics" : {
       "radius" : 9,
-      "invMass" : 1.06,
+      "invMass" : 0.90,
       "damping" : 0.9877,
       "color" : "FFFFFF",
       "cMask" : [ "all"
@@ -309,7 +309,8 @@ var practiceMap =
       "cGroup" : [ "ball"
       ],
       "bounciness" : 0.8,
-      "friction" : 0.05
+      "friction" : 0.05 
+
 
     },
   
