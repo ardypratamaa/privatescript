@@ -295,14 +295,14 @@ var practiceMap =
       "acceleration" : 0.143,
       "kickingAcceleration" : 0.08,
       "kickingDamping" : 0.96,
-      "kickStrength" : 6.1
+      "kickStrength" : 6.14
 
     },
 
     "ballPhysics" : {
       "radius" : 9,
       "invMass" : 1.06,
-      "damping" : 0.9849,
+      "damping" : 0.9877,
       "color" : "FFFFFF",
       "cMask" : [ "all"
       ],
@@ -1993,7 +1993,7 @@ room.onPlayerJoin = function (player) {
     var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
     if (playerRole == "admin" || playerRole == "master") {
       room.setPlayerAdmin(player.id, true);
-      room.sendAnnouncement("「ᴀᴅᴍɪɴ」" + player.name + " ᴄᴀᴍᴇ ɪɴᴛᴏ ᴛʜᴇ ʀᴏᴏᴍ!", null, 0xff7900, "bold");
+      room.sendAnnouncement("「ᴀᴅᴍɪɴ」" + player.name + " ᴄᴀᴍᴇ ɪɴᴛᴏ ᴛʜᴇ ʀᴏᴏᴍ!", null, 0xff7900, "normal");
     }
   }
   if (localStorage.getItem(getAuth(player)) == null) {
@@ -3525,10 +3525,10 @@ room.onPlayerBallKick = function (player) {
 
     // set gravity for real soccer corners/goalkicks
     if (game.rsCorner == true) {
-      room.setDiscProperties(0, { xgravity: (room.getPlayerDiscProperties(player.id).xspeed / 16) * -1, ygravity: (room.getPlayerDiscProperties(player.id).yspeed / 16) * -1 });
+      room.setDiscProperties(0, { xgravity: (room.getPlayerDiscProperties(player.id).xspeed / 16) * -1, ygravity: (room.getPlayerDiscProperties(player.id).yspeed / 19) * -1 });  //default 16
     }
     if (game.rsGoalKick == true) {
-      room.setDiscProperties(0, { xgravity: 0, ygravity: (room.getPlayerDiscProperties(player.id).yspeed / 20) * -1 });
+      room.setDiscProperties(0, { xgravity: 0, ygravity: (room.getPlayerDiscProperties(player.id).yspeed / 23) * -1 });  //default 20
     }
 
     game.rsCorner = false;
@@ -4289,7 +4289,7 @@ function handleBallTouch() {
           game.powershotCounter++;
           //room.sendAnnouncement("Powershot counter: " + game.powershotCounter, null, 0x333333, "small-bold", 0);
           if (game.powershotCounter > 72 && game.powershotTrigger == false && Math.round(room.getDiscProperties(0).invMass) != 2) { //time powershot default = 100
-            room.setDiscProperties(0, { invMass: 2.42 }); //ps strength
+            room.setDiscProperties(0, { invMass: 2.35 }); //ps strength
             room.sendAnnouncement("POWERSHOT READY", game.powershotID, 0x33dd33, "small-bold", 1);
             room.setPlayerAvatar(game.powershotID, "🚀");
             game.powershotTrigger = true;
