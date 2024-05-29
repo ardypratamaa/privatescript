@@ -1665,9 +1665,9 @@ room.onPlayerJoin = function (player) {
   // console.log("[📢] Auth: " + player.auth);
   extendedP.push([player.id, player.auth, player.conn, false, 0, 0, false]);
   updateRoleOnPlayerIn();
-  room.sendAnnouncement("👋🏼 Hi there, " + player.name + "!", null, 0x5ee7ff, "bold");
+  room.sendAnnouncement("👋🏼 ᴡᴇʟᴄᴏᴍᴇ, " + player.name + "!", null, 0x5ee7ff, "bold");
   if (room.getPlayerList().length > 1 && room.getPlayerList().length < 5) {
-    room.sendAnnouncement("Loading the stadium...", player.id, 0xedc021, "bold");
+    room.sendAnnouncement("ʟᴏᴀᴅɪɴɢ ᴛʜᴇ ꜱᴛᴀᴅɪᴜᴍ...", player.id, 0xedc021, "bold");
     // setTimeout(() => {
     //   room.sendAnnouncement(" ---------------------------------------------------", player.id, 0xedc021, "bold");
     //   room.sendAnnouncement("Welcome to the room\nRemember, here we play just for fun!", player.id, 0xedc021, "bold");
@@ -1678,7 +1678,7 @@ room.onPlayerJoin = function (player) {
     var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
     if (playerRole == "admin" || playerRole == "master") {
       room.setPlayerAdmin(player.id, true);
-      room.sendAnnouncement("「Admin」" + player.name + " Came into the room!", null, 0xff7900, "bold");
+      room.sendAnnouncement("「Admin」" + player.name + " Came into the room!", null, 0xff7900, "normal");
     }
   }
   if (localStorage.getItem(getAuth(player)) == null) {
