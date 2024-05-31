@@ -12,7 +12,9 @@ const bannedAuths = [
   "KRn32GyswvGZi8DEofaQoPzbzOV9ToaYmBR1dWwQbJY",  // chiefo
   "HogP5Ng_2oA8GsbK_-7-0cVDuhrmOqXfYKm8rTYb9NI",  // chiefo
   "N1LbelFP2dIua7xrBIeWTjGHyt391bWaxQ60VAjfDG8", //mamaramzi
-  "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk"
+  "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
+  "TADWZEkm-2LDS2rQSJzZlLLIht7uCyLGGdIQ3Uwi1rE",
+  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE"
 ];
 
 // Function to check if the player is banned and kick them
@@ -177,6 +179,19 @@ function getRandomItem(array) {
 function areUniformsEqual(uniform1, uniform2) {
   return JSON.stringify(uniform1) === JSON.stringify(uniform2);
 }
+
+// "playerPhysics" : {
+//   "bCoef" : 0,
+//   "acceleration" : 0.124,
+//   "kickingAcceleration" : 0.083,
+//   "kickStrength" : 5.56,
+//   "cGroup" : [ "red", "blue"
+//   ],
+
+//   "damping" : 0.96,
+//   "kickback" : 0
+
+// },
 
 
 /* ESTÁDIO */
@@ -400,9 +415,9 @@ var practiceMap =
   
     "playerPhysics" : {
       "bCoef" : 0,
-      "acceleration" : 0.124,
+      "acceleration" : 0.12,
       "kickingAcceleration" : 0.083,
-      "kickStrength" : 5.56,
+      "kickStrength" : 5.5,
       "cGroup" : [ "red", "blue"
       ],
 
@@ -1233,6 +1248,7 @@ function choosePlayer() {
     room.sendAnnouncement("[Tips] Enter player number or type 'random'", TeamR[0].id, 0x21DC00, "normal");
     timeOutCap = setTimeout(
       function (player) {
+        room.sendAnnouncement("" + player.name + " is picking players....", null, 0x55bae2, "bold");
         room.sendAnnouncement("Be quick, @" + player.name + ", only remain " + Number.parseInt(chooseTime / 2) + " seconds left!", player.id, 0xf2a000, "normal");
         timeOutCap = setTimeout(
           function (player) {
@@ -1249,6 +1265,7 @@ function choosePlayer() {
     room.sendAnnouncement("[Tips] Enter player number or type 'random'", TeamB[0].id, 0x21DC00, "normal");
     timeOutCap = setTimeout(
       function (player) {
+        room.sendAnnouncement("" + player.name + " is picking players....", null, 0x55bae2, "bold");
         room.sendAnnouncement("Be quick, @" + player.name + ", only remain " + Number.parseInt(chooseTime / 2) + " seconds left!", player.id, 0xf2a000, "normal");
         timeOutCap = setTimeout(
           function (player) {
@@ -1290,7 +1307,7 @@ function getSpecList(player) {
   }
   cstm = cstm.substring(0, cstm.length - 2);
   cstm += "";
-  room.sendAnnouncement(cstm, player.id, 0xebeb09, "bold");  //default normal pas recruit
+  room.sendAnnouncement(cstm, player.id, 0xebeb09, "small");  //default normal pas recruit
 }
 
 /* STATISTICS FUNCTIONS */
@@ -3022,10 +3039,12 @@ room.onPlayerChat = function (player, message) {
   } else if (["!bb", "!bye", "!cya", "!gn"].includes(message[0].toLowerCase())) {
     room.kickPlayer(player.id, "👋 Until later!", false);
   } else if (["!start", "!fixstart"].includes(message[0].toLowerCase())) {
-    if (room.getScores() == null) {
-      room.startGame();
+    if (inChooseMode === true) {
+        whisper("Can't start while picking", player.id);
+    } else if (room.getScores() == null) {
+        room.startGame();
     } else {
-      whisper("Cannot start while game in progress", player.id);
+        whisper("Cannot start while game in progress", player.id);
     }
   } else if (["!dc", "!disc", "!discord"].includes(message[0].toLowerCase())) {
     room.sendAnnouncement("                                        ▒█▀▀▄ ▀█▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▄ ", null, 0x9250fd, "bold");
