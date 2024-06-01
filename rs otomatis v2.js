@@ -4865,7 +4865,7 @@ function realSoccerRef() {
             game.rsReady = true;
             game.boosterCount = 0;
             game.boosterState = false;
-            room.setDiscProperties(0, { x: -1140, y: 590, xspeed: 0, yspeed: 0, color: "0x0fbcf9", cMask: 268435519, xgravity: 0, ygravity: 0 });
+            room.setDiscProperties(0, { x: -1140, y: 585, xspeed: 0, yspeed: 0, color: "0x0fbcf9", cMask: 268435519, xgravity: 0, ygravity: 0 });
             room.setDiscProperties(1, { x: -1150, y: 670, radius: 420 });
             room.setDiscProperties(3, { x: 0, y: 2000, radius: 0 });
           });
