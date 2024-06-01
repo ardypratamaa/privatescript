@@ -4584,7 +4584,7 @@ function getDate() {
 
 function sendDiscordRecording() {
   const form = new FormData();
-  form.append("file", new File([room.stopRecording()], `SCRIM/TUR-Replay-${getDate()}.hbr2`, { type: "text/plain" }));
+  form.append("file", new File([room.stopRecording()], `LEAGUE-2-Replay-${getDate()}.hbr2`, { type: "text/plain" }));
   var request = new XMLHttpRequest();
   request.open("POST", replayWebHook);
   request.send(form);
