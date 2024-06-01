@@ -2783,49 +2783,48 @@ room.onPlayerChat = function (player, message) {
   lastMessageTime[playerId] = currentTime;
 
 
-  if(player.admin == true){
-    if(room.getScores() != null){
-        for(var i=0; i<players.length; i++){
-      if(message.startsWith("!freeze")==true){
-          if(message === "!freeze " + players[i].name){
-        if(players[i].team != 0){
-            if(freeze.includes(players[i].name) == false){
-          freeze.push(players[i].name);
-          getPlayerByID(players[i].id).freezePoint = {x:players[i].position.x,y:players[i].position.y};
-          room.setPlayerDiscProperties(players[i].id,{xspeed:0,yspeed:0});
-          room.setPlayerAvatar(players[i].id,"☠️");
-          room.sendAnnouncement("🧊 " + players[i].name + " was frozen by " + player.name,null,0x00FFFF,"normal",2);
-          sendWebhook(playerWebHook, `\`🧊 [soccer] ${players[i].name} was frozen by ${player.name}\``);
+  if (player.admin) {
+    if (room.getScores() != null) {
+        for (var i = 0; i < players.length; i++) {
+            var playerName = players[i].name;
+            var playerId = players[i].id;
+            var playerTeam = players[i].team;
+            
+            if (message.startsWith("!freeze")) {
+                if (message === "!freeze " + playerName) {
+                    if (playerTeam != 0) {
+                        if (!freeze.includes(playerName)) {
+                            freeze.push(playerName);
+                            getPlayerByID(playerId).freezePoint = { x: players[i].position.x, y: players[i].position.y };
+                            room.setPlayerDiscProperties(playerId, { xspeed: 0, yspeed: 0 });
+                            room.setPlayerAvatar(playerId, "☠️");
+                            room.sendAnnouncement("🧊 " + playerName + " was frozen by " + player.name, null, 0x00FFFF, "normal", 2);
+                            sendWebhook(playerWebHook, `🧊 [soccer] ${playerName} was frozen by ${player.name}`);
+                        } else {
+                            room.sendAnnouncement("This player is already frozen.", player.id, 0xFFFF00, "bold", 2);
+                        }
+                    } else {
+                        room.sendAnnouncement("A spectator cannot be frozen.", player.id, 0xFFFF00, "bold", 2);
+                    }
+                }
+            } else if (message.startsWith("!melt")) {
+                if (message === "!melt " + playerName) {
+                    if (playerTeam != 0) {
+                        if (freeze.includes(playerName)) {
+                            freeze.splice(freeze.indexOf(playerName), 1);
+                            getPlayerByID(playerId).freezePoint = { x: undefined, y: undefined };
+                            room.setPlayerAvatar(playerId);
+                            room.sendAnnouncement("♨️ " + playerName + " was un-freeze by " + player.name, null, 0xFF0000, "normal", 2);
+                        } else {
+                            room.sendAnnouncement("This player is already melt.", player.id, 0xFFFF00, "bold", 2);
+                        }
+                    } else {
+                        room.sendAnnouncement("A spectator cannot be melt.", player.id, 0xFFFF00, "bold", 2);
+                    }
+                }
             }
-            else{
-          room.sendAnnouncement("This player is already frozen.",player.id,0xFFFF00,"bold",2);
-            }
-                          }
-        else{
-            room.sendAnnouncement("A spectator cannot be frozen.",player.id,0xFFFF00,"bold",2);
         }
-                      }
-                  }
-      else if(message.startsWith("!melt")==true){
-          if(message === "!melt " + players[i].name){
-        if(players[i].team != 0){
-            if(freeze.includes(players[i].name) == true){
-          freeze.splice(freeze.indexOf(players[i].name),1);
-          getPlayerByID(players[i].id).freezePoint = {x:undefined,y:undefined};
-          room.setPlayerAvatar(players[i].id);
-          room.sendAnnouncement("♨️ " + players[i].name + " was un-freeze by " + player.name,null,0xFF0000,"normal",2);
-            }
-            else{
-          room.sendAnnouncement("This player is already melt.",player.id,0xFFFF00,"bold",2);
-            }
-        }
-        else{
-            room.sendAnnouncement("A spectator cannot be melt.",player.id,0xFFFF00,"bold",2);
-        }
-          }
     }
-              }
-      }
   }
 
   if (message.startsWith("@@")) {
