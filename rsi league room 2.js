@@ -2,9 +2,9 @@
 //var roomName = "💠 [ʀꜱɪ|ɪᴅ] Scrim Room | ᴘᴠᴘ ⚽";
 var roomName = "💠 [ʀꜱɪ|ɪᴅ] RSI League 2 | ᴘᴠᴘ ⚽";
 //var roomPassword = "scrim2";
-const maxPlayers = 35; // maximum number of players in the room
+const maxPlayers = 30; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
-const geo = [{ lat: -6.17, lon: 106.85985, code: "id" }]; //indo
+const geo = [{ lat: -6.17, lon: 106.8599, code: "id" }]; //indo
 
 // RSI BANNED SYSTEM
 const bannedAuths = [
@@ -742,12 +742,12 @@ var practiceMap =
     ],
   
     "discs" : [
-      { "radius" : 9.3, "invMass" : 0.9, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
+      { "radius" : 9.2, "invMass" : 0.9, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
       { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
       
-      { "radius" : 9.6, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
+      { "radius" : 9.3, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
       { "radius" : 1.5, "pos" : [0,0 ], "trait" : "jb" },
       { "radius" : 1.15, "pos" : [6.8476,2.2249 ], "trait" : "jb" },
       { "radius" : 1.15, "pos" : [0,7.2 ], "trait" : "jb" },
@@ -2351,8 +2351,8 @@ room.onPlayerJoin = function (player) {
   // updateRoleOnPlayerIn();
   room.sendAnnouncement("👋🏼 ᴡᴇʟᴄᴏᴍᴇ, " + player.name + "!", null, 0x5ee7ff, "bold");
   if (room.getPlayerList().length > 1 && room.getPlayerList().length < 5) {
-    room.sendAnnouncement("if you sent a message", player.id, 0xedc021, "normal");
-    room.sendAnnouncement("your message only can seen by other spectator", player.id, 0xedc021, "normal");
+    room.sendAnnouncement("use ( t ) before text if you want to send message", player.id, 0xedc021, "normal");
+    room.sendAnnouncement("example: t hello", player.id, 0xedc021, "normal");
   }
   if (localStorage.getItem(player.auth) != null) {
     var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
@@ -2459,11 +2459,8 @@ room.onPlayerChat = function (player, message) {
   //   }
   // }
 
-  if (message.startsWith("a ") || message.startsWith("A ")) {
-    var globalMsg = message.substring(2).trim();
-    room.sendAnnouncement("[GLOBAL CHAT] " + player.name + ": " + globalMsg, null, 0xffffff);
-  } else {
-    var teamMsg = message.trim();
+  if (message.startsWith("t ") || message.startsWith("T ")) {
+    teamMsg = message.substring(2).trim();
     var players;
     var teamColor;
     var teamMsgPrefix;
@@ -2480,18 +2477,9 @@ room.onPlayerChat = function (player, message) {
         teamMsgPrefix = "🔵[TEAM CHAT]";
         showAdmins = true;
     } else if (player.team == 0) {
-        if (player.admin) {
-            // Admins in spectator mode should send global admin chat
-            var allPlayers = room.getPlayerList();
-            allPlayers.forEach(function (recipient) {
-                room.sendAnnouncement("[💠admin] " + player.name + ": " + teamMsg, recipient.id, 0x99ffff, "normal", 1);
-            });
-            return false;
-        } else {
-            players = room.getPlayerList().filter(p => p.team == 0);
-            teamColor = 0xdee7fa;
-            teamMsgPrefix = "[SPECTATOR]";
-        }
+        players = room.getPlayerList().filter(p => p.team == 0);
+        teamColor = 0xdee7fa;
+        teamMsgPrefix = "[SPECTATOR]";
     }
 
     if (players) {
@@ -2508,7 +2496,12 @@ room.onPlayerChat = function (player, message) {
         }
     }
 
+    return false;
+  } else if (message.startsWith("a ") || message.startsWith("A ")) {
+    var globalMsg = message.substring(2).trim();
+    room.sendAnnouncement("[GLOBAL CHAT] " + player.name + ": " + globalMsg, null, 0xffffff);
   }
+
 
 
   /* RSI ANTI SPAM */
