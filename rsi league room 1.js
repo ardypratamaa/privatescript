@@ -4592,5 +4592,5 @@ setInterval(function () {
 }, 220000);
 
 msg1 = setInterval(function () {
-  room.sendAnnouncement("🏆 Searching For The Champions 🏆 !", null, 0xff8a4a, "normal");
+  room.sendAnnouncement("🏆 Searching For S2 Champions 🏆 !", null, 0xff8a4a, "normal");
 }, msg1Time);
