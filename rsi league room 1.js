@@ -294,7 +294,7 @@ var practiceMap =
       "kickingAcceleration" : 0.08,
       "kickingDamping" : 0.96,
       "kickStrength" : 6.32,
-      "kickback": 0
+      "kickback" : 0
   
     },
   
@@ -347,10 +347,10 @@ var practiceMap =
       /* 40 */ { "x" : -1030, "y" : 40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : 70, "color" : "576C46", "vis" : false },
       /* 41 */ { "x" : 1030, "y" : -40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : -70, "color" : "576C46", "vis" : false },
       /* 42 */ { "x" : 1030, "y" : 40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : -70, "color" : "576C46", "vis" : false },
-      /* 43 */ { "x" : 1030, "y" : -40, "trait" : "line", "color" : "576C46" },
-      /* 44 */ { "x" : 1030, "y" : 40, "trait" : "line", "color" : "576C46" },
-      /* 45 */ { "x" : -1030, "y" : -40, "trait" : "line", "color" : "576C46" },
-      /* 46 */ { "x" : -1030, "y" : 40, "trait" : "line", "color" : "576C46" },
+      /* 43 */ { "x" : 1030, "y" : -40, "trait" : "line", "color" : "576C46", "_selected" : "segment", "vis" : false },
+      /* 44 */ { "x" : 1030, "y" : 40, "trait" : "line", "color" : "576C46", "_selected" : "segment", "vis" : false },
+      /* 45 */ { "x" : -1030, "y" : -40, "trait" : "line", "color" : "576C46", "vis" : false },
+      /* 46 */ { "x" : -1030, "y" : 40, "trait" : "line", "color" : "576C46", "vis" : false },
       /* 47 */ { "x" : 0, "y" : 3, "trait" : "line" },
       /* 48 */ { "x" : 0, "y" : -3, "trait" : "line" },
       
@@ -602,8 +602,8 @@ var practiceMap =
       
       { "v0" : 37, "v1" : 38, "curve" : 180, "vis" : false, "bCoef" : 0.1, "cMask" : ["red","blue" ], "cGroup" : ["redKO" ], "trait" : "kickOffBarrier" },
       
-      { "v0" : 43, "v1" : 44, "vis" : true, "color" : "576C46", "trait" : "line", "x" : 1030 },
-      { "v0" : 45, "v1" : 46, "vis" : true, "color" : "576C46", "trait" : "line", "x" : -1030 },
+      { "v0" : 43, "v1" : 44, "vis" : false, "color" : "576C46", "trait" : "line", "x" : 1030, "_selected" : true },
+      { "v0" : 45, "v1" : 46, "vis" : false, "color" : "576C46", "trait" : "line", "x" : -1030 },
       { "v0" : 47, "v1" : 48, "curve" : -180, "trait" : "line", "x" : -935 },
       { "v0" : 47, "v1" : 48, "curve" : 180, "trait" : "line", "x" : -935 },
       { "v0" : 47, "v1" : 48, "curve" : 90, "trait" : "line", "x" : -935 },
@@ -4592,5 +4592,5 @@ setInterval(function () {
 }, 220000);
 
 msg1 = setInterval(function () {
-  room.sendAnnouncement("🏆 Searching For S2 Champions 🏆 !", null, 0xff8a4a, "normal");
+  room.sendAnnouncement("🏆 Searching For The Champions 🏆 !", null, 0xff8a4a, "normal");
 }, msg1Time);
