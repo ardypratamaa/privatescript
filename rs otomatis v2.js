@@ -1,12 +1,12 @@
 /* ROOM */
+//var roomName = "💠 [ʀꜱɪ|ɪᴅ] RS Football | ᴘᴠᴘ ⚽";
 var roomName = "💠 [ʀꜱɪ|ɪᴅ] RS Football | ᴘᴠᴘ ⚽";
-//var roomName = "💠 [ʀꜱɪ|ᴠɴ] Real Soccer | ᴘᴠᴘ ⚽";
 const botName = "------ ᴀᴜᴛᴏʀᴏᴏᴍ.ʀꜱɪ ------";
 //var roomPassword = "scrim2";
 const maxPlayers = 23; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
 //const geo = [{ lat: 11.82, lon: 108.8, code: "vn" }]; //vietnam
-//const geo = [{ lat: -6.17, lon: 106.85, code: "id" }]; //indo
+//const geo = [{ lat: 10.81, lon: 106.804, code: "id" }]; //vietnam
 const geo = [{ lat: -6.17, lon: 106.866, code: "id" }]; //indo
 
 // RSI BANNED SYSTEM
@@ -32,7 +32,7 @@ var throwTimeOut = 420; // 7 seconds (var is in game ticks)
 var gkTimeOut = 600; // 10 seconds (var is in game ticks)
 var ckTimeOut = 600; // 10 seconds (var is in game ticks)
 var throwinDistance = 270; // distance players can move the ball during throw in
-var powerShotMode = true;
+var powerShotMode = false;
 var gameTime = 5; //default game time if 0 is selected
 
 const room = HBInit({
@@ -271,6 +271,19 @@ function areUniformsEqual(uniform1, uniform2) {
   return JSON.stringify(uniform1) === JSON.stringify(uniform2);
 }
 
+function moveBotToBottom() {
+  let players = room.getPlayerList();
+  let bot = players.find(player => player.id == 0); // Assuming bot ID is 0
+  if (bot) {
+    let otherPlayerIds = players.filter(player => player.id != bot.id).map(player => player.id);
+    otherPlayerIds.push(bot.id);
+    room.reorderPlayers(otherPlayerIds);
+    console.log("Bot moved to the bottom");
+  } else {
+    console.log("Bot not found");
+  }
+}
+
 /* STADIUM*/
 
 var playerRadius = 15;
@@ -292,15 +305,15 @@ var practiceMap = //rsi map
     "bg" : { "type" : "grass", "width" : 1270, "height" : 720, "kickOffRadius" : 180, "cornerRadius" : 0, "color" : "454955" },
   
     "playerPhysics" : {
-      "bCoef" : 0.05,
-      "invMass" : 0.5,
-      "damping" : 0.95,
-      "acceleration" : 0.1424,
+      "bCoef" : 0.04,
+      "invMass" : 0.45,  // Slightly reduced for better control
+      "damping" : 0.93,  // Reduced damping for less friction
+      "acceleration" : 0.2057,  // Increased for better responsiveness
       "kickingAcceleration" : 0.08,
       "kickingDamping" : 0.96,
-      "kickStrength" : 6.32,
+      "kickStrength" : 5.277,  // Moderate kick strength
       "kickback" : 0
-  
+      
     },
   
     "ballPhysics" : "disc0",
@@ -747,7 +760,7 @@ var practiceMap = //rsi map
     ],
   
     "discs" : [
-      { "radius" : 9.2, "invMass" : 0.9, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
+      { "radius" : 9.3, "invMass" : 1.457, "pos" : [0, 0], "color" : "FFFFFF", "cMask" : ["all"], "cGroup" : ["ball", "kick", "score"], "damping" : 0.9855,  "bounciness" : 0.8,"friction" : 0.05},
       { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
@@ -803,7 +816,7 @@ var practiceMap = //rsi map
     ],
   
     "traits" : {
-      "jb" : { "damping" : 0.998, "cMask" : [ ], "cGroup" : ["c0" ], "invMass" : 1e+250, "radius" : 0.8, "color" : "000000" },
+      "jb" : { "damping" : 0.992, "cMask" : [ ], "cGroup" : ["c0" ], "invMass" : 1e+250, "radius" : 0.8, "color" : "000000" },
       "ballArea" : { "vis" : false, "bCoef" : 0, "cMask" : ["ball" ], "cGroup" : ["ball" ] },
       "goalPost" : { "radius" : 5, "invMass" : 0, "bCoef" : 1, "cGroup" : ["ball" ] },
       "rightNet" : { "radius" : 0, "invMass" : 1, "bCoef" : 0, "cGroup" : ["ball","c3" ] },
@@ -1725,7 +1738,7 @@ function getTime(scores) {
   );
 }
 
-function createPlayer(player){ //Create player informations, it will be used in the room.onPlayerJoin() event.
+function createPlayer(player){ //Create player informations, it will be used in the event.
   playerInformations[playerInformations.length] = {
 name:player.name,
 id:player.id,
@@ -1736,7 +1749,7 @@ freezePoint:{
   }
 }
 
-function deletePlayer(id){ //Delete player informations, it will be used in the room.onPlayerLeave() event.
+function deletePlayer(id){ //Delete player informations, it will be used in the event.
   for(var i=0; i<playerInformations.length; i++){
 if(playerInformations[i].id == id){
     playerInformations.splice(i,1);
@@ -2587,6 +2600,19 @@ setInterval(() => {
 /* PLAYER MOVEMENT */
 
 room.onPlayerJoin = function (player) {
+
+  // const warning = [
+  //   "⚠️ Your current warnings for leaving mid game: 1/5",
+  //   "Warnings can be removed by having a clean record for 24 hours",
+  // ];
+
+  // setTimeout(() => {
+  //   warning.forEach(line => {
+  //       room.sendAnnouncement(line, player.id, 0xFB6B6B, "normal");
+  //   });
+  // }, 5300)
+
+  moveBotToBottom();
   const currentTime = getCurrentTime(); 
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined rs server.\``);
@@ -2595,7 +2621,7 @@ room.onPlayerJoin = function (player) {
 
   extendedP.push([player.id, player.auth, player.conn, false, 0, 0, false]);
   updateRoleOnPlayerIn();
-  room.sendAnnouncement("👋🏼 ᴡᴇʟᴄᴏᴍᴇ, " + player.name + "!", null, 0x5ee7ff, "bold");
+  //room.sendAnnouncement("👋🏼 ᴡᴇʟᴄᴏᴍᴇ, " + player.name + "!", null, 0x5ee7ff, "bold");
   const text = [
     "╔═══════════════════════════════════════════════════╗",
     "║                                                      𝗥𝗦𝗜.𝗖𝗢𝗠𝗠𝗨𝗡𝗜𝗧𝗬                                                        ║",
@@ -2608,9 +2634,9 @@ room.onPlayerJoin = function (player) {
 
   setTimeout(() => {
     text.forEach(line => {
-        room.sendAnnouncement(line, player.id, 0xedc021, "normal");
+        room.sendAnnouncement(line, player.id, 0xf2a000, "normal");
     });
-  }, 2600); // 2000 milliseconds = 2 seconds
+  }, 3100); 
 
   if (localStorage.getItem(player.auth) != null) {
     var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
@@ -2636,6 +2662,7 @@ function findNextAdmin() {
 }
 
 room.onPlayerTeamChange = function (changedPlayer, byPlayer) {
+  moveBotToBottom();
   if (changedPlayer.id == 0) {
     room.setPlayerTeam(0, Team.SPECTATORS);
     return;
@@ -2709,6 +2736,7 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
+  moveBotToBottom();
   // var players = room.getPlayerList();
   // var adminNumber = 0;
   // for (var i = 0; i < players.length; i++) {
@@ -4297,7 +4325,8 @@ room.onPlayerBallKick = function (player) {
 /* GAME MANAGEMENT */
 
 room.onGameStart = function (byPlayer) {
-  room.setDiscProperties(0, { invMass: 1.05 });
+  moveBotToBottom();
+  //room.setDiscProperties(0, { invMass: 1.05 });
   game = new Game(Date.now(), room.getScores(), []);
   countAFK = true;
   activePlay = false;
@@ -4364,6 +4393,7 @@ room.onGameStart = function (byPlayer) {
 };
 
 room.onGameStop = function (byPlayer) {
+  moveBotToBottom();
   if (byPlayer.id == 0 && endGameVariable) {
     updateTeams();
     if (inChooseMode) {
@@ -4970,7 +5000,7 @@ function realSoccerRef() {
             game.rsReady = true;
             game.boosterCount = 0;
             game.boosterState = false;
-            room.setDiscProperties(0, { x: -1140, y: -590, xspeed: 0, yspeed: 0, color: "0x0fbcf9", cMask: 268435519, xgravity: 0, ygravity: 0 });
+            room.setDiscProperties(0, { x: -1140, y: -585, xspeed: 0, yspeed: 0, color: "0x0fbcf9", cMask: 268435519, xgravity: 0, ygravity: 0 });
             room.setDiscProperties(1, { x: -1150, y: -670, radius: 420 });
             room.setDiscProperties(3, { x: 0, y: 2000, radius: 0 });
           });
@@ -5346,11 +5376,11 @@ function sendDiscordRecording() {
 }
 
 setInterval(function () {
-  room.sendAnnouncement("🔊 Join our Discord: discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "nomal", 0);
+  room.sendAnnouncement("🔊 Join our Discord. https://discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "nomal", 0);
   setTimeout(function () {
     room.sendAnnouncement("⚽ Command: !ᴅᴄ, !ꜰɪxꜱᴛᴀʀᴛ, !ᴘᴏᴡᴇʀꜱʜᴏᴛ, !ᴀꜰᴋ, !ʙʙ, !ꜱᴛᴀᴛꜱ, !ᴍᴀᴘ, !ʀᴀɴᴋ, !ꜱᴡᴀᴘ, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ] ", null, 0x61ddff, "normal", 0);
   }, 70000); // Wait 40 seconds after the first announcement
-}, 220000);
+}, 200000);
 
 msg1 = setInterval(function () {
   room.sendAnnouncement("🏆 Join official discord for event information !", null, 0xff8a4a, "normal");
