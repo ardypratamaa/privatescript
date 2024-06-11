@@ -3820,7 +3820,7 @@ room.onPlayerChat = function (player, message) {
               }
           });
 
-          room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " disc sizes set to " + newRadius + " by " + player.name, null, 0x00FF00, "normal", 2);
+          //room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " disc sizes set to " + newRadius + " by " + player.name, null, 0x00FF00, "normal", 2);
       } else {
           room.sendAnnouncement("Invalid team ID or radius.", player.id, 0xff0000, "normal", 2);
       }
