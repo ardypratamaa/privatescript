@@ -312,7 +312,7 @@ var practiceMap = //rsi map
       "acceleration" : 0.1455,
       "kickingAcceleration" : 0.08,
       "kickingDamping" : 0.96,
-      "kickStrength" : 5.873,
+      "kickStrength" : 5.874,
       "kickback" : 0
 
     },
