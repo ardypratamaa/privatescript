@@ -1680,12 +1680,6 @@ setInterval(() => {
 
 room.onPlayerJoin = function (player) {
 
-  if (playerIds.has(player.auth) && !whitelist.has(player.auth)) {
-    room.kickPlayer(player.id, "Duplicate player detected", false);
-  } else {
-    playerIds.add(player.auth);
-  }
-
   // const warning = [
   //   "⚠️ Your current warnings for leaving mid game: 1/5",
   //   "Warnings can be removed by having a clean record for 24 hours",
@@ -1812,7 +1806,6 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
-  playerIds.delete(player.auth);
   moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
