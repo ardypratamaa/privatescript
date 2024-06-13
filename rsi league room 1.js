@@ -2352,12 +2352,6 @@ setInterval(() => {
 
 room.onPlayerJoin = function (player) {
 
-  if (playerIds.has(player.auth) && !whitelist.has(player.auth)) {
-    room.kickPlayer(player.id, "Duplicate player detected", false);
-  } else {
-    playerIds.add(player.auth);
-  }
-
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined rs server.\``);
@@ -2468,7 +2462,6 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
-  playerIds.delete(player.auth);
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left rs server.\``);
