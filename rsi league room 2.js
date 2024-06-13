@@ -2462,7 +2462,6 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
-  playerIds.delete(player.auth);
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left rs server.\``);
