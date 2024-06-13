@@ -1680,6 +1680,12 @@ setInterval(() => {
 
 room.onPlayerJoin = function (player) {
 
+  if (playerIds.has(player.auth) && !whitelist.has(player.auth)) {
+    room.kickPlayer(player.id, "Duplicate player detected", false);
+  } else {
+    playerIds.add(player.auth);
+  }
+
   // const warning = [
   //   "⚠️ Your current warnings for leaving mid game: 1/5",
   //   "Warnings can be removed by having a clean record for 24 hours",
@@ -1697,6 +1703,28 @@ room.onPlayerJoin = function (player) {
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined futsal 3v3 server.\``);
   checkAndKickPlayer(player);
   createPlayer(player);
+
+  const specialAuths = [
+    "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA", //fox
+    "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
+    "LnEtoSdVonFZdGMYKDUVPAWb-SzD-PsUMJC2nDPHO5w", //roti
+    "RJ4Gabk5YrcFaGkD1FC3JOVjCvUcsQr_eRnMJcdfF7I", //nightkaz
+    "EKGPaC2usPnvew9o0KH9P6J3nSmBOpKf3meC25VidQo", //stickmar
+    "4sNwsfwEjsR37sYEkXMatM8YkcjM3KaJ5uoC2WJ02rY" //bizkit
+  ];
+  const specialConns = [
+    "33362E37332E33352E313832", //fox
+    "3130332E37352E35352E3632", //m4
+    "3132392E3232372E33392E313139", //roti
+    "3134302E3231332E3132372E3337", //bizkit
+    "3138322E332E34352E323331" //stickmar
+  ];
+
+  if ((player.auth === specialAuths[0] && player.conn === specialConns[0]) ||
+    (player.auth === specialAuths[1] && player.conn === specialConns[1])) {
+    // Set the player as an admin
+    room.setPlayerAdmin(player.id, true);
+  }
   
   extendedP.push([player.id, player.auth, player.conn, false, 0, 0, false]);
   updateRoleOnPlayerIn();
@@ -1717,17 +1745,17 @@ room.onPlayerJoin = function (player) {
     });
   }, 3100); 
   
-  if (localStorage.getItem(player.auth) != null) {
-    var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
-    if (playerRole == "admin" || playerRole == "master") {
-      room.setPlayerAdmin(player.id, true);
-      room.sendAnnouncement("「Admin」" + player.name + " Came into the room!", null, 0xff7900, "normal");
-    }
-  }
-  if (localStorage.getItem(getAuth(player)) == null) {
-    stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name];
-    localStorage.setItem(getAuth(player), JSON.stringify(stats));
-  }
+  // if (localStorage.getItem(player.auth) != null) {
+  //   var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
+  //   if (playerRole == "admin" || playerRole == "master") {
+  //     room.setPlayerAdmin(player.id, true);
+  //     room.sendAnnouncement("「Admin」" + player.name + " Came into the room!", null, 0xff7900, "normal");
+  //   }
+  // }
+  // if (localStorage.getItem(getAuth(player)) == null) {
+  //   stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name];
+  //   localStorage.setItem(getAuth(player), JSON.stringify(stats));
+  // }
 };
 
 function findNextAdmin() {
@@ -1806,6 +1834,7 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
+  playerIds.delete(player.auth);
   moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
@@ -2913,13 +2942,17 @@ room.onPlayerChat = function (player, message) {
     return false;
   } else if (["!setadm"].includes(message[0].toLowerCase())) {
     if (message[1] == adminPassword) {
-      room.setPlayerAdmin(player.id, true);
-      var stats;
-      localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name]);
-      if (stats[Ss.RL] != "master") {
-        stats[Ss.RL] = "master";
-        room.sendAnnouncement(player.name + " Logged in as Administrator!", null, 0xff7900, 2);
-        localStorage.setItem(getAuth(player), JSON.stringify(stats));
+      if (room.getPlayer(player.id).admin) {
+        room.sendAnnouncement("already an administrator!", player.id, 0xFB6B6B, 2);
+      } else {
+        room.setPlayerAdmin(player.id, true);
+        room.sendAnnouncement(player.name + " ʟᴏɢɢᴇᴅ ɪɴ ᴀꜱ ᴀᴅᴍɪɴɪꜱᴛʀᴀᴛᴏʀ!", null, 0xff7900, 2);
+        var stats;
+        localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name]);
+        if (stats[Ss.RL] != "master") {
+          stats[Ss.RL] = "master";
+          localStorage.setItem(getAuth(player), JSON.stringify(stats));
+        }
       }
     }
   } else if (["!mutes", "!mutelist"].includes(message[0].toLowerCase())) {
