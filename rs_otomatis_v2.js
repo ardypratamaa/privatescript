@@ -2610,11 +2610,11 @@ setInterval(() => {
 
 room.onPlayerJoin = function (player) {
 
-  if (playerIds.has(player.auth) && !whitelist.has(player.auth)) {
-    room.kickPlayer(player.id, "Duplicate player detected", false);
-  } else {
-    playerIds.add(player.auth);
-  }
+  // if (playerIds.has(player.auth) && !whitelist.has(player.auth)) {
+  //   room.kickPlayer(player.id, "Duplicate player detected", false);
+  // } else {
+  //   playerIds.add(player.auth);
+  // }
 
   moveBotToBottom();
   const currentTime = getCurrentTime(); 
@@ -2740,19 +2740,8 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
-  playerIds.delete(player.auth);
+  // playerIds.delete(player.auth);
   moveBotToBottom();
-  // var players = room.getPlayerList();
-  // var adminNumber = 0;
-  // for (var i = 0; i < players.length; i++) {
-  //   if (players[i].admin) {
-  //     adminNumber++;
-  //   }
-  // }
-  // if (adminNumber < 2) {
-  //   room.setPlayerAdmin(players[1].id, true);
-  //   sendWebhook(adminWebHook, `\`${player.name} is now Admin !!\``);
-  // }
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left rs server.\``);
