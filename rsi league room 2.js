@@ -2410,10 +2410,10 @@ room.onPlayerJoin = function (player) {
   //     room.sendAnnouncement("「ᴀᴅᴍɪɴ」" + player.name + " ᴄᴀᴍᴇ ɪɴᴛᴏ ᴛʜᴇ ʀᴏᴏᴍ!", null, 0xff7900, "normal");
   //   }
   // }
-  // if (localStorage.getItem(getAuth(player)) == null) {
-  //   stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name];
-  //   localStorage.setItem(getAuth(player), JSON.stringify(stats));
-  // }
+  if (localStorage.getItem(getAuth(player)) == null) {
+    stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name];
+    localStorage.setItem(getAuth(player), JSON.stringify(stats));
+  }
 };
 
 function findNextAdmin() {
