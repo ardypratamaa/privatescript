@@ -1735,10 +1735,10 @@ room.onPlayerJoin = function (player) {
   //     room.sendAnnouncement("「Admin」" + player.name + " Came into the room!", null, 0xff7900, "normal");
   //   }
   // }
-  // if (localStorage.getItem(getAuth(player)) == null) {
-  //   stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name];
-  //   localStorage.setItem(getAuth(player), JSON.stringify(stats));
-  // }
+  if (localStorage.getItem(getAuth(player)) == null) {
+    stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name];
+    localStorage.setItem(getAuth(player), JSON.stringify(stats));
+  }
 };
 
 function findNextAdmin() {
@@ -1867,7 +1867,7 @@ room.onPlayerChat = function (player, message) {
     if (player.team != 0) {
         const teamChatPrefix = player.team == 1 ? "🔴 [ᴛᴇᴀᴍ ᴄʜᴀᴛ] " : "🔵 [ᴛᴇᴀᴍ ᴄʜᴀᴛ] ";
         room.getPlayerList().forEach((element) => {
-            if (element.team == player.team) room.sendAnnouncement(teamChatPrefix + player.name + ": " + message.substr(2), element.id, player.team == 1 ? /*16725591*/ 3261685 : 3261685, "bold", 0);
+            if (element.team == player.team) room.sendAnnouncement(teamChatPrefix + player.name + ": " + message.substr(2), element.id, player.team == 1 ? /*16725591*/ 3261685 : 3261685, "normal", 0);
         });
         return false;
     } else {
