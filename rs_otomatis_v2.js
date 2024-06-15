@@ -3429,7 +3429,6 @@ room.onPlayerChat = function (player, message) {
         room.sendAnnouncement("already an administrator!", player.id, 0xFB6B6B, 2);
       } else {
         room.setPlayerAdmin(player.id, true);
-        room.sendAnnouncement(player.name + " ʟᴏɢɢᴇᴅ ɪɴ ᴀꜱ ᴀᴅᴍɪɴɪꜱᴛʀᴀᴛᴏʀ!", null, 0xff7900, 2);
         var stats;
         localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name]);
         if (stats[Ss.RL] != "master") {
