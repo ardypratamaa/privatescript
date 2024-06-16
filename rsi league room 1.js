@@ -752,12 +752,12 @@ var practiceMap =
     ],
   
     "discs" : [
-      { "radius" : 9.2, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
+      { "radius" : 9, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
       { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
       
-      { "radius" : 9.3, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
+      { "radius" : 9.1, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
       { "radius" : 1.5, "pos" : [0,0 ], "trait" : "jb" },
       { "radius" : 1.15, "pos" : [6.8476,2.2249 ], "trait" : "jb" },
       { "radius" : 1.15, "pos" : [0,7.2 ], "trait" : "jb" },
@@ -1597,8 +1597,8 @@ function Goal(time, team, striker, assist) {
 // Webhooks
 // -------------------------------------------------
 
-let replayWebHook = "https://discord.com/api/webhooks/1227094504989921340/4Me4_Lm-Ovcfa5XwWVUMxCQQoXSs1g8OvjTsuMLhfgLB4SxecVwkn30HdVqSpiDYfX_E";
-let goalWebHook = "https://discord.com/api/webhooks/1227774180343287890/gi34423X3uBqB--UM_-aIB5MqPShDFmftAUwTMIw8aB2U-30TYcqu9a9HMQ7C3HrLzMt";
+let replayWebHook = "https://discord.com/api/webhooks/1251779490988822649/Y3vzzVlXzegvw50ZETxIoVW13vxKCg1UfkOB4O7GD1Uu1pJIysYiauD0lEY1grphWabs";
+let goalWebHook = "https://discord.com/api/webhooks/1251779490988822649/Y3vzzVlXzegvw50ZETxIoVW13vxKCg1UfkOB4O7GD1Uu1pJIysYiauD0lEY1grphWabs";
 let chatWebHook = "https://discord.com/api/webhooks/1227802111459459072/Db2vLhw6Mxcp0Xu9aNVYl684ANho_4Nuqz-roujkQQPYhbjG_PqENhDOgGnnqE5R4P4n";
 let joinWebHook = "https://discord.com/api/webhooks/1228203622366449695/h_oYpebe1f6D8i7sMhs5J4wUn3-iHRIqUPXT-Lsvq98cf6z_BsRj_I8zAP93S4wgi-gD";
 let startWebHook = "https://discord.com/api/webhooks/1228211340519149661/kmFJSfdirOOWRnH-bynJrDxisbtI-5kg5AesFc4RaktI0NSwgoo6KBbj5bkyshJfcQhq";
@@ -2715,6 +2715,35 @@ room.onPlayerChat = function (player, message) {
     return false;
   }
 
+  if (message.startsWith("Y ") || message.startsWith("y ")) {
+    var remainingMessage = message.substring(2).trim();
+    if (player.admin) {
+        var parts = remainingMessage.split(" ");
+        var targetPlayerName = parts[0];
+        var reason = parts.slice(1).join(" ");
+
+        sendWebhook(goalWebHook, `\`[BOOKINGS]\` 🟨 Player: \`${targetPlayerName}\` Reason: \`${reason}\` `);
+        room.sendAnnouncement(`[BOOKINGS] 🟨 Player: ${targetPlayerName} got yellow card for Reason: ${reason}`, null, 0xffffe0, "normal", 1);
+    } else {
+        room.sendChat("⚠️ You don't have permission", player.id);
+    }
+    return false; // Prevent the message from being displayed in chat
+  }
+
+  if (message.startsWith("R ") || message.startsWith("r ")) {
+    var remainingMessage = message.substring(2).trim();
+    if (player.admin) {
+        var parts = remainingMessage.split(" ");
+        var targetPlayerName = parts[0];
+        var reason = parts.slice(1).join(" ");
+
+        sendWebhook(goalWebHook, `\`[BOOKINGS]\` 🟥 Player: \`${targetPlayerName}\` Reason: \`${reason}\` `);
+        room.sendAnnouncement(`[BOOKINGS] 🟥 Player: ${targetPlayerName} got red card for Reason: ${reason}`, null, 0xffffe0, "normal", 1);
+    } else {
+        room.sendChat("⚠️ You don't have permission", player.id);
+    }
+    return false; // Prevent the message from being displayed in chat
+  }
 
   if (message.startsWith("m ") || message.startsWith("M ")) {
     if (player.admin) {
@@ -3373,6 +3402,24 @@ room.onPlayerChat = function (player, message) {
       room.setPassword(null);
       roomPassword = null;
       announce("Password dibersihkan oleh " + player.name);
+    } else {
+      whisper("Only Super Admins can clear password", player.id);
+    }
+  } else if (["!swap"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      if (args.length == 1) {
+        var players = room.getPlayerList().filter((player) => player.id != 0);
+        if (players.length == 0) return false;
+        players.forEach(function (player) {
+          if (player.team == 1) {
+            room.setPlayerTeam(player.id, 2);
+          }
+          if (player.team == 2) {
+            room.setPlayerTeam(player.id, 1);
+          }
+        });
+        announce("🔄 Tim Berhasil Ditukar");
+      }
     } else {
       whisper("Only Super Admins can clear password", player.id);
     }
@@ -4163,7 +4210,7 @@ room.onGameStart = function (byPlayer) {
   room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0x2ef55d, "bold");
   room.sendAnnouncement(centerText("RSI League Season 2"), null, 0x5ee7ff);
   room.startRecording();
-  sendWebhook(startWebHook, `\`⚽ 𝙆𝙄𝘾𝙆 𝙊𝙁𝙁 !! ⚽\` - Game duration \`${gameTime} minutes\``);
+  sendWebhook(goalWebHook, `\`𝙆𝙄𝘾𝙆 𝙊𝙁𝙁\` - \`${gameTime} minutes\``);
     
   if(freeze.length > 0){
     freeze = [];
@@ -4173,7 +4220,7 @@ room.onGameStart = function (byPlayer) {
 
 room.onGameStop = function (byPlayer) {
  
-  sendWebhook(startWebHook, `\`⚽ FULL TIME ⚽\` **Possesion: ** \`[RED] ${(Rposs * 100).toPrecision(3).toString()}%\`  | possession |  \`[BLUE] ${(Bposs * 100).toPrecision(3).toString()}%\``)
+  // sendWebhook(goalWebHook, `\`FULL TIME\``)
   sendDiscordRecording();
   whisper("ʀᴇᴘʟᴀʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴇɴᴛ ᴛᴏ ᴅɪꜱᴄᴏʀᴅ!", null);
   if(freeze.length > 0){
@@ -4210,10 +4257,10 @@ room.onTeamGoal = function (team) {
         room.sendAnnouncement(line, null, 0x11DEB3, "small");
       });
       // announce("[GOALLL] ⚽ Scorer: " + lastPlayersTouched[0].name + " ( 🅰️ Assist: " + lastPlayersTouched[1].name + " ) 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
-      room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
+      // room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
       avatarCelebration(goalMaker, "⚽", "🎯");
       
-      sendWebhook(goalWebHook, `\`[GOALL LEAGUE]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Assist: ** \`${lastPlayersTouched[1].name}\` ** Menit: ** \`${goalTime}\` `);
+      sendWebhook(goalWebHook, `\`[GOAL]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Assist: ** \`${lastPlayersTouched[1].name}\` ** Menit: ** \`${goalTime}\` ** Scores ** \`🟥 ${scores.red} - ${scores.blue} 🟦\``);
       game.goals.push(new Goal(scores.time, team, lastPlayersTouched[0], lastPlayersTouched[1]));
     } else {
       var frasegol = frasesGols[(Math.random() * frasesGols.length) | 0];
@@ -4227,10 +4274,10 @@ room.onTeamGoal = function (team) {
         room.sendAnnouncement(line, null, 0x11DEB3, "small");
       });
       // announce("[GOALLL] ⚽ Scorer: " + lastPlayersTouched[0].name + " 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
-      room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
+      // room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
       avatarCelebration(goalMaker, "⚽", "🎯");
 
-      sendWebhook(goalWebHook, `\`[GOALL LEAGUE]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` `);
+      sendWebhook(goalWebHook, `\`[GOAL]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` ** Scores ** \`🟥 ${scores.red} - ${scores.blue} 🟦\``);
       game.goals.push(new Goal(scores.time, team, lastPlayersTouched[0], null));
     }
 
@@ -4252,7 +4299,7 @@ room.onTeamGoal = function (team) {
       room.sendAnnouncement(line, null, 0xFB6B6B, "small");
     });
 
-    sendWebhook(goalWebHook, `\`[OWN-GOAL RS]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` `);
+    sendWebhook(goalWebHook, `\`[OWN-GOAL]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` ** Scores ** \`🟥 ${scores.red} - ${scores.blue} 🟦\``);
     game.goals.push(new Goal(scores.time, team, null, null));
     avatarCelebration(goalMaker, "🤦‍♂️", "🤡");
 
@@ -4969,7 +5016,7 @@ function getDate() {
 
 function sendDiscordRecording() {
   const form = new FormData();
-  form.append("file", new File([room.stopRecording()], `LEAGUE-1-Replay-${getDate()}.hbr2`, { type: "text/plain" }));
+  form.append("file", new File([room.stopRecording()], `LIGA-ROOM-1.hbr2`, { type: "text/plain" }));
   var request = new XMLHttpRequest();
   request.open("POST", replayWebHook);
   request.send(form);
