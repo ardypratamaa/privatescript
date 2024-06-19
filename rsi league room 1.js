@@ -2423,7 +2423,7 @@ function updatePlayerCount() {
 
   if (currentPlayerCount !== previousPlayerCount) {
       const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
-      const message = `\`[liga room 1] ${currentPlayerCount} players\n${playerNames}\``;
+      const message = `\`🟢[liga room 1] ${currentPlayerCount} players\n${playerNames}\``;
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
