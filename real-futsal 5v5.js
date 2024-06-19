@@ -1715,9 +1715,9 @@ function updatePlayerCount() {
       let message;
 
       if (adminCount > 0) {
-          message = `\`[futsal 5v5] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+          message = `\`🟢[futsal 5v5] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
       } else {
-          message = `\`[futsal 5v5] ${currentPlayerCount} players\n${playerNames}\``;
+          message = `\`🟢[futsal 5v5] ${currentPlayerCount} players\n${playerNames}\``;
       }
 
       sendWebhook(countWebHook, message);
