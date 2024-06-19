@@ -1710,14 +1710,22 @@ function updatePlayerCount() {
   const currentPlayerCount = players.length;
 
   if (currentPlayerCount !== previousPlayerCount) {
-      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
-      const message = `\`[futsal 5v5] ${currentPlayerCount} players\n${playerNames}\``;
+      const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
+      const adminCount = players.filter(player => player.admin).length;
+      let message;
+
+      if (adminCount > 0) {
+          message = `\`[futsal 5v5] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+      } else {
+          message = `\`[futsal 5v5] ${currentPlayerCount} players\n${playerNames}\``;
+      }
+
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
 }
 
-setInterval(updatePlayerCount, 5000);
+setInterval(updatePlayerCount, 3000);
 
 function findNextAdmin() {
   var players = room.getPlayerList();
