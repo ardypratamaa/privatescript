@@ -2678,25 +2678,13 @@ function updatePlayerCount() {
 
   if (currentPlayerCount !== previousPlayerCount) {
       const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
-      const message = `\`[football 6v6] ${currentPlayerCount} players\n${playerNames}\``;
-      sendWebhook(countWebHook, message);
-      previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
-  }
-}
-
-function updatePlayerCount() {
-  const players = room.getPlayerList().filter(player => player.id !== 0); // Exclude the host bot
-  const currentPlayerCount = players.length;
-
-  if (currentPlayerCount !== previousPlayerCount) {
-      const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
       const adminCount = players.filter(player => player.admin).length;
       let message;
 
       if (adminCount > 0) {
-          message = `\`[football 6v6] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+          message = `\`🟢[football 6v6] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
       } else {
-          message = `\`[football 6v6] ${currentPlayerCount} players\n${playerNames}\``;
+          message = `\`🟢[football 6v6] ${currentPlayerCount} players\n${playerNames}\``;
       }
 
       sendWebhook(countWebHook, message);
