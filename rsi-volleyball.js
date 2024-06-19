@@ -1399,9 +1399,9 @@ function updatePlayerCount() {
       let message;
 
       if (adminCount > 0) {
-          message = `\`[volleyball] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+          message = `\`🟢[volleyball] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
       } else {
-          message = `\`[volleyball] ${currentPlayerCount} players\n${playerNames}\``;
+          message = `\`🟢[volleyball] ${currentPlayerCount} players\n${playerNames}\``;
       }
 
       sendWebhook(countWebHook, message);
