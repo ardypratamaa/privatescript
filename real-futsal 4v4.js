@@ -180,6 +180,8 @@ function areUniformsEqual(uniform1, uniform2) {
   return JSON.stringify(uniform1) === JSON.stringify(uniform2);
 }
 
+let previousPlayerCount = 0;
+
 var vip1 = [];
 var vip2 = [];
 var vip3 = [];
@@ -655,6 +657,7 @@ let toxicWebHook = "https://discord.com/api/webhooks/1230501754249023568/CD-X4s4
 let statsWebHook = "https://discord.com/api/webhooks/1241945103409483796/8xg1jJa6k-HT0_GV8yM-5Uzku4AqgpI9l0aT74iX9f9rie42kITW9jdhjXpoV_CcmAAi";
 let playerWebHook = "https://discord.com/api/webhooks/1241969878639050827/bjWpE3PLFtdFX4HPWkXuY40qRxzDADOF4-2VycPw8HJaqbHVclwVNDVLScKs1jBunB8_";
 let spamWebHook = "https://discord.com/api/webhooks/1243753194446655519/RoQ9kPUVVYnJKsEGh-m8XUZt0yl4IQf0P9kY-i05iwGGO0FfArxhEMG0rPG51opjROOw";
+let countWebHook = "https://discord.com/api/webhooks/1252873195242131496/cz4I7rjzEwe2RqWOgd25UErK7_Xko0KM6MMcP9yTkdIhkyJaCzAV0fzelC5jI6hKUnK1";
 
 var lastTeamTouched; // records who was the last to touch the ball
 var lastPlayersTouched; // allows you to receive good goal notifications (must be lastPlayersKicked, waiting for a next update to get better control of shots on target)
@@ -1756,6 +1759,20 @@ room.onPlayerJoin = function (player) {
   }
 };
 
+function updatePlayerCount() {
+  const players = room.getPlayerList().filter(player => player.id !== 0); // Exclude the host bot
+  const currentPlayerCount = players.length;
+
+  if (currentPlayerCount !== previousPlayerCount) {
+      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
+      const message = `\`[futsal 4v4] ${currentPlayerCount} players\n${playerNames}\``;
+      sendWebhook(countWebHook, message);
+      previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
+  }
+}
+
+setInterval(updatePlayerCount, 5000);
+
 function findNextAdmin() {
   var players = room.getPlayerList();
   for (var i = 0; i < players.length; i++) {
@@ -1878,6 +1895,7 @@ room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [futsal 4v4] ${player.name} [${player.id}]: ${message}\``);
   var players = room.getPlayerList();
+  let args = message.split(" ");
 
   if (message.length > 1 && message[0].toLowerCase() == "t" && message[1] == " ") {
     if (player.team != 0) {
@@ -3167,6 +3185,311 @@ room.onPlayerChat = function (player, message) {
         room.startGame();
     } else {
         whisper("Cannot start while game in progress", player.id);
+    }
+  } else if (["!setteamava"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let teamId = parseInt(args[1]);
+      let avatarUrl = args[2];
+
+      if ((teamId === 1 || teamId === 2) && avatarUrl) {
+          let team = teamId === 1 ? 1 : 2; // 1 for red team, 2 for blue team
+          let players = room.getPlayerList();
+
+          players.forEach(p => {
+              if (p.team === team) {
+                  room.setPlayerAvatar(p.id, avatarUrl);
+              }
+          });
+
+          //room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " avatars set by " + player.name, null, 0x00FF00, "normal", 2);
+      } else {
+          room.sendAnnouncement("Invalid team ID or avatar URL.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can set team avatars", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!setavatar"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let playerId = parseInt(args[1]);
+      let avatarUrl = args[2]; // Assuming the avatar URL is provided as the third argument
+
+      let targetPlayer = room.getPlayer(playerId);
+
+      if (targetPlayer !== null) {
+          room.setPlayerAvatar(playerId, avatarUrl);
+          // room.sendAnnouncement("Player ID " + playerId + "'s avatar set by " + player.name);
+      } else {
+          room.sendAnnouncement("Invalid player ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can set player avatars", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!resetteamava"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let teamId = parseInt(args[1]);
+
+      if (teamId === 1 || teamId === 2) {
+          let team = teamId === 1 ? 1 : 2; // 1 for red team, 2 for blue team
+          let players = room.getPlayerList();
+
+          players.forEach(p => {
+              if (p.team === team) {
+                  room.setPlayerAvatar(p.id, null); // Resetting the avatar to default (null)
+              }
+          });
+
+          //room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " avatars reset by " + player.name, null, 0x00FF00, "normal", 2);
+      } else {
+          room.sendAnnouncement("Invalid team ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can reset team avatars", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!resetavatar"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let playerId = parseInt(args[1]);
+
+      let targetPlayer = room.getPlayer(playerId);
+
+      if (targetPlayer !== null) {
+          room.setPlayerAvatar(playerId, null); // Setting avatar to null (default avatar)
+          // room.sendAnnouncement("Player ID " + playerId + "'s avatar reset by " + player.name);
+      } else {
+          room.sendAnnouncement("Invalid player ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can reset player avatars", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!blink"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let playerId = parseInt(args[1]);
+      let intervalId;
+      let targetPlayer = room.getPlayer(playerId);
+
+      if (targetPlayer !== null) {
+          let currentRadius = 15; // Assuming current radius is 15, you should adjust this according to your actual scenario
+          let newRadius = 0;
+          let direction = 2;
+
+          intervalId = setInterval(() => {
+              room.setPlayerDiscProperties(playerId, { radius: newRadius });
+              newRadius += direction * 5;
+
+              if (newRadius >= currentRadius || newRadius <= 0) {
+                  direction *= -1; // Reverse the direction
+              }
+          }, 200); // Adjust the interval time as needed
+
+          // Stop blinking after 10 seconds (just an example)
+          setTimeout(() => {
+              clearInterval(intervalId);
+              room.setPlayerDiscProperties(playerId, { radius: currentRadius });
+          }, 12000); // 10000 milliseconds = 10 seconds
+      } else {
+          room.sendAnnouncement("Invalid player ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can make players blink", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!blinkteam"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let teamId = parseInt(args[1]); // 1 for red team, 2 for blue team
+      let intervalId;
+      let playersInTeam = room.getPlayerList().filter(p => p.team === teamId);
+
+      if (playersInTeam.length > 0) {
+          let currentRadius = 15; // Assuming current radius is 15, adjust as necessary
+          let newRadius = 0;
+          let direction = 2;
+
+          intervalId = setInterval(() => {
+              playersInTeam.forEach(p => {
+                  room.setPlayerDiscProperties(p.id, { radius: newRadius });
+              });
+              newRadius += direction * 5;
+
+              if (newRadius >= currentRadius || newRadius <= 0) {
+                  direction *= -1; // Reverse the direction
+              }
+          }, 200); // Adjust the interval time as needed
+
+          // Stop blinking after 10 seconds (just an example)
+          setTimeout(() => {
+              clearInterval(intervalId);
+              playersInTeam.forEach(p => {
+                  room.setPlayerDiscProperties(p.id, { radius: currentRadius });
+              });
+          }, 12000); // 10000 milliseconds = 10 seconds
+      } else {
+          room.sendAnnouncement("Invalid team ID or no players in the specified team.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can make teams blink", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!blink2"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let playerId = parseInt(args[1]);
+      let intervalId;
+      let targetPlayer = room.getPlayer(playerId);
+
+      if (targetPlayer !== null) {
+          let currentRadius = 15; // Assuming current radius is 15, you should adjust this according to your actual scenario
+          let newRadius = 0;
+          let direction = 3;
+
+          intervalId = setInterval(() => {
+              room.setPlayerDiscProperties(playerId, { radius: newRadius });
+              newRadius += direction * 5;
+
+              if (newRadius >= currentRadius || newRadius <= 0) {
+                  direction *= -1; // Reverse the direction
+              }
+          }, 200); // Adjust the interval time as needed
+
+          // Stop blinking after 10 seconds (just an example)
+          setTimeout(() => {
+              clearInterval(intervalId);
+              room.setPlayerDiscProperties(playerId, { radius: currentRadius });
+          }, 12000); // 10000 milliseconds = 10 seconds
+      } else {
+          room.sendAnnouncement("Invalid player ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can make players blink", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!setsize"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let playerId = parseInt(args[1]);
+      let newRadius = parseFloat(args[2]);
+      let targetPlayer = room.getPlayer(playerId);
+
+      if (targetPlayer !== null && !isNaN(newRadius)) {
+          room.setPlayerDiscProperties(playerId, { radius: newRadius });
+          // room.sendAnnouncement("Player ID " + playerId + " disc size set to " + newRadius + " by " + player.name);
+      } else {
+          room.sendAnnouncement("Invalid player ID or radius.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can change player disc properties", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!setteamsize"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let teamId = parseInt(args[1]);
+      let newRadius = parseFloat(args[2]);
+
+      if ((teamId === 1 || teamId === 2) && !isNaN(newRadius)) {
+          let players = room.getPlayerList();
+
+          players.forEach(p => {
+              if (p.team === teamId) {
+                  room.setPlayerDiscProperties(p.id, { radius: newRadius });
+              }
+          });
+
+          //room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " disc sizes set to " + newRadius + " by " + player.name, null, 0x00FF00, "normal", 2);
+      } else {
+          room.sendAnnouncement("Invalid team ID or radius.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can change team disc sizes", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!reset"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let playerId = parseInt(args[1]);
+      let defaultRadius = 15; // Default radius value
+      let defaultDiscProperties = {
+        radius: defaultRadius,
+        bCoef: 0,
+        invMass: 0.5,
+        damping: 0.96,
+        acceleration: 0.117,
+        kickingAcceleration: 0.083,
+        kickingDamping: 0.96,
+        kickStrength: 5.5,
+        kickback: 0
+      };
+
+      let targetPlayer = room.getPlayer(playerId);
+
+      if (targetPlayer !== null) {
+          room.setPlayerDiscProperties(playerId, defaultDiscProperties);
+          // room.sendAnnouncement("Player ID " + playerId + " disc size reset to " + defaultRadius + " by " + player.name);
+      } else {
+          room.sendAnnouncement("Invalid player ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can reset player disc properties", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!resetteam"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let teamId = parseInt(args[1]);
+      let defaultDiscProperties = {
+          radius: 15,
+          bCoef: 0,
+          invMass: 0.5,
+          damping: 0.96,
+          acceleration: 0.117,
+          kickingAcceleration: 0.083,
+          kickingDamping: 0.96,
+          kickStrength: 5.5,
+          kickback: 0
+      };
+
+      if (teamId === 1 || teamId === 2) {
+          let players = room.getPlayerList();
+
+          players.forEach(p => {
+              if (p.team === teamId) {
+                  room.setPlayerDiscProperties(p.id, defaultDiscProperties);
+              }
+          });
+
+          //room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " disc sizes reset to default by " + player.name, null, 0x00FF00, "normal", 2);
+      } else {
+          room.sendAnnouncement("Invalid team ID.", player.id, 0xff0000, "normal", 2);
+      }
+    } else {
+        room.sendAnnouncement("Only Super Admins can reset team disc properties", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!setsizeall"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let newRadius = parseFloat(args[1]); // Assuming the size argument is the first argument after the command
+
+      // Iterate over all players in the room
+      room.getPlayerList().forEach(targetPlayer => {
+          // Set the new disc size for each player
+          room.setPlayerDiscProperties(targetPlayer.id, { radius: newRadius });
+      });
+
+      // Inform about the action
+      // room.sendAnnouncement("All player discs size set to " + newRadius + " by " + player.name);
+    } else {
+        room.sendAnnouncement("Only Super Admins can change player disc properties", player.id, 0xff0000, "normal", 2);
+    }
+  } else if (["!resetall"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      let defaultRadius = 15; // Default radius value
+      let defaultDiscProperties = {
+          radius: defaultRadius,
+          bCoef: 0,
+          invMass: 0.5,
+          damping: 0.96,
+          acceleration: 0.117,
+          kickingAcceleration: 0.083,
+          kickingDamping: 0.96,
+          kickStrength: 5.5,
+          kickback: 0
+      };
+
+      // Iterate over all players in the room
+      room.getPlayerList().forEach(targetPlayer => {
+          // Set the default disc properties for each player
+          room.setPlayerDiscProperties(targetPlayer.id, defaultDiscProperties);
+      });
+
+      // room.sendAnnouncement("All player discs size reset to normal by " + player.name);
+    } else {
+        room.sendAnnouncement("Only Super Admins can reset player disc properties", player.id, 0xff0000, "normal", 2);
     }
   } else if (["!dc", "!disc", "!discord"].includes(message[0].toLowerCase())) {
     room.sendAnnouncement("                                        ▒█▀▀▄ ▀█▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▄ ", null, 0x9250fd, "bold");
