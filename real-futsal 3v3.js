@@ -1694,6 +1694,7 @@ const specialConns = [
   "3130332E37352E35352E3632", //m4
   "3132392E3232372E33392E313139", //roti
   "3134302E3231332E3132372E3337", //bizkit
+  "3132352E3136352E38312E323135", //kazuto
   "3138322E332E34352E323331" //stickmar
 ];
 
@@ -1747,14 +1748,22 @@ function updatePlayerCount() {
   const currentPlayerCount = players.length;
 
   if (currentPlayerCount !== previousPlayerCount) {
-      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
-      const message = `\`[futsal 3v3] ${currentPlayerCount} players\n${playerNames}\``;
+      const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
+      const adminCount = players.filter(player => player.admin).length;
+      let message;
+
+      if (adminCount > 0) {
+          message = `\`[futsal 3v3] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+      } else {
+          message = `\`[futsal 3v3] ${currentPlayerCount} players\n${playerNames}\``;
+      }
+
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
 }
 
-setInterval(updatePlayerCount, 5000);
+setInterval(updatePlayerCount, 3000);
 
 function findNextAdmin() {
   var players = room.getPlayerList();
