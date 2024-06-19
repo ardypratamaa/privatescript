@@ -771,12 +771,12 @@ var practiceMap = //rsi map
     ],
   
     "discs" : [
-      { "radius" : 9, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
+      { "radius" : 9.2, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
       { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
       
-      { "radius" : 9.1, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
+      { "radius" : 9.3, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
       { "radius" : 1.5, "pos" : [0,0 ], "trait" : "jb" },
       { "radius" : 1.15, "pos" : [6.8476,2.2249 ], "trait" : "jb" },
       { "radius" : 1.15, "pos" : [0,7.2 ], "trait" : "jb" },
@@ -2677,14 +2677,34 @@ function updatePlayerCount() {
   const currentPlayerCount = players.length;
 
   if (currentPlayerCount !== previousPlayerCount) {
-      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
+      const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
       const message = `\`[football 6v6] ${currentPlayerCount} players\n${playerNames}\``;
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
 }
 
-setInterval(updatePlayerCount, 5000);
+function updatePlayerCount() {
+  const players = room.getPlayerList().filter(player => player.id !== 0); // Exclude the host bot
+  const currentPlayerCount = players.length;
+
+  if (currentPlayerCount !== previousPlayerCount) {
+      const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
+      const adminCount = players.filter(player => player.admin).length;
+      let message;
+
+      if (adminCount > 0) {
+          message = `\`[football 6v6] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+      } else {
+          message = `\`[football 6v6] ${currentPlayerCount} players\n${playerNames}\``;
+      }
+
+      sendWebhook(countWebHook, message);
+      previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
+  }
+}
+
+setInterval(updatePlayerCount, 3000);
 
 function findNextAdmin() {
   var players = room.getPlayerList();
