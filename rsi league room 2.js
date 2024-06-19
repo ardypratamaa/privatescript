@@ -1,10 +1,10 @@
 /* ROOM */
 //var roomName = "💠 [ʀꜱɪ|ɪᴅ] Scrim Room | ᴘᴠᴘ ⚽";
-var roomName = "💠 (ʀꜱɪ|ɪᴅ) League Room 1| ᴘᴠᴘ ⚽";
+var roomName = "💠 (ʀꜱɪ|ɪᴅ) League Room 2| ᴘᴠᴘ ⚽";
 //var roomPassword = "scrim2";
 const maxPlayers = 30; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
-const geo = [{ lat: -6.17, lon: 106.85990, code: "id" }]; //liga 1
+const geo = [{ lat: -6.17, lon: 106.85989, code: "id" }]; //liga 1
 //const geo = [{ lat: -6.17, lon: 106.85989, code: "id" }]; //liga 2
 
 // RSI BANNED SYSTEM
@@ -1599,8 +1599,8 @@ function Goal(time, team, striker, assist) {
 // Webhooks
 // -------------------------------------------------
 
-let replayWebHook = "https://discord.com/api/webhooks/1251779490988822649/Y3vzzVlXzegvw50ZETxIoVW13vxKCg1UfkOB4O7GD1Uu1pJIysYiauD0lEY1grphWabs";
-let goalWebHook = "https://discord.com/api/webhooks/1251779490988822649/Y3vzzVlXzegvw50ZETxIoVW13vxKCg1UfkOB4O7GD1Uu1pJIysYiauD0lEY1grphWabs";
+let replayWebHook = "https://discord.com/api/webhooks/1251779689337589810/16JPXSXkXtAef_KekBjtU2IYny18C5Mq37KxhyaLe_qQQbcm6yexHjbgrlxtEe8gcW-F";
+let goalWebHook = "https://discord.com/api/webhooks/1251779689337589810/16JPXSXkXtAef_KekBjtU2IYny18C5Mq37KxhyaLe_qQQbcm6yexHjbgrlxtEe8gcW-F";
 let chatWebHook = "https://discord.com/api/webhooks/1227802111459459072/Db2vLhw6Mxcp0Xu9aNVYl684ANho_4Nuqz-roujkQQPYhbjG_PqENhDOgGnnqE5R4P4n";
 let joinWebHook = "https://discord.com/api/webhooks/1228203622366449695/h_oYpebe1f6D8i7sMhs5J4wUn3-iHRIqUPXT-Lsvq98cf6z_BsRj_I8zAP93S4wgi-gD";
 let startWebHook = "https://discord.com/api/webhooks/1228211340519149661/kmFJSfdirOOWRnH-bynJrDxisbtI-5kg5AesFc4RaktI0NSwgoo6KBbj5bkyshJfcQhq";
@@ -1610,7 +1610,7 @@ let fieldWebHook = "https://discord.com/api/webhooks/1233955747985887343/O955Dr_
 let statsWebHook = "https://discord.com/api/webhooks/1241941404859498567/JRNpNAmFGDeE7S8kybSes_KvMO6C_4EZFrPc-8WM6tFfbUgu3RUXbYgCxUuJboreCWZv";
 let playerWebHook = "https://discord.com/api/webhooks/1241969878639050827/bjWpE3PLFtdFX4HPWkXuY40qRxzDADOF4-2VycPw8HJaqbHVclwVNDVLScKs1jBunB8_";
 let spamWebHook = "https://discord.com/api/webhooks/1243753059155312711/ApZTk8vGyDgQRqXkoTZ6XXjxsFZSC6sK6Zkl2yJG2HoCtw_uSxsbz6hZvDV_elVdGOlZ";
-let countWebHook = "https://discord.com/api/webhooks/1252884551097909289/EJHIhwVX1_LjY_oTgwkcbq7ElsZqlpC9ybVSRBz7yHTxdE89dd7kQ4oFO1j2okSxDawi";
+let countWebHook = "https://discord.com/api/webhooks/1252885185029079090/bol2J_VNIkUMZ78ALRtblp1XCHnK7fGjUSm1ZZ3tzEORfA837SDvYostTDbYuzRpI0qB";
 
 
 // -------------------------------------------------
@@ -2423,7 +2423,7 @@ function updatePlayerCount() {
 
   if (currentPlayerCount !== previousPlayerCount) {
       const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
-      const message = `\`[liga room 1] ${currentPlayerCount} players\n${playerNames}\``;
+      const message = `\`[liga room 2] ${currentPlayerCount} players\n${playerNames}\``;
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
@@ -2671,36 +2671,6 @@ room.onPlayerChat = function (player, message) {
     }
     return false;
   }
-
-  if (message.startsWith("kick #")) {
-    if (player.admin) {
-      // Extract the player ID from the message, removing the "kick #" prefix
-      var playerId = message.substr(6);
-  
-      // Call the function to kick the player
-      var success = kickPlayerById(playerId);
-  
-      if (!success) {
-        room.sendChat("⚠️ Player not found.");
-      }
-    }
-    return false;
-  }
-
-  if (message.startsWith("kick #")) {
-    if (player.admin) {
-      // Extract the player ID from the message, removing the "kick #" prefix
-      var playerId = message.substr(6);
-  
-      // Call the function to kick the player
-      var success = kickPlayerById(playerId);
-  
-      if (!success) {
-        room.sendChat("⚠️ Player not found.");
-      }
-    }
-    return false;
-  }
   
   // Function to kick a player by ID
   function kickPlayerById(playerId) {
@@ -2738,7 +2708,7 @@ room.onPlayerChat = function (player, message) {
         var reason = parts.slice(1).join(" ");
 
         sendWebhook(goalWebHook, `\`[BOOKINGS]\` 🟨 Player: \`${targetPlayerName}\` Reason: \`${reason}\` `);
-        room.sendAnnouncement(`[BOOKINGS] 🟨 Player: ${targetPlayerName} got yellow card for Reason: ${reason}`, null, 0xffffe0, "normal", 1);
+        room.sendAnnouncement(`[BOOKING] 🟨 Player: ${targetPlayerName} got yellow card for Reason: ${reason}`, null, 0xffffe0, "normal", 1);
     } else {
         room.sendChat("⚠️ You don't have permission", player.id);
     }
@@ -4234,7 +4204,6 @@ room.onGameStart = function (byPlayer) {
 };
 
 room.onGameStop = function (byPlayer) {
- 
   // sendWebhook(goalWebHook, `\`FULL TIME\``)
   sendDiscordRecording();
   whisper("ʀᴇᴘʟᴀʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴇɴᴛ ᴛᴏ ᴅɪꜱᴄᴏʀᴅ!", null);
@@ -4350,6 +4319,7 @@ room.onPositionsReset = function () {
   if (game.lastPlayAnnounced == true) {
     room.stopGame(true);
     game.lastPlayAnnounced = false;
+    announce("⚽ FULL TIME ⚽");
     announce("⚽ FULL TIME ⚽");
     // sendDiscordRecording();
     // whisper("ʀᴇᴘʟᴀʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴇɴᴛ ᴛᴏ ᴅɪꜱᴄᴏʀᴅ!", null);
@@ -4819,7 +4789,7 @@ async function ballWarning(origColour, warningCount) {
 function extraTime() {
   var extraSeconds = Math.ceil(game.extraTimeCount / 41);
   game.extraTimeEnd = gameTime * 60 + extraSeconds;
-  // announce("Extra time: " + extraSeconds + " Seconds", null, null, null, 1);
+  //announce("Extra time: " + extraSeconds + " Seconds", null, null, null, 1);
 }
 
 function secondsToMinutes(time) {
@@ -5030,7 +5000,7 @@ function getDate() {
 
 function sendDiscordRecording() {
   const form = new FormData();
-  form.append("file", new File([room.stopRecording()], `LIGA-ROOM-1.hbr2`, { type: "text/plain" }));
+  form.append("file", new File([room.stopRecording()], `LIGA-ROOM-2.hbr2`, { type: "text/plain" }));
   var request = new XMLHttpRequest();
   request.open("POST", replayWebHook);
   request.send(form);
