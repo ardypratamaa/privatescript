@@ -209,6 +209,8 @@ let whitelist = new Set([
 
 ]);
 
+let previousPlayerCount = 0;
+
 // Store last message times and counts for players
 var lastMessageTime = {};
 var messageCounts = {};
@@ -1608,6 +1610,7 @@ let fieldWebHook = "https://discord.com/api/webhooks/1233955747985887343/O955Dr_
 let statsWebHook = "https://discord.com/api/webhooks/1241941404859498567/JRNpNAmFGDeE7S8kybSes_KvMO6C_4EZFrPc-8WM6tFfbUgu3RUXbYgCxUuJboreCWZv";
 let playerWebHook = "https://discord.com/api/webhooks/1241969878639050827/bjWpE3PLFtdFX4HPWkXuY40qRxzDADOF4-2VycPw8HJaqbHVclwVNDVLScKs1jBunB8_";
 let spamWebHook = "https://discord.com/api/webhooks/1243753059155312711/ApZTk8vGyDgQRqXkoTZ6XXjxsFZSC6sK6Zkl2yJG2HoCtw_uSxsbz6hZvDV_elVdGOlZ";
+let countWebHook = "https://discord.com/api/webhooks/1252885185029079090/bol2J_VNIkUMZ78ALRtblp1XCHnK7fGjUSm1ZZ3tzEORfA837SDvYostTDbYuzRpI0qB";
 
 
 // -------------------------------------------------
@@ -2350,6 +2353,21 @@ setInterval(() => {
 
 /* PLAYER MOVEMENT */
 
+const specialAuths = [
+  "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA", //fox
+  "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
+  "LnEtoSdVonFZdGMYKDUVPAWb-SzD-PsUMJC2nDPHO5w", //roti
+  "EKGPaC2usPnvew9o0KH9P6J3nSmBOpKf3meC25VidQo", //stickmar
+  "4sNwsfwEjsR37sYEkXMatM8YkcjM3KaJ5uoC2WJ02rY" //bizkit
+];
+const specialConns = [
+  "33362E37332E33352E313832", //fox
+  "3130332E37352E35352E3632", //m4
+  "3132392E3232372E33392E313139", //roti
+  "3134302E3231332E3132372E3337", //bizkit
+  "3138322E332E34352E323331" //stickmar
+];
+
 room.onPlayerJoin = function (player) {
 
   const currentTime = getCurrentTime();
@@ -2358,24 +2376,7 @@ room.onPlayerJoin = function (player) {
   checkAndKickPlayer(player);
   createPlayer(player);
 
-  const specialAuths = [
-    "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA", //fox
-    "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
-    "LnEtoSdVonFZdGMYKDUVPAWb-SzD-PsUMJC2nDPHO5w", //roti
-    "EKGPaC2usPnvew9o0KH9P6J3nSmBOpKf3meC25VidQo", //stickmar
-    "4sNwsfwEjsR37sYEkXMatM8YkcjM3KaJ5uoC2WJ02rY" //bizkit
-  ];
-  const specialConns = [
-    "33362E37332E33352E313832", //fox
-    "3130332E37352E35352E3632", //m4
-    "3132392E3232372E33392E313139", //roti
-    "3134302E3231332E3132372E3337", //bizkit
-    "3138322E332E34352E323331" //stickmar
-  ];
-
-  if ((player.auth === specialAuths[0] && player.conn === specialConns[0]) ||
-    (player.auth === specialAuths[1] && player.conn === specialConns[1])) {
-    // Set the player as an admin
+  if (specialAuths.includes(player.auth) || specialConns.includes(player.conn)) {
     room.setPlayerAdmin(player.id, true);
   }
 
@@ -2415,6 +2416,20 @@ room.onPlayerJoin = function (player) {
     localStorage.setItem(getAuth(player), JSON.stringify(stats));
   }
 };
+
+function updatePlayerCount() {
+  const players = room.getPlayerList().filter(player => player.id !== 0); // Exclude the host bot
+  const currentPlayerCount = players.length;
+
+  if (currentPlayerCount !== previousPlayerCount) {
+      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
+      const message = `\`[liga room 2] ${currentPlayerCount} players\n${playerNames}\``;
+      sendWebhook(countWebHook, message);
+      previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
+  }
+}
+
+setInterval(updatePlayerCount, 5000);
 
 function findNextAdmin() {
   var players = room.getPlayerList();
@@ -4772,9 +4787,9 @@ async function ballWarning(origColour, warningCount) {
 }
 
 function extraTime() {
-  var extraSeconds = Math.ceil(game.extraTimeCount / 60);
+  var extraSeconds = Math.ceil(game.extraTimeCount / 41);
   game.extraTimeEnd = gameTime * 60 + extraSeconds;
-  announce("Extra time: " + extraSeconds + " Seconds", null, null, null, 1);
+  //announce("Extra time: " + extraSeconds + " Seconds", null, null, null, 1);
 }
 
 function secondsToMinutes(time) {
