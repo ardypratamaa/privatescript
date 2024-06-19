@@ -211,6 +211,8 @@ let whitelist = new Set([
 
 ]);
 
+let previousPlayerCount = 0;
+
 // Store last message times and counts for players
 var lastMessageTime = {};
 var messageCounts = {};
@@ -1625,6 +1627,7 @@ let fieldWebHook = "https://discord.com/api/webhooks/1233955747985887343/O955Dr_
 let statsWebHook = "https://discord.com/api/webhooks/1241941404859498567/JRNpNAmFGDeE7S8kybSes_KvMO6C_4EZFrPc-8WM6tFfbUgu3RUXbYgCxUuJboreCWZv";
 let playerWebHook = "https://discord.com/api/webhooks/1241969878639050827/bjWpE3PLFtdFX4HPWkXuY40qRxzDADOF4-2VycPw8HJaqbHVclwVNDVLScKs1jBunB8_";
 let spamWebHook = "https://discord.com/api/webhooks/1243753059155312711/ApZTk8vGyDgQRqXkoTZ6XXjxsFZSC6sK6Zkl2yJG2HoCtw_uSxsbz6hZvDV_elVdGOlZ";
+let countWebHook = "https://discord.com/api/webhooks/1252871669089833000/BY4ibBIK_JUs0tc8L52ybctgZ9F1WCgU7KrJtxElQmY2eb-CVXUhCrpo3oEneLT22Nqr";
 
 
 // -------------------------------------------------
@@ -2668,6 +2671,20 @@ room.onPlayerJoin = function (player) {
     localStorage.setItem(getAuth(player), JSON.stringify(stats));
   }
 };
+
+function updatePlayerCount() {
+  const players = room.getPlayerList().filter(player => player.id !== 0); // Exclude the host bot
+  const currentPlayerCount = players.length;
+
+  if (currentPlayerCount !== previousPlayerCount) {
+      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
+      const message = `\`[football 6v6] ${currentPlayerCount} players\n${playerNames}\``;
+      sendWebhook(countWebHook, message);
+      previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
+  }
+}
+
+setInterval(updatePlayerCount, 5000);
 
 function findNextAdmin() {
   var players = room.getPlayerList();
