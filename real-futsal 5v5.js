@@ -435,13 +435,14 @@ var practiceMap =
 		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
 		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
 		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" }
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
+    { "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" }
 
 	],
 
 	"playerPhysics" : {
 		"bCoef" : 0,
-		"acceleration" : 0.121,
+		"acceleration" : 0.122,
 		"kickingAcceleration" : 0.083,
 		"kickStrength" : 5.5,
 		"cGroup" : [ "red", "blue"
@@ -475,7 +476,7 @@ var practiceMap =
 
 	],
 
-	"canBeStored" : true
+	"canBeStored" : false
 }`;
 /* OPÇÕES */
 
@@ -3944,25 +3945,31 @@ const originalDiscPositions = {
   16: { x: -696.5, y: 316.50 },
   17: { x: -696.5, y: 316.50 },
   18: { x: -696.5, y: 316.50 },
-  19: { x: -696.5, y: 316.50 }
+  19: { x: -696.5, y: 316.50 },
+  20: { x: -696.5, y: 316.50 }
 };
 
 // Function to teleport discs to their specific coordinates
 function teleportDiscs() {
   var ballPosition = room.getBallPosition();
-  var discColor = ballPosition.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+  var teleportX = ballPosition.x < 0 ? -700 : 700;
+  var teleportY = -80;
+  var teleportXdua = ballPosition.x < 0 ? -700 : 700;
+  var teleportYdua = 80;
 
-  room.setDiscProperties(9, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: 2, radius: 5.6, color: discColor });
-  room.setDiscProperties(10, { x: ballPosition.x, y: ballPosition.y, xspeed: 0, yspeed: 3, radius: 5.6, color: discColor });
-  room.setDiscProperties(11, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: 0, radius: 5.6, color: discColor });
-  room.setDiscProperties(12, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 0, radius: 5.6, color: discColor });
-  room.setDiscProperties(13, { x: ballPosition.x, y: ballPosition.y, xspeed: 0, yspeed: -3, radius: 5.6, color: discColor });
-  room.setDiscProperties(14, { x: ballPosition.x, y: ballPosition.y, xspeed: -4, yspeed: 0, radius: 5.6, color: discColor });
-  room.setDiscProperties(15, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -2, radius: 5.6, color: discColor });
-  room.setDiscProperties(16, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 2, radius: 5.6, color: discColor });
-  room.setDiscProperties(17, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: -4, radius: 5.6, color: discColor });
-  room.setDiscProperties(18, { x: ballPosition.x, y: ballPosition.y, xspeed: 4, yspeed: -2, radius: 5.6, color: discColor });
-  room.setDiscProperties(19, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -3, radius: 5.6, color: discColor });
+  // Set properties for each disc with specific colors
+  room.setDiscProperties(9, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 0, radius: 5.2, color: 0xFE4141 }); // red
+  room.setDiscProperties(10, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 1, radius: 5.2, color: 0x00FF00 }); // green
+  room.setDiscProperties(11, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 0, radius: 5.2, color: 0x87CEEB }); // sky blue
+  room.setDiscProperties(12, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 1, radius: 5.2, color: 0xFFC0CB }); // pink
+  room.setDiscProperties(13, { x: teleportX, y: teleportY, xspeed: 0, yspeed: -1, radius: 5.2, color: 0xFFFF00 }); // yellow
+  room.setDiscProperties(14, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 2, radius: 5.2, color: 0xFE4141 }); // red
+  room.setDiscProperties(15, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 0, radius: 5.2, color: 0x00FF00 }); // green
+  room.setDiscProperties(16, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 1, radius: 5.2, color: 0x87CEEB }); // sky blue
+  room.setDiscProperties(17, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 0, radius: 5.2, color: 0xFFC0CB }); // pink
+  room.setDiscProperties(18, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 1, radius: 5.2, color: 0xFFFF00 }); // yellow
+  room.setDiscProperties(19, { x: teleportXdua, y: teleportYdua, xspeed: 0, yspeed: -1, radius: 5.2, color: 0xFE4141 }); // red
+  room.setDiscProperties(20, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 2, radius: 5.2, color: 0x00FF00 }); // green
 }
 
 // Function to reset discs to their original positions
