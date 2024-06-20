@@ -792,7 +792,19 @@ var practiceMap =
       { "radius" : 2, "invMass" : 0, "pos" : [-1252,160 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
       { "radius" : 5, "invMass" : 0, "pos" : [1151,124 ], "bCoef" : 0.5, "trait" : "goalPost" },
       { "radius" : 2, "invMass" : 0, "pos" : [1250.75,-158.75 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-      { "radius" : 2, "invMass" : 0, "pos" : [1251.75,160.25 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" }
+      { "radius" : 2, "invMass" : 0, "pos" : [1251.75,160.25 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
+
+      { "pos" : [-1306,752 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,752 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,751 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,752 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1305,753 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1305,754 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111"}
   
     ],
   
@@ -2423,7 +2435,7 @@ function updatePlayerCount() {
 
   if (currentPlayerCount !== previousPlayerCount) {
       const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
-      const message = `\`🟢[liga room 2] ${currentPlayerCount} players\n${playerNames}\``;
+      const message = `\`[liga room 2] ${currentPlayerCount} players\n${playerNames}\``;
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
@@ -4218,7 +4230,49 @@ room.onGameUnpause = function (byPlayer) {
   // }
 };
 
+const originalDiscPositions = {
+  33: { x: -374, y: 766 },
+  34: { x: -374, y: 766 },
+  35: { x: -374, y: 766 },
+  36: { x: -374, y: 766 },
+  37: { x: -374, y: 766 },
+  38: { x: -374, y: 766 },
+  39: { x: -374, y: 766 },
+  40: { x: -374, y: 766 },
+  41: { x: -374, y: 766 },
+  42: { x: -374, y: 766 },
+  43: { x: -374, y: 766 }
+};
+
+// Function to teleport discs to their specific coordinates
+function teleportDiscs() {
+  var ballPosition = room.getBallPosition();
+  var discColor = ballPosition.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+  room.setDiscProperties(33, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: 2, radius: 5.6, color: discColor });
+  room.setDiscProperties(34, { x: ballPosition.x, y: ballPosition.y, xspeed: 0, yspeed: 3, radius: 5.6, color: discColor });
+  room.setDiscProperties(35, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: 0, radius: 5.6, color: discColor });
+  room.setDiscProperties(36, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 0, radius: 5.6, color: discColor });
+  room.setDiscProperties(37, { x: ballPosition.x, y: ballPosition.y, xspeed: 0, yspeed: -3, radius: 5.6, color: discColor });
+  room.setDiscProperties(38, { x: ballPosition.x, y: ballPosition.y, xspeed: -4, yspeed: 0, radius: 5.6, color: discColor });
+  room.setDiscProperties(39, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -2, radius: 5.6, color: discColor });
+  room.setDiscProperties(40, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 2, radius: 5.6, color: discColor });
+  room.setDiscProperties(41, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: -4, radius: 5.6, color: discColor });
+  room.setDiscProperties(42, { x: ballPosition.x, y: ballPosition.y, xspeed: 4, yspeed: -2, radius: 5.6, color: discColor });
+  room.setDiscProperties(43, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -3, radius: 5.6, color: discColor });
+}
+
+// Function to reset discs to their original positions
+function resetDiscs() {
+  for (const discId in originalDiscPositions) {
+    const pos = originalDiscPositions[discId];
+    room.setDiscProperties(parseInt(discId), { x: pos.x, y: pos.y, xspeed: 0, yspeed: 0, radius: 0 });
+  }
+}
+
 room.onTeamGoal = function (team) {
+  teleportDiscs();
+  setTimeout(resetDiscs, 2000);
   let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
   game.rsActive = false;
   teamgoaler = team;
