@@ -810,6 +810,20 @@ var practiceMap =
       { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
       { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
       { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1305,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
+      { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] },
       { "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111", "cMask" : ["ball" ] }
   
     ],
@@ -4256,16 +4270,26 @@ const originalDiscPositions = {
   46: { x: -374, y: 766 },
   47: { x: -374, y: 766 },
   48: { x: -374, y: 766 },
-  49: { x: -374, y: 766 }
+  49: { x: -374, y: 766 },
+  50: { x: -374, y: 766 },
+  51: { x: -374, y: 766 },
+  52: { x: -374, y: 766 },
+  53: { x: -374, y: 766 },
+  54: { x: -374, y: 766 },
+  55: { x: -374, y: 766 },
+  56: { x: -374, y: 766 },
+  57: { x: -374, y: 766 }
 };
 
 function teleportDiscs() {
   const lastPlayerTouched = lastPlayersTouched[0];
   if (lastPlayerTouched && lastPlayerTouched.team !== 0) { // Ensure the player is in a team
     const discProperties = room.getPlayerDiscProperties(lastPlayerTouched.id);
+    var ballPosition = room.getBallPosition();
     if (discProperties) {
       playerDiscOriginalRadius[lastPlayerTouched.id] = discProperties.radius;
       room.setPlayerDiscProperties(lastPlayerTouched.id, { radius: 0 });
+      room.setDiscProperties(0, { color: -1, radius: 0 });
 
       var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
 
@@ -4286,6 +4310,15 @@ function teleportDiscs() {
       room.setDiscProperties(47, { x: discProperties.x, y: discProperties.y, xspeed: -2, yspeed: 3, radius: 5.6, color: discColor });
       room.setDiscProperties(48, { x: discProperties.x, y: discProperties.y, xspeed: 2, yspeed: 2, radius: 5.6, color: discColor });
       room.setDiscProperties(49, { x: discProperties.x, y: discProperties.y, xspeed: -1, yspeed: -1, radius: 5.6, color: discColor });
+      
+      room.setDiscProperties(50, { x: ballPosition.x, y: ballPosition.y, xspeed: 1, yspeed: -2, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(51, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -3, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(52, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: -1, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(53, { x: ballPosition.x, y: ballPosition.y, xspeed: -1, yspeed: 1, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(54, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: -1, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(55, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 3, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(56, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: 2, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(57, { x: ballPosition.x, y: ballPosition.y, xspeed: -1, yspeed: -1, radius: 5.6, color: 0xFFFFFF });
     }
   }
 }
@@ -4364,6 +4397,8 @@ function resetDiscs() {
       room.setPlayerDiscProperties(player.id, { radius: playerDiscOriginalRadius[player.id] });
     }
   });
+
+  room.setDiscProperties(0, { radius: 9, color: 0xFFFFFF });
 }
 
 let previousChoice = -1;
@@ -4394,7 +4429,7 @@ room.onTeamGoal = function (team) {
     teleportDiscsTiga();
   }
   previousChoice = randomChoice;
-  setTimeout(resetDiscs, 2000)
+  setTimeout(resetDiscs, 2000);
   
   let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
   game.rsActive = false;
