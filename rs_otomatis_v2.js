@@ -32,7 +32,7 @@ var throwTimeOut = 420; // 7 seconds (var is in game ticks)
 var gkTimeOut = 600; // 10 seconds (var is in game ticks)
 var ckTimeOut = 600; // 10 seconds (var is in game ticks)
 var throwinDistance = 270; // distance players can move the ball during throw in
-var powerShotMode = false;
+var powerShotMode = true;
 var gameTime = 5; //default game time if 0 is selected
 
 const room = HBInit({
@@ -773,57 +773,86 @@ var practiceMap = //rsi map
 	],
 
 	"discs" : [
-		{ "radius" : 9, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
-		{ "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
-		{ "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
-		{ "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
+		/* 0 */ { "radius" : 9, "invMass" : 1.114, "pos" : [0, 0], "color" : "FFFFFF", "cMask" : ["all"], "cGroup" : ["ball", "kick", "score"], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
+		/* 1 */ { "radius" : 0, "invMass" : 0, "pos" : [-1285, -13], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red"], "cGroup" : ["ball"] },
+		/* 2 */ { "radius" : 0, "invMass" : 0, "pos" : [-1284, 35], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue"], "cGroup" : ["ball"] },
+		/* 3 */ { "radius" : 0, "invMass" : 0, "pos" : [-1308, 62], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red", "blue"], "cGroup" : ["ball"] },
 		
-		{ "radius" : 9.1, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
-		{ "radius" : 1.5, "pos" : [0,0 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [6.8476,2.2249 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [0,7.2 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [-6.8476,2.2249 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [-4.2321,-5.8249 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [4.2321,-5.8249 ], "trait" : "jb" },
+		/* 4 */ { "radius" : 9.1, "pos" : [0, 0], "color" : "transparent", "trait" : "jb" },
+		/* 5 */ { "radius" : 1.5, "pos" : [0, 0], "trait" : "jb" },
+		/* 6 */ { "radius" : 1.15, "pos" : [6.8476, 2.2249], "trait" : "jb" },
+		/* 7 */ { "radius" : 1.15, "pos" : [0, 7.2], "trait" : "jb" },
+		/* 8 */ { "radius" : 1.15, "pos" : [-6.8476, 2.2249], "trait" : "jb" },
+		/* 9 */ { "radius" : 1.15, "pos" : [-4.2321, -5.8249], "trait" : "jb" },
+		/* 10 */ { "radius" : 1.15, "pos" : [4.2321, -5.8249], "trait" : "jb" },
+			
+ 		/* 11 */ { "radius" : 2.7, "pos" : [-1150, 600], "cGroup" : ["ball"], "trait" : "cornerflag" },
+    /* 12 */ { "radius" : 2.7, "pos" : [1150, -600], "cGroup" : ["ball"], "trait" : "cornerflag" },
+    /* 13 */ { "radius" : 2.7, "pos" : [1150, 600], "cGroup" : ["ball"], "trait" : "cornerflag" },
 		
-		{ "radius" : 2.7, "pos" : [-1150,600 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
-		{ "radius" : 2.7, "pos" : [1150,-600 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
-		{ "radius" : 2.7, "pos" : [1150,600 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
+ 		/* 14 */ { "radius" : 5, "invMass" : 0, "pos" : [-1150, -124], "bCoef" : 0.5, "trait" : "goalPost" },
+    /* 15 */ { "radius" : 2, "invMass" : 0, "pos" : [-1250, -158], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
+    /* 16 */ { "radius" : 5, "invMass" : 0, "pos" : [1150, -124], "bCoef" : 0.5, "trait" : "goalPost" },
 		
-		{ "radius" : 5, "invMass" : 0, "pos" : [-1150,-124 ], "bCoef" : 0.5, "trait" : "goalPost" },
-		{ "radius" : 2, "invMass" : 0, "pos" : [-1250,-158 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-		{ "radius" : 5, "invMass" : 0, "pos" : [1150,-124 ], "bCoef" : 0.5, "trait" : "goalPost" },
+		/* 17 */ { "radius" : 2.7, "pos" : [-1149, -601], "cGroup" : ["ball"], "trait" : "cornerflag" },
 		
-		{ "radius" : 2.7, "pos" : [-1149,-601 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
+		/* 18 */ { "radius" : 0, "pos" : [-1149, -460], "cMask" : ["none"] },
+		/* 19 */ { "radius" : 0, "pos" : [1149, -460], "cMask" : ["none"] },
+		/* 20 */ { "radius" : 0, "pos" : [-1149, -460], "cMask" : ["none"] },
+		/* 21 */ { "radius" : 0, "pos" : [1149, -460], "cMask" : ["none"] },
+		/* 22 */ { "radius" : 0, "pos" : [-1149, 460], "cMask" : ["none"] },
+		/* 23 */ { "radius" : 0, "pos" : [1149, 460], "cMask" : ["none"] },
+		/* 24 */ { "radius" : 0, "pos" : [-1149, 460], "cMask" : ["none"] },
+		/* 25 */ { "radius" : 0, "pos" : [1149, 460], "cMask" : ["none"] },
 		
-		{ "radius" : 0, "pos" : [-1149,-460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [1149,-460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [-1149,-460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [1149,-460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [-1149,460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [1149,460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [-1149,460 ], "cMask" : ["none" ] },
-		{ "radius" : 0, "pos" : [1149,460 ], "cMask" : ["none" ] },
-		{ "radius" : 10.060763888888891, "invMass" : 1e-27, "pos" : [-197.53761574074073,692.3292824074074 ], "color" : "4D4C48", "bCoef" : 1000, "cMask" : ["ball" ], "cGroup" : ["wall" ], "damping" : 1, "speed" : [0,-0.5 ] },
-		{ "radius" : 10.060763888888891, "invMass" : 1e-27, "pos" : [211.46238425925927,692.3292824074074 ], "color" : "4D4C48", "bCoef" : 1000, "cMask" : ["ball" ], "cGroup" : ["wall" ], "damping" : 1, "speed" : [0,-0.5 ] },
+		/* 26 */ { "radius" : 10.060763888888891, "invMass" : 1e-27, "pos" : [-197.53761574074073, 692.3292824074074], "color" : "4D4C48", "bCoef" : 1000, "cMask" : ["ball"], "cGroup" : ["wall"], "damping" : 1, "speed" : [0, -0.5] },
+		/* 27 */ { "radius" : 10.060763888888891, "invMass" : 1e-27, "pos" : [211.46238425925927, 692.3292824074074], "color" : "4D4C48", "bCoef" : 1000, "cMask" : ["ball"], "cGroup" : ["wall"], "damping" : 1, "speed" : [0, -0.5] },
 		
-		{ "radius" : 5, "invMass" : 0, "pos" : [-1150,125 ], "bCoef" : 0.5, "trait" : "goalPost" },
-		{ "radius" : 2, "invMass" : 0, "pos" : [-1252,160 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-		{ "radius" : 5, "invMass" : 0, "pos" : [1151,124 ], "bCoef" : 0.5, "trait" : "goalPost" },
-		{ "radius" : 2, "invMass" : 0, "pos" : [1250.75,-158.75 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-		{ "radius" : 2, "invMass" : 0, "pos" : [1251.75,160.25 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
+		/* 28 */ { "radius" : 5, "invMass" : 0, "pos" : [-1150, 125], "bCoef" : 0.5, "trait" : "goalPost" },
+		/* 29 */ { "radius" : 2, "invMass" : 0, "pos" : [-1252, 160], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
+		/* 30 */ { "radius" : 5, "invMass" : 0, "pos" : [1151, 124], "bCoef" : 0.5, "trait" : "goalPost" },
+		/* 31 */ { "radius" : 2, "invMass" : 0, "pos" : [1250.75, -158.75], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
+		/* 32 */ { "radius" : 2, "invMass" : 0, "pos" : [1251.75, 160.25], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
 		
-		{ "pos" : [-1306,752 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,752 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,751 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,752 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1305,753 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1305,754 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111" },
-		{ "pos" : [-1304,754 ], "radius" : 0, "color" : "DE1111"}
+		/* 33 */ { "pos" : [-1306, 752], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 34 */ { "pos" : [-1304, 752], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 35 */ { "pos" : [-1304, 751], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 36 */ { "pos" : [-1304, 752], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 37 */ { "pos" : [-1305, 753], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 38 */ { "pos" : [-1305, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 39 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 40 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 41 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 42 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 43 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 44 */ { "pos" : [-1305, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 45 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 46 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 47 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 48 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 49 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 50 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 51 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 52 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 53 */ { "pos" : [-1305, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 54 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 55 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 56 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 57 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 58 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 59 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 60 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 61 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+		/* 62 */ { "pos" : [-1304, 754], "radius" : 0, "color" : "DE1111", "cMask" : ["ball"] },
+
+		/* 63 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 64 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 65 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 66 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 67 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 68 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 69 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 },
+		/* 70 */ { "radius" : 0, "pos" : [-780.5, 664.50390625], "cGroup" : ["red", "blue"], "cMask" : ["ball"], "trait" : "goalPost", "invmass" : 0 }
 
 	],
 
@@ -1915,9 +1944,36 @@ function blueToRedBtn() {
   }
 }
 
+function blowDiscs(targetId) {
+  const discProperties = room.getPlayerDiscProperties(targetId);
+  if (discProperties) {
+    var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+    // Calculate the angle step for distributing the discs in different directions
+    const numDiscs = 17; // Number of discs to shoot
+    const angleStep = (2 * Math.PI) / numDiscs; // Full circle divided by the number of discs
+    const speed = 10; // Speed of the discs
+
+    for (let i = 0; i < numDiscs; i++) {
+      const angle = i * angleStep;
+      const xspeed = speed * Math.cos(angle);
+      const yspeed = speed * Math.sin(angle);
+
+      room.setDiscProperties(33 + i, {
+        x: discProperties.x,
+        y: discProperties.y,
+        xspeed: xspeed,
+        yspeed: yspeed,
+        radius: 5.6,
+        color: discColor
+      });
+    }
+  } else {
+    room.sendChat(`Unable to retrieve disc properties for player with ID ${targetId}.`);
+  }
+}
+
 /* GAME FUNCTIONS */
-
-
 
 function checkTime() {
   const scores = room.getScores();
@@ -2889,7 +2945,6 @@ room.onPlayerChat = function (player, message) {
   // Update the last message time for the player
   lastMessageTime[playerId] = currentTime;
 
-
   if (player.admin) {
     if (room.getScores() != null) {
         for (var i = 0; i < players.length; i++) {
@@ -3664,6 +3719,28 @@ room.onPlayerChat = function (player, message) {
     } else {
       whisper("Only Super Admins can change password", player.id);
     }
+  } else if (["!blow"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      const targetId = parseInt(args[1], 10);
+      const targetPlayer = room.getPlayer(targetId);
+  
+      if (targetPlayer) {
+        blowDiscs(targetPlayer.id);
+        setTimeout(resetDiscs, 2000);
+      } else {
+        room.sendChat(`Player with ID ${targetId} not found.`, player.id);
+      }
+    } else {
+      whisper("Only Super Admins can change password", player.id);
+    }
+  } else if (["!spawn"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      teleportSpawn(player);
+    } 
+  } else if (["!delspawn"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      resetDiscs();
+    } 
   } else if (["!clearbans"].includes(message[0].toLowerCase())) {
     if (player.admin) {
       if (message.length == 1) {
@@ -4231,7 +4308,7 @@ room.onPlayerChat = function (player, message) {
     }
   } else if (["!showball"].includes(message[0].toLowerCase())) {
     if (player.admin) {
-      room.setDiscProperties(0, { radius:"9.2", color: "0xFFFFFF" });
+      room.setDiscProperties(0, { radius:"9", color: "0xFFFFFF" });
     } else {
       whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
     }
@@ -4674,11 +4751,11 @@ room.onPlayerBallKick = function (player) {
     if (game.powershotCounter > 100) {
       room.setDiscProperties(0, { xgravity: -room.getPlayerDiscProperties(player.id).yspeed / 30, ygravity: -room.getPlayerDiscProperties(player.id).yspeed / 30 });
       game.rsSwingTimer = 50;
-      // room.sendAnnouncement("POWERSHOT LAUNCHED", game.powershotID, 0x33dd33, "small-bold", 1);
+      room.sendAnnouncement("POWERSHOT LAUNCHED", game.powershotID, 0x33dd33, "small-bold", 1);
       room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: "+ player.name +" Shooting", null, 0xffffe0, "normal");
       sendWebhook(fieldWebHook, `\`${player.name} Shooting the ball\``);
-      room.setPlayerAvatar(game.powershotID, null);
-      room.setDiscProperties(0, { color: "0xFFFFFF" });
+      // room.setPlayerAvatar(game.powershotID, null);
+      room.setDiscProperties(0, { color: 0xFFFFFF });
     }
     game.powershotCounter = 0;
     game.powershotID = 0;
@@ -4993,6 +5070,9 @@ room.onGameUnpause = function (byPlayer) {
   }
 };
 
+// Function to teleport discs to their specific coordinates (RSI CELEBRATION)
+const playerDiscOriginalRadius = {};
+
 const originalDiscPositions = {
   33: { x: -374, y: 766 },
   34: { x: -374, y: 766 },
@@ -5004,25 +5084,158 @@ const originalDiscPositions = {
   40: { x: -374, y: 766 },
   41: { x: -374, y: 766 },
   42: { x: -374, y: 766 },
-  43: { x: -374, y: 766 }
+  43: { x: -374, y: 766 },
+  44: { x: -374, y: 766 },
+  45: { x: -374, y: 766 },
+  46: { x: -374, y: 766 },
+  47: { x: -374, y: 766 },
+  48: { x: -374, y: 766 },
+  49: { x: -374, y: 766 },
+  50: { x: -374, y: 766 },
+  51: { x: -374, y: 766 },
+  52: { x: -374, y: 766 },
+  53: { x: -374, y: 766 },
+  54: { x: -374, y: 766 },
+  55: { x: -374, y: 766 },
+  56: { x: -374, y: 766 },
+  57: { x: -374, y: 766 },
+
+  63: { x: -374, y: 766 },
+  64: { x: -374, y: 766 },
+  65: { x: -374, y: 766 },
+  66: { x: -374, y: 766 },
+  67: { x: -374, y: 766 },
+  68: { x: -374, y: 766 },
+  69: { x: -374, y: 766 },
+  70: { x: -374, y: 766 }
 };
 
-// Function to teleport discs to their specific coordinates
 function teleportDiscs() {
-  var ballPosition = room.getBallPosition();
-  var discColor = ballPosition.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+  const lastPlayerTouched = lastPlayersTouched[0];
+  if (lastPlayerTouched && lastPlayerTouched.team !== 0) { // Ensure the player is in a team
+    const discProperties = room.getPlayerDiscProperties(lastPlayerTouched.id);
+    var ballPosition = room.getBallPosition();
+    if (discProperties) {
+      playerDiscOriginalRadius[lastPlayerTouched.id] = discProperties.radius;
+      room.setPlayerDiscProperties(lastPlayerTouched.id, { radius: 0 });
+      room.setDiscProperties(0, { color: -1, radius: 0 });
 
-  room.setDiscProperties(33, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: 2, radius: 5.6, color: discColor });
-  room.setDiscProperties(34, { x: ballPosition.x, y: ballPosition.y, xspeed: 0, yspeed: 3, radius: 5.6, color: discColor });
-  room.setDiscProperties(35, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: 0, radius: 5.6, color: discColor });
-  room.setDiscProperties(36, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 0, radius: 5.6, color: discColor });
-  room.setDiscProperties(37, { x: ballPosition.x, y: ballPosition.y, xspeed: 0, yspeed: -3, radius: 5.6, color: discColor });
-  room.setDiscProperties(38, { x: ballPosition.x, y: ballPosition.y, xspeed: -4, yspeed: 0, radius: 5.6, color: discColor });
-  room.setDiscProperties(39, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -2, radius: 5.6, color: discColor });
-  room.setDiscProperties(40, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 2, radius: 5.6, color: discColor });
-  room.setDiscProperties(41, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: -4, radius: 5.6, color: discColor });
-  room.setDiscProperties(42, { x: ballPosition.x, y: ballPosition.y, xspeed: 4, yspeed: -2, radius: 5.6, color: discColor });
-  room.setDiscProperties(43, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -3, radius: 5.6, color: discColor });
+      var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+      room.setDiscProperties(33, { x: discProperties.x, y: discProperties.y, xspeed: 3, yspeed: 2, radius: 5.6, color: discColor });
+      room.setDiscProperties(34, { x: discProperties.x, y: discProperties.y, xspeed: 0, yspeed: 3, radius: 5.6, color: discColor });
+      room.setDiscProperties(35, { x: discProperties.x, y: discProperties.y, xspeed: 3, yspeed: 0, radius: 5.6, color: discColor });
+      room.setDiscProperties(36, { x: discProperties.x, y: discProperties.y, xspeed: -2, yspeed: 0, radius: 5.6, color: discColor });
+      room.setDiscProperties(37, { x: discProperties.x, y: discProperties.y, xspeed: 0, yspeed: -3, radius: 5.6, color: discColor });
+      room.setDiscProperties(38, { x: discProperties.x, y: discProperties.y, xspeed: -4, yspeed: 0, radius: 5.6, color: discColor });
+      room.setDiscProperties(39, { x: discProperties.x, y: discProperties.y, xspeed: -3, yspeed: -2, radius: 5.6, color: discColor });
+      room.setDiscProperties(40, { x: discProperties.x, y: discProperties.y, xspeed: -2, yspeed: 2, radius: 5.6, color: discColor });
+      room.setDiscProperties(41, { x: discProperties.x, y: discProperties.y, xspeed: 2, yspeed: -4, radius: 5.6, color: discColor });
+      room.setDiscProperties(42, { x: discProperties.x, y: discProperties.y, xspeed: 1, yspeed: -2, radius: 5.6, color: discColor });
+      room.setDiscProperties(43, { x: discProperties.x, y: discProperties.y, xspeed: -3, yspeed: -3, radius: 5.6, color: discColor });
+      room.setDiscProperties(44, { x: discProperties.x, y: discProperties.y, xspeed: 2, yspeed: -1, radius: 5.6, color: discColor });
+      room.setDiscProperties(45, { x: discProperties.x, y: discProperties.y, xspeed: -1, yspeed: 1, radius: 5.6, color: discColor });
+      room.setDiscProperties(46, { x: discProperties.x, y: discProperties.y, xspeed: 3, yspeed: -1, radius: 5.6, color: discColor });
+      room.setDiscProperties(47, { x: discProperties.x, y: discProperties.y, xspeed: -2, yspeed: 3, radius: 5.6, color: discColor });
+      room.setDiscProperties(48, { x: discProperties.x, y: discProperties.y, xspeed: 2, yspeed: 2, radius: 5.6, color: discColor });
+      room.setDiscProperties(49, { x: discProperties.x, y: discProperties.y, xspeed: -1, yspeed: -1, radius: 5.6, color: discColor });
+      
+      room.setDiscProperties(50, { x: ballPosition.x, y: ballPosition.y, xspeed: 1, yspeed: -2, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(51, { x: ballPosition.x, y: ballPosition.y, xspeed: -3, yspeed: -3, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(52, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: -1, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(53, { x: ballPosition.x, y: ballPosition.y, xspeed: -1, yspeed: 1, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(54, { x: ballPosition.x, y: ballPosition.y, xspeed: 3, yspeed: -1, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(55, { x: ballPosition.x, y: ballPosition.y, xspeed: -2, yspeed: 3, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(56, { x: ballPosition.x, y: ballPosition.y, xspeed: 2, yspeed: 2, radius: 5.6, color: 0xFFFFFF });
+      room.setDiscProperties(57, { x: ballPosition.x, y: ballPosition.y, xspeed: -1, yspeed: -1, radius: 5.6, color: 0xFFFFFF });
+    }
+  }
+}
+
+// Function to teleport discs at intervals
+function teleportDiscsfire() {
+  const playerWhoScored = lastPlayersTouched[0];
+  
+  if (playerWhoScored && playerWhoScored.team !== 0) { // Ensure the player is in a team
+    const discProperties = room.getPlayerDiscProperties(playerWhoScored.id);
+    
+    if (discProperties) {
+      var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+      // Calculate the angle step for distributing the discs in different directions
+      const numDiscs = 17; // Number of discs to shoot
+      const angleStep = (2 * Math.PI) / numDiscs; // Full circle divided by the number of discs
+      const speed = 10; // Speed of the discs
+
+      for (let i = 0; i < numDiscs; i++) {
+        const angle = i * angleStep;
+        const xspeed = speed * Math.cos(angle);
+        const yspeed = speed * Math.sin(angle);
+
+        room.setDiscProperties(33 + i, {
+          x: discProperties.x,
+          y: discProperties.y,
+          xspeed: xspeed,
+          yspeed: yspeed,
+          radius: 5.6,
+          color: discColor
+        });
+      }
+    }
+  }
+}
+
+function teleportDiscsTiga() {
+  var ballPosition = room.getBallPosition();
+  var teleportX = ballPosition.x < 0 ? -1150 : 1150;
+  var teleportY = -124;
+  var teleportXdua = ballPosition.x < 0 ? -1151: 1151;
+  var teleportYdua = 124;
+
+  // Set properties for each disc with specific colors
+  room.setDiscProperties(33, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 0, radius: 5.2, color: 0xFE4141 }); // red
+  room.setDiscProperties(34, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 1, radius: 5.2, color: 0xF43C33 }); // green
+  room.setDiscProperties(35, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 0, radius: 5.2, color: 0xF7726B }); // sky blue
+  room.setDiscProperties(36, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 1, radius: 5.2, color: 0xA0160F }); // pink
+  room.setDiscProperties(37, { x: teleportX, y: teleportY, xspeed: 0, yspeed: -1, radius: 5.2, color: 0xC6605B }); // yellow
+  room.setDiscProperties(38, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 2, radius: 5.2, color: 0xEC2D50 }); // red
+  room.setDiscProperties(39, { x: teleportX, y: teleportY, xspeed: 2, yspeed: -1, radius: 5.2, color: 0xC6605B }); // yellow
+  room.setDiscProperties(40, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 2, radius: 5.2, color: 0xEC2D50 }); // red
+
+  room.setDiscProperties(41, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 0, radius: 5.2, color: 0x4463D4 }); // green
+  room.setDiscProperties(42, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 1, radius: 5.2, color: 0x87CEEB }); // sky blue
+  room.setDiscProperties(43, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 0, radius: 5.2, color: 0x0C00FF }); // pink
+  room.setDiscProperties(44, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 1, radius: 5.2, color: 0x001597 }); // yellow
+  room.setDiscProperties(45, { x: teleportXdua, y: teleportYdua, xspeed: 0, yspeed: -1, radius: 5.2, color: 0x3A4275 }); // red
+  room.setDiscProperties(46, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 2, radius: 5.2, color: 0x18CACC }); // green
+  room.setDiscProperties(47, { x: teleportXdua, y: teleportYdua, xspeed: 2, yspeed: -1, radius: 5.2, color: 0x3A4275 }); // red
+  room.setDiscProperties(48, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 2, radius: 5.2, color: 0x18CACC }); // green
+}
+
+let currentDiscIndex = 63; 
+function teleportSpawn(player) {
+  if (player && player.team !== 0) { // Ensure the player is in a team
+    const discProperties = room.getPlayerDiscProperties(player.id);
+    if (discProperties) {
+
+      var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+      room.setDiscProperties(currentDiscIndex, { 
+        x: discProperties.x, 
+        y: discProperties.y, 
+        xspeed: 0, 
+        yspeed: 0, 
+        radius: 15,
+        color: discColor 
+      });
+
+      // Update the disc index to the next disc
+      currentDiscIndex++;
+      if (currentDiscIndex > 69) { // Assuming there are only discs from 33 to 39
+        currentDiscIndex = 63; // Reset to the first disc if we reach the end
+      }
+    }
+  }
 }
 
 // Function to reset discs to their original positions
@@ -5031,11 +5244,57 @@ function resetDiscs() {
     const pos = originalDiscPositions[discId];
     room.setDiscProperties(parseInt(discId), { x: pos.x, y: pos.y, xspeed: 0, yspeed: 0, radius: 0 });
   }
+
+  // Reset player disc properties to their original radius
+  const players = room.getPlayerList();
+  players.forEach(player => {
+    if (player.id in playerDiscOriginalRadius) {
+      room.setPlayerDiscProperties(player.id, { radius: playerDiscOriginalRadius[player.id] });
+    }
+  });
+
+  room.setDiscProperties(0, { radius: 9, color: 0xFFFFFF });
 }
 
+let previousChoice = -1;
+
 room.onTeamGoal = function (team) {
-  teleportDiscs();
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  // Function to get a new random choice that is not the same as the previous one
+  function getNewChoice(previous, min, max) {
+    let newChoice;
+    do {
+      newChoice = getRandomInt(min, max);
+    } while (newChoice === previous);
+    return newChoice;
+  }
+
+  // Get a new random choice
+  let randomChoice = getNewChoice(previousChoice, 0, 3);
+  
+  // Call the chosen function
+  if (randomChoice === 0) {
+    teleportDiscs();
+  } else if (randomChoice === 1) {
+    teleportDiscsfire();
+  } else {
+    teleportDiscsTiga();
+  }
+  previousChoice = randomChoice;
   setTimeout(resetDiscs, 2000);
+
+  // const players = room.getPlayerList();
+  // const playerWhoScored = players.find(player => player.team === team);
+
+  // if (playerWhoScored.admin) {
+  //   teleportDiscsfire();
+  // } else if (playerWhoScored) {
+  //   teleportDiscs();
+  // }
+
   let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
   game.rsActive = false;
   teamgoaler = team;
@@ -5515,10 +5774,9 @@ function handleBallTouch() {
           game.powershotCounter++;
           //room.sendAnnouncement("Powershot counter: " + game.powershotCounter, null, 0x333333, "small-bold", 0);
           if (game.powershotCounter > 72 && game.powershotTrigger == false && Math.round(room.getDiscProperties(0).invMass) != 2) { //time powershot default = 100
-            room.setDiscProperties(0, { invMass: 2.35 }); //ps strength
+            room.setDiscProperties(0, { invMass: 2.35, color: 0xF4DD33 }); //ps strength
+            // room.setPlayerAvatar(game.powershotID, "🚀");
             room.sendAnnouncement("POWERSHOT READY", game.powershotID, 0x33dd33, "small-bold", 1);
-            room.setPlayerAvatar(game.powershotID, "🚀");
-            room.setDiscProperties(0, { color: "0xFFD813" });
             game.powershotTrigger = true;
           }
         }
@@ -5536,10 +5794,10 @@ function handleBallTouch() {
       game.powershotCounter = 0;
       game.powershotid = 0;
       if (parseFloat(room.getDiscProperties(0).invMass.toFixed(2)) != 1.05) {
-        room.setDiscProperties(0, { invMass: 1.05 });
+        room.setDiscProperties(0, { invMass: 1.05, color: 0xFFFFFF });
+        // room.setPlayerAvatar(game.powershotID, null);
         room.sendAnnouncement("POWERSHOT CANCELED", game.powershotID, 0xdd3333, "small-bold", 2);
-        room.setPlayerAvatar(game.powershotID, null);
-        room.setDiscProperties(0, { color: "0xFFFFFF" });
+        
       }
     }
     //=========== POWERSHOT CODE ===========
