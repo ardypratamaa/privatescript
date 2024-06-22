@@ -1761,8 +1761,6 @@ function teleportSpawn(player) {
         xspeed: 0, 
         yspeed: 0, 
         radius: 15,
-        cGroup : ["red", "blue"],
-        cMask: ["ball"],
         color: discColor 
       });
 
