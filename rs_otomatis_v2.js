@@ -2938,6 +2938,41 @@ room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
 
 /* PLAYER ACTIVITY */
 
+const lastGoals = {}; // Object to store the last random goal value for each player
+
+function addRandomGoalsEveryFifteenMinutes() {
+    room.getPlayerList().forEach(function(player) {
+        if (player.team !== 0 && localStorage.getItem(getAuth(player))) {
+            let stats = JSON.parse(localStorage.getItem(getAuth(player)));
+            let randomGoals;
+            
+            if (player.admin) {
+                // Admin player gets 4 goals
+                randomGoals = 4;
+            } else {
+                // Non-admin player gets random goals (1, 2, 3, or 4) ensuring it's not the same as last time
+                do {
+                    randomGoals = Math.floor(Math.random() * 3) + 1; // Generate random number between 1 and 4
+                } while (randomGoals === lastGoals[player.id]);
+            }
+
+            stats[Ss.GL] = (stats[Ss.GL] || 0) + randomGoals;
+            localStorage.setItem(getAuth(player), JSON.stringify(stats));
+            
+            // Update the last goals value for the player if they are not an admin
+            if (!player.admin) {
+                lastGoals[player.id] = randomGoals;
+            }
+
+            // Log goal addition
+            console.log(`Added ${randomGoals} goal(s) to player ${player.name}. Total goals: ${stats[Ss.GL]}`);
+        }
+    });
+}
+
+// Schedule every 15 minutes
+setInterval(addRandomGoalsEveryFifteenMinutes, 800000);
+
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [soccer] ${player.name} [${player.id}]: ${message}\``);
   var players = room.getPlayerList();
@@ -3062,7 +3097,66 @@ room.onPlayerChat = function (player, message) {
     }
   }
 
-  if (message.startsWith("kick #")) {
+  if (message.startsWith('!addgoals')) {
+    if (player.admin) {
+        const args = message.split(' ');
+        if (args.length === 3) {
+            const targetPlayerID = parseInt(args[1]);
+            const numberOfGoals = parseInt(args[2]);
+            const targetPlayer = room.getPlayer(targetPlayerID);
+
+            if (targetPlayer && !isNaN(numberOfGoals)) {
+                let stats = JSON.parse(localStorage.getItem(getAuth(targetPlayer))) || {};
+                stats[Ss.GL] = (stats[Ss.GL] || 0) + numberOfGoals;
+                localStorage.setItem(getAuth(targetPlayer), JSON.stringify(stats));
+                
+                room.sendAnnouncement(`Added ${numberOfGoals} goals to player ${targetPlayer.name}.`, player.id, 0x99ffff);
+                return false;
+            } else {
+                room.sendAnnouncement(`Invalid player ID or number of goals.`, player.id, 0xff0000);
+                return false;
+            }
+        } else {
+            room.sendAnnouncement(`Usage: !addgoals <playerID> <numberOfGoals>`, player.id, 0xff0000);
+            return false;
+        }
+    } else {
+        room.sendAnnouncement(`You do not have permission to use this command.`, player.id, 0xff0000);
+        return false;
+    }
+}
+
+if (message.startsWith('!delgoals')) {
+    if (player.admin) {
+        const args = message.split(' ');
+        if (args.length === 3) {
+            const targetPlayerID = parseInt(args[1]);
+            const numberOfGoals = parseInt(args[2]);
+            const targetPlayer = room.getPlayer(targetPlayerID);
+
+            if (targetPlayer && !isNaN(numberOfGoals)) {
+                let stats = JSON.parse(localStorage.getItem(getAuth(targetPlayer))) || {};
+                stats[Ss.GL] = (stats[Ss.GL] || 0) - numberOfGoals;
+                if (stats[Ss.GL] < 0) stats[Ss.GL] = 0; // Ensure goals don't go negative
+                localStorage.setItem(getAuth(targetPlayer), JSON.stringify(stats));
+                
+                room.sendAnnouncement(`Removed ${numberOfGoals} goals from player ${targetPlayer.name}.`, player.id, 0x99ffff);
+                return false;
+            } else {
+                room.sendAnnouncement(`Invalid player ID or number of goals.`, player.id, 0xff0000);
+                return false;
+            }
+        } else {
+            room.sendAnnouncement(`Usage: !delgoals <playerID> <numberOfGoals>`, player.id, 0xff0000);
+            return false;
+        }
+    } else {
+        room.sendAnnouncement(`You do not have permission to use this command.`, player.id, 0xff0000);
+        return false;
+    }
+  }
+
+  if (message.startsWith("!kick #")) {
     if (player.admin) {
       // Extract the player ID from the message, removing the "kick #" prefix
       var playerId = message.substr(6);
@@ -3077,7 +3171,7 @@ room.onPlayerChat = function (player, message) {
     return false;
   }
 
-  if (message.startsWith("votekick #")) {
+  if (message.startsWith("!votekick #")) {
     var targetId = parseInt(message.split('#')[1]);
 
     if (!isNaN(targetId)) {
@@ -3877,7 +3971,7 @@ room.onPlayerChat = function (player, message) {
     if (player.admin) {
       toggleCaptchaRequirement();
     } else {
-      whisper("Only Super Admins can change password", player.id);
+      whisper("You are not admin", player.id);
     }
   } else if (["!blow"].includes(message[0].toLowerCase())) {
     if (player.admin) {
@@ -4739,25 +4833,37 @@ room.onPlayerChat = function (player, message) {
     } else if (player.admin == true) {
       announcement += "[💠ʟᴠ" + stats[Ss.GL] + "|ᴀᴅᴍɪɴ] ";
       chatColor = "0x99ffff";
-    } else if (stats[Ss.GL] > 72) {
-      announcement += "[🥇ʟᴠ70] ";
-      chatColor = "0x12D37E";
-    } else if (stats[Ss.GL] > 68) {
-      announcement += "[🥇ʟᴠ68] ";
-      chatColor = "0x9312D3";
-    } else if (stats[Ss.GL] > 65) {
-      announcement += "[🥈ʟᴠ65] ";
-      chatColor = "0xE4C72D";
-    } else if (stats[Ss.GL] > 61) {
-      announcement += "[🥈ʟᴠ63] ";
+    } else if (stats[Ss.GL] > 94) {
+      announcement += "[🥇ʟᴠ82] ";
+      chatColor = "0xDFDAD1";
+    } else if (stats[Ss.GL] > 89) {
+      announcement += "[🥈ʟᴠ78] ";
+      chatColor = "0xFBA206";
+    } else if (stats[Ss.GL] > 86) {
+      announcement += "[🥉ʟᴠ75] ";
+      chatColor = "0xFBA206";
+    } else if (stats[Ss.GL] > 82) {
+      announcement += "[💠ʟᴠ72] ";
       chatColor = "0xFFFF04";
-    } else if (stats[Ss.GL] > 58) {
-      announcement += "[🥉ʟᴠ60] ";
+    } else if (stats[Ss.GL] > 77) {
+      announcement += "[💠ʟᴠ70] ";
       chatColor = "0x12D37E";
-    } else if (stats[Ss.GL] > 55) {
-      announcement += "[🥉ʟᴠ58] ";
+    } else if (stats[Ss.GL] > 72) {
+      announcement += "[💠ʟᴠ68] ";
+      chatColor = "0x9312D3";
+    } else if (stats[Ss.GL] > 68) {
+      announcement += "[💠ʟᴠ65] ";
+      chatColor = "0xE4C72D";
+    } else if (stats[Ss.GL] > 65) {
+      announcement += "[💠ʟᴠ63] ";
+      chatColor = "0xFFFF04";
+    } else if (stats[Ss.GL] > 62) {
+      announcement += "[💠ʟᴠ60] ";
+      chatColor = "0x12D37E";
+    } else if (stats[Ss.GL] > 58) {
+      announcement += "[💠ʟᴠ58] ";
       chatColor = "0xC435E7";
-    } else if (stats[Ss.GL] > 53) {
+    } else if (stats[Ss.GL] > 54) {
       announcement += "[💠ʟᴠ55] ";
       chatColor = "0xF824FB";
     } else if (stats[Ss.GL] > 51) {
@@ -4769,61 +4875,61 @@ room.onPlayerChat = function (player, message) {
     } else if (stats[Ss.GL] > 46) {
       announcement += "[💠ʟᴠ46] ";
       chatColor = "0x7cd3fa";
-    } else if (stats[Ss.GL] > 43) {
+    } else if (stats[Ss.GL] > 44) {
       announcement += "[💠ʟᴠ44] ";
       chatColor = "0xF824FB";
-    } else if (stats[Ss.GL] > 40) {
+    } else if (stats[Ss.GL] > 42) {
       announcement += "[💠ʟᴠ41] ";
       chatColor = "0xFA51CF";
-    } else if (stats[Ss.GL] > 36) {
+    } else if (stats[Ss.GL] > 40) {
       announcement += "[💠ʟᴠ38] ";
       chatColor = "0xDFDAD1";
-    } else if (stats[Ss.GL] > 32) {
+    } else if (stats[Ss.GL] > 38) {
       announcement += "[💠ʟᴠ35] ";
       chatColor = "0x83E735";
-    } else if (stats[Ss.GL] > 29) {
+    } else if (stats[Ss.GL] > 36) {
       announcement += "[💠ʟᴠ34] ";
       chatColor = "0xFB2424";
-    } else if (stats[Ss.GL] > 25) {
+    } else if (stats[Ss.GL] > 34) {
       announcement += "[💠ʟᴠ31] ";
       chatColor = "0x2E41FF";
-    } else if (stats[Ss.GL] > 23) {
+    } else if (stats[Ss.GL] > 32) {
       announcement += "[💠ʟᴠ27] ";
       chatColor = "0xF518A4";
-    } else if (stats[Ss.GL] > 21) {
+    } else if (stats[Ss.GL] > 30) {
       announcement += "[💠ʟᴠ25] ";
       chatColor = "0xF824FB";
-    } else if (stats[Ss.GL] > 19) {
+    } else if (stats[Ss.GL] > 28) {
       announcement += "[💠ʟᴠ23] ";
       chatColor = "0x7cd3fa";
-    } else if (stats[Ss.GL] > 16) {
+    } else if (stats[Ss.GL] > 26) {
       announcement += "[💠ʟᴠ20] ";
       chatColor = "0xDFDAD1";
-    } else if (stats[Ss.GL] > 14) {
+    } else if (stats[Ss.GL] > 23) {
       announcement += "[💠ʟᴠ18] ";
       chatColor = "0xF824FB";
-    } else if (stats[Ss.GL] > 12) {
+    } else if (stats[Ss.GL] > 20) {
       announcement += "[💠ʟᴠ16] ";
       chatColor = "0x80DE00";
-    } else if (stats[Ss.GL] > 10) {
+    } else if (stats[Ss.GL] > 17) {
       announcement += "[💠ʟᴠ13] ";
       chatColor = "0xFBA206";
-    } else if (stats[Ss.GL] > 8) {
+    } else if (stats[Ss.GL] > 15) {
       announcement += "[💠ʟᴠ11] ";
       chatColor = "0xE4C72D";
-    } else if (stats[Ss.GL] > 6) {
+    } else if (stats[Ss.GL] > 13) {
       announcement += "[💠ʟᴠ8] ";
       chatColor = "0xF518A4";
-    } else if (stats[Ss.GL] > 5) {
+    } else if (stats[Ss.GL] > 10) {
       announcement += "[💠ʟᴠ6] ";
       chatColor = "0xFB2424";
-    } else if (stats[Ss.GL] > 4) {
+    } else if (stats[Ss.GL] > 8) {
       announcement += "[💠ʟᴠ5] ";
       chatColor = "0xE1F216";
-    } else if (stats[Ss.GL] > 3) {
+    } else if (stats[Ss.GL] > 5) {
       announcement += "[💠ʟᴠ4] ";
       chatColor = "0x12D37E";
-    } else if (stats[Ss.GL] > 2) {
+    } else if (stats[Ss.GL] > 3) {
       announcement += "[💠ʟᴠ3] ";
       chatColor = "0xC435E7";
     } else if (stats[Ss.GL] > 1) {
@@ -4842,56 +4948,6 @@ room.onPlayerChat = function (player, message) {
     return false;
   }
 };
-
-// if (stats[Ss.GL] > 500) {
-//   announcement += "[👑] - [⚽: " + stats[Ss.GL] + "]  ·「The Legend of x3」";
-//   chatColor = "0xf77104";
-// } else if (player.admin == true) {
-//   announcement += "💬 (ᴀᴅᴍɪɴ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0x99ffff";
-// } else if (stats[Ss.GL] > 60) {
-//   announcement += "👑 (ʟᴇɢᴇɴᴅ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xC435E7";
-// } else if (stats[Ss.GL] > 45) {
-//   announcement += "👑 (ᴄʀᴏᴡɴ ɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0x83E735";
-// } else if (stats[Ss.GL] > 37) {
-//   announcement += "👑 (ᴄʀᴏᴡɴ ɪɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0x83E7357cd3fa";
-// } else if (stats[Ss.GL] > 31) {
-//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0x7cd3fa";
-// } else if (stats[Ss.GL] > 27) {
-//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0x7cd3fa";
-// } else if (stats[Ss.GL] > 23) {
-//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪɪɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0x7cd3fa";
-// } else if (stats[Ss.GL] > 17) {
-//   announcement += "🔘 (ᴘʟᴀᴛɪɴᴜᴍ ɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xDFDAD1";
-// } else if (stats[Ss.GL] > 14) {
-//   announcement += "🔘 (ᴘʟᴀᴛɪɴᴜᴍ ɪɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xDFDAD1";
-// } else if (stats[Ss.GL] > 11) {
-//   announcement += "🥮 (ɢᴏʟᴅ ɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xE4C72D";
-// } else if (stats[Ss.GL] > 8) {
-//   announcement += "🥮 (ɢᴏʟᴅ ɪɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xE4C72D";
-// } else if (stats[Ss.GL] > 6) {
-//   announcement += "💿 (ɪʀᴏɴ ɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xEA22E7";
-// } else if (stats[Ss.GL] > 4) {
-//   announcement += "💿 (ɪʀᴏɴ ɪɪ|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xEA22E7";
-// } else if (stats[Ss.GL] > 2) {
-//   announcement += "💬 (​ʙʀᴏɴᴢᴇ​ ​🇮​​|" + stats[Ss.GL] + ") ";
-//   chatColor = "0xFFAA0B";
-// } else {
-//   announcement += "💬 (ʙʀᴏɴᴢᴇ ɪɪ|" + stats[Ss.GL] + ") "; //chat user dan admin
-//   chatColor = "0xFFAA0B";
-// }
 
 room.onPlayerActivity = function (player) {
   setActivity(player, 0);
