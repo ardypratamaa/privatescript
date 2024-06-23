@@ -223,6 +223,12 @@ var vip3 = [];
 
 var captchaRequired = false;
 
+var voteKickThreshold = 0.5; // 60% of active players need to vote to kick
+var noVoteKickThreshold = 0.5; // 60% of active players need to vote to not kick
+var voteKickDuration = 50 * 1000; // 60 seconds for the vote to be active
+var voteKicks = {};
+var gamePausedDueToVoteKick = false;
+
 // RSI RANDOM KIT
 var redTeamColors = [
   // COUNTRY
@@ -2891,6 +2897,23 @@ room.onPlayerLeave = function (player) {
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left rs server.\``);
   deletePlayer(player);
 
+  if (voteKicks[player.id]) {
+    clearTimeout(voteKicks[player.id].timeout);
+    clearInterval(voteKicks[player.id].announcementInterval); // Clear the announcement interval
+    delete voteKicks[player.id];
+    room.sendAnnouncement(`Vote kick ${player.name} has been canceled because target left.`, null, 0xFF9898, "normal", 1);
+  }
+
+  for (let targetId in voteKicks) {
+      voteKicks[targetId].votes.delete(player.id);
+      voteKicks[targetId].noVotes.delete(player.id);
+  }
+
+  if (gamePausedDueToVoteKick) {
+      room.pauseGame(false);
+      gamePausedDueToVoteKick = false;
+  }
+
   if (TeamR.findIndex((red) => red.id == player.id) == 0 && inChooseMode && TeamR.length <= TeamB.length) {
     choosePlayer();
     capLeft = true;
@@ -2932,6 +2955,14 @@ room.onPlayerChat = function (player, message) {
         return false;
     }
   }
+
+  if (message.length > 1 && message[0].toLowerCase() == "a" && message[1] == " ") {
+    const anonymousMessage = "[Anonymous]: " + message.substr(2);
+    room.getPlayerList().forEach((element) => {
+        room.sendAnnouncement(anonymousMessage, element.id, 16777215, "normal", 0); // White color
+    });
+    return false;
+  } 
 
   /* RSI ANTI SPAM */
   var playerId = player.id;
@@ -2979,7 +3010,7 @@ room.onPlayerChat = function (player, message) {
                             room.setPlayerDiscProperties(playerId, { xspeed: 0, yspeed: 0 });
                             room.setPlayerAvatar(playerId, "☠️");
                             room.sendAnnouncement("🧊 " + playerName + " was frozen by " + player.name, null, 0x00FFFF, "normal", 2);
-                            sendWebhook(playerWebHook, `🧊 [soccer] ${playerName} was frozen by ${player.name}`);
+                            sendWebhook(playerWebHook, `\`🧊 [soccer] ${playerName} was frozen by ${player.name}\``);
                         } else {
                             room.sendAnnouncement("This player is already frozen.", player.id, 0xFFFF00, "bold", 2);
                         }
@@ -3044,6 +3075,117 @@ room.onPlayerChat = function (player, message) {
       }
     }
     return false;
+  }
+
+  if (message.startsWith("votekick #")) {
+    var targetId = parseInt(message.split('#')[1]);
+
+    if (!isNaN(targetId)) {
+        var target = room.getPlayer(targetId);
+
+        if (target) {
+            startVoteKick(player, target);
+        } else {
+            room.sendAnnouncement(`Player with ID ${targetId} not found.`, player.id, 0xFF9898, "normal", 1);
+        }
+    } else {
+        room.sendAnnouncement(`Invalid ID. Usage: votekick #<playerID>`, player.id, 0x8fff8f, "normal", 1);
+    }
+
+    return false; // prevent the message from being broadcasted
+  }
+
+  if (message === '!yes') {
+      for (let targetId in voteKicks) {
+          let voteKick = voteKicks[targetId];
+          if (voteKick.votes.has(player.id) || voteKick.noVotes.has(player.id)) {
+              room.sendAnnouncement(`Already voted.`, player.id, 0x8fff8f, "normal", 1);
+          } else {
+              voteKick.votes.add(player.id);
+              room.sendAnnouncement(`You voted ${voteKick.target.name} to be kicked.`, player.id, 0x8fff8f, "normal", 1); // Notification for the voting player
+              checkVoteKick(voteKick);
+          }
+      }
+      return false; // prevent the message from being broadcasted
+  }
+
+  if (message === '!no') {
+      for (let targetId in voteKicks) {
+          let voteKick = voteKicks[targetId];
+          if (voteKick.votes.has(player.id) || voteKick.noVotes.has(player.id)) {
+              room.sendAnnouncement(`Already voted.`, player.id, 0x8fff8f, "normal", 1);
+          } else {
+              voteKick.noVotes.add(player.id);
+              room.sendAnnouncement(`You voted !no to kick ${voteKick.target.name}.`, player.id, 0xFF9898, "normal", 1); // Notification for the voting player
+              checkVoteKick(voteKick);
+          }
+      }
+      return false; // prevent the message from being broadcasted
+  }
+
+  // function votekick
+  function startVoteKick(initiator, target) {
+    if (voteKicks[target.id]) {
+        room.sendAnnouncement(`A vote to kick player ${target.name} is already in progress.`, initiator.id, 0x8fff8f, "normal", 1);
+        return;
+    }
+
+    voteKicks[target.id] = {
+        target: target,
+        initiator: initiator,
+        votes: new Set(),
+        noVotes: new Set(),
+        timeout: setTimeout(() => endVoteKick(target, false), voteKickDuration),
+        announcementInterval: null
+    };
+
+    room.pauseGame(true);
+    gamePausedDueToVoteKick = true;
+
+    sendWebhook(playerWebHook, `\`🚫 [vote] player [${initiator.name}] start vote to kick [${target.name}]\``);
+    function sendVoteReminder() {
+        room.sendAnnouncement(`Vote kick ( ${target.name} )`, null, 0x8fff8f, "normal", 1);
+        room.sendAnnouncement(`Type  [!yes]  or  [!no]  to vote`, null, 0x8fff8f, "normal", 1);
+        voteKicks[target.id].announcementInterval = setTimeout(() => {
+            if (voteKicks[target.id]) {
+                sendVoteReminder();
+            }
+        }, 3000);
+    }
+    sendVoteReminder();
+  }
+
+  function checkVoteKick(voteKick) {
+      var totalPlayers = room.getPlayerList().filter(p => p.id !== 0).length; // exclude host
+      var requiredYesVotes = Math.ceil(totalPlayers * voteKickThreshold);
+      var requiredNoVotes = Math.ceil(totalPlayers * noVoteKickThreshold);
+
+      if (voteKick.votes.size >= requiredYesVotes) {
+          endVoteKick(voteKick.target, true);
+      } else if (voteKick.noVotes.size >= requiredNoVotes) {
+          endVoteKick(voteKick.target, false);
+      }
+  }
+
+  function endVoteKick(target, success) {
+      if (voteKicks[target.id]) {
+          clearTimeout(voteKicks[target.id].timeout);
+          clearTimeout(voteKicks[target.id].announcementInterval); // Clear the announcement interval
+
+          if (success) {
+              room.kickPlayer(target.id, "You get kicked by Vote", false);
+              room.sendAnnouncement(`Player ${target.name} has been kicked by vote.`, null, 0x8fff8f, "normal", 1);
+          } else {
+              room.sendAnnouncement(`Vote kick ${target.name} has failed.`, null, 0xF75A5A, "normal", 1);
+          }
+
+          delete voteKicks[target.id];
+      }
+
+      if (gamePausedDueToVoteKick) {
+          room.pauseGame(false);
+          gamePausedDueToVoteKick = false;
+      }
   }
   
   // Function to kick a player by ID
@@ -6073,7 +6215,7 @@ function sendDiscordRecording() {
 setInterval(function () {
   room.sendAnnouncement("🔊 Join our Discord. https://discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "nomal", 0);
   setTimeout(function () {
-    room.sendAnnouncement("⚽ Command: !ᴅᴄ, !ꜰɪxꜱᴛᴀʀᴛ, !ᴘᴏᴡᴇʀꜱʜᴏᴛ, !ᴀꜰᴋ, !ʙʙ, !ꜱᴛᴀᴛꜱ, !ᴍᴀᴘ, !ʀᴀɴᴋ, !ꜱᴡᴀᴘ, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ] ", null, 0x61ddff, "normal", 0);
+    room.sendAnnouncement("⚽ Command: !ᴅᴄ, !ꜰɪxꜱᴛᴀʀᴛ, !ᴘᴏᴡᴇʀꜱʜᴏᴛ, !ᴀꜰᴋ, !ʙʙ, !ꜱᴛᴀᴛꜱ, !ᴍᴀᴘ, !ʀᴀɴᴋ, !ꜱᴡᴀᴘ, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ], ᴀ [anon chat], votekick #(id) ", null, 0x61ddff, "normal", 0);
   }, 70000); // Wait 40 seconds after the first announcement
 }, 200000);
 
