@@ -188,13 +188,11 @@ var vip3 = [];
 
 var captchaRequired = false;
 
-let playerIds = new Set();
-let whitelist = new Set([
-  "m1wppzf2sVGJOZlxFr6ivtFbtayhin_3xIHQSXfzTso", //mainoo 
-  "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
-  "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA" //foxwilds
-
-]);
+var voteKickThreshold = 0.5; // 60% of active players need to vote to kick
+var noVoteKickThreshold = 0.5; // 60% of active players need to vote to not kick
+var voteKickDuration = 50 * 1000; // 60 seconds for the vote to be active
+var voteKicks = {};
+var gamePausedDueToVoteKick = false;
 
 
 /* ESTÁDIO */
@@ -424,18 +422,29 @@ var practiceMap =
 		{ "radius" : 3, "invMass" : 0, "pos" : [550,-240 ], "color" : "D100FF", "bCoef" : 0.1, "trait" : "line" },
 		{ "radius" : 3, "invMass" : 0, "pos" : [550,240 ], "color" : "D100FF", "bCoef" : 0.1, "trait" : "line" },
 		
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" },
-    { "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111" }
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+    { "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+     
+    { "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+    { "radius" : 0, "pos" : [-555.5,254.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] }
 
 	],
 
@@ -1898,16 +1907,23 @@ room.onPlayerLeave = function (player) {
   delete lastMessageTime[player.id];
   delete messageCounts[player.id];
 
-  // var players = room.getPlayerList();
-  // var adminNumber = 0;
-  // for (var i = 0; i < players.length; i++) {
-  //   if (players[i].admin) {
-  //     adminNumber++;
-  //   }
-  // }
-  // if (adminNumber < 2) {
-  //   room.setPlayerAdmin(players[1].id, true);
-  // }
+  if (voteKicks[player.id]) {
+    clearTimeout(voteKicks[player.id].timeout);
+    clearInterval(voteKicks[player.id].announcementInterval); // Clear the announcement interval
+    delete voteKicks[player.id];
+    room.sendAnnouncement(`Vote kick ${player.name} has been canceled because target left.`, null, 0xFF9898, "normal", 1);
+  }
+
+  for (let targetId in voteKicks) {
+      voteKicks[targetId].votes.delete(player.id);
+      voteKicks[targetId].noVotes.delete(player.id);
+  }
+
+  if (gamePausedDueToVoteKick) {
+      room.pauseGame(false);
+      gamePausedDueToVoteKick = false;
+  }
+
   if (TeamR.findIndex((red) => red.id == player.id) == 0 && inChooseMode && TeamR.length <= TeamB.length) {
     choosePlayer();
     capLeft = true;
@@ -1949,6 +1965,14 @@ room.onPlayerChat = function (player, message) {
         return false;
     }
   }
+
+  if (message.length > 1 && message[0].toLowerCase() == "a" && message[1] == " ") {
+    const anonymousMessage = "[Anonymous]: " + message.substr(2);
+    room.getPlayerList().forEach((element) => {
+        room.sendAnnouncement(anonymousMessage, element.id, 16777215, "normal", 0); // White color
+    });
+    return false;
+  } 
 
   /* RSI ANTI SPAM */
   var playerId = player.id;
@@ -2063,6 +2087,117 @@ room.onPlayerChat = function (player, message) {
       }
     }
     return false;
+  }
+
+  if (message.startsWith("votekick #")) {
+    var targetId = parseInt(message.split('#')[1]);
+
+    if (!isNaN(targetId)) {
+        var target = room.getPlayer(targetId);
+
+        if (target) {
+            startVoteKick(player, target);
+        } else {
+            room.sendAnnouncement(`Player with ID ${targetId} not found.`, player.id, 0xFF9898, "normal", 1);
+        }
+    } else {
+        room.sendAnnouncement(`Invalid ID. Usage: votekick #<playerID>`, player.id, 0x8fff8f, "normal", 1);
+    }
+
+    return false; // prevent the message from being broadcasted
+  }
+
+  if (message === '!yes') {
+      for (let targetId in voteKicks) {
+          let voteKick = voteKicks[targetId];
+          if (voteKick.votes.has(player.id) || voteKick.noVotes.has(player.id)) {
+              room.sendAnnouncement(`Already voted.`, player.id, 0x8fff8f, "normal", 1);
+          } else {
+              voteKick.votes.add(player.id);
+              room.sendAnnouncement(`You voted ${voteKick.target.name} to be kicked.`, player.id, 0x8fff8f, "normal", 1); // Notification for the voting player
+              checkVoteKick(voteKick);
+          }
+      }
+      return false; // prevent the message from being broadcasted
+  }
+
+  if (message === '!no') {
+      for (let targetId in voteKicks) {
+          let voteKick = voteKicks[targetId];
+          if (voteKick.votes.has(player.id) || voteKick.noVotes.has(player.id)) {
+              room.sendAnnouncement(`Already voted.`, player.id, 0x8fff8f, "normal", 1);
+          } else {
+              voteKick.noVotes.add(player.id);
+              room.sendAnnouncement(`You voted !no to kick ${voteKick.target.name}.`, player.id, 0xFF9898, "normal", 1); // Notification for the voting player
+              checkVoteKick(voteKick);
+          }
+      }
+      return false; // prevent the message from being broadcasted
+  }
+
+  // function votekick
+  function startVoteKick(initiator, target) {
+    if (voteKicks[target.id]) {
+        room.sendAnnouncement(`A vote to kick player ${target.name} is already in progress.`, initiator.id, 0x8fff8f, "normal", 1);
+        return;
+    }
+
+    voteKicks[target.id] = {
+        target: target,
+        initiator: initiator,
+        votes: new Set(),
+        noVotes: new Set(),
+        timeout: setTimeout(() => endVoteKick(target, false), voteKickDuration),
+        announcementInterval: null
+    };
+
+    room.pauseGame(true);
+    gamePausedDueToVoteKick = true;
+
+    sendWebhook(playerWebHook, `\`🚫 [vote] player [${initiator.name}] start vote to kick [${target.name}]\``);
+    function sendVoteReminder() {
+        room.sendAnnouncement(`Vote kick ( ${target.name} )`, null, 0x8fff8f, "normal", 1);
+        room.sendAnnouncement(`Type  [!yes]  or  [!no]  to vote`, null, 0x8fff8f, "normal", 1);
+        voteKicks[target.id].announcementInterval = setTimeout(() => {
+            if (voteKicks[target.id]) {
+                sendVoteReminder();
+            }
+        }, 3000);
+    }
+    sendVoteReminder();
+  }
+
+  function checkVoteKick(voteKick) {
+      var totalPlayers = room.getPlayerList().filter(p => p.id !== 0).length; // exclude host
+      var requiredYesVotes = Math.ceil(totalPlayers * voteKickThreshold);
+      var requiredNoVotes = Math.ceil(totalPlayers * noVoteKickThreshold);
+
+      if (voteKick.votes.size >= requiredYesVotes) {
+          endVoteKick(voteKick.target, true);
+      } else if (voteKick.noVotes.size >= requiredNoVotes) {
+          endVoteKick(voteKick.target, false);
+      }
+  }
+
+  function endVoteKick(target, success) {
+      if (voteKicks[target.id]) {
+          clearTimeout(voteKicks[target.id].timeout);
+          clearTimeout(voteKicks[target.id].announcementInterval); // Clear the announcement interval
+
+          if (success) {
+              room.kickPlayer(target.id, "You get kicked by Vote", false);
+              room.sendAnnouncement(`Player ${target.name} has been kicked by vote.`, null, 0x8fff8f, "normal", 1);
+          } else {
+              room.sendAnnouncement(`Vote kick ${target.name} has failed.`, null, 0xF75A5A, "normal", 1);
+          }
+
+          delete voteKicks[target.id];
+      }
+
+      if (gamePausedDueToVoteKick) {
+          room.pauseGame(false);
+          gamePausedDueToVoteKick = false;
+      }
   }
   
   // Function to kick a player by ID
@@ -3182,7 +3317,7 @@ room.onPlayerChat = function (player, message) {
     if (player.admin) {
       toggleCaptchaRequirement();
     } else {
-      whisper("Only Super Admins can change password", player.id);
+      whisper("You are not admin", player.id);
     }
   } else if (["!clearbans"].includes(message[0].toLowerCase())) {
     if (player.admin) {
@@ -4051,8 +4186,6 @@ room.onGameStop = function (byPlayer) {
   }
 };
 
-room.onGamePause = function (byPlayer) {};
-
 room.onGameUnpause = function (byPlayer) {
   if ((TeamR.length == 4 && TeamB.length == 4 && inChooseMode) || (TeamR.length == TeamB.length && teamS.length < 2 && inChooseMode)) {
     deactivateChooseMode();
@@ -4071,7 +4204,18 @@ const originalDiscPositions = {
   17: { x: -558.5, y: 253.5 },
   18: { x: -558.5, y: 253.5 },
   19: { x: -558.5, y: 253.5 },
-  20: { x: -558.5, y: 253.5 }
+  20: { x: -558.5, y: 253.5 },
+
+  21: { x: -558.5, y: 253.5 },
+  22: { x: -558.5, y: 253.5 },
+  23: { x: -558.5, y: 253.5 },
+  24: { x: -558.5, y: 253.5 },
+  25: { x: -558.5, y: 253.5 },
+  26: { x: -558.5, y: 253.5 },
+  27: { x: -558.5, y: 253.5 },
+  28: { x: -558.5, y: 253.5 },
+  29: { x: -558.5, y: 253.5 },
+  30: { x: -558.5, y: 253.5 }
 };
 
 // Function to teleport discs to their specific coordinates
@@ -4083,18 +4227,50 @@ function teleportDiscs() {
   var teleportYdua = 80;
 
   // Set properties for each disc with specific colors
-  room.setDiscProperties(9, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 0, radius: 5.1, color: 0xFE4141 }); // red
-  room.setDiscProperties(10, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 1, radius: 5.1, color: 0x00FF00 }); // green
-  room.setDiscProperties(11, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 0, radius: 5.1, color: 0x87CEEB }); // sky blue
-  room.setDiscProperties(12, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 1, radius: 5.1, color: 0xFFC0CB }); // pink
-  room.setDiscProperties(13, { x: teleportX, y: teleportY, xspeed: 0, yspeed: -1, radius: 5.1, color: 0xFFFF00 }); // yellow
-  room.setDiscProperties(14, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 2, radius: 5.1, color: 0xFE4141 }); // red
-  room.setDiscProperties(15, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 0, radius: 5.1, color: 0x00FF00 }); // green
-  room.setDiscProperties(16, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 1, radius: 5.1, color: 0x87CEEB }); // sky blue
-  room.setDiscProperties(17, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 0, radius: 5.1, color: 0xFFC0CB }); // pink
-  room.setDiscProperties(18, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 1, radius: 5.1, color: 0xFFFF00 }); // yellow
-  room.setDiscProperties(19, { x: teleportXdua, y: teleportYdua, xspeed: 0, yspeed: -1, radius: 5.1, color: 0xFE4141 }); // red
-  room.setDiscProperties(20, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 2, radius: 5.1, color: 0x00FF00 }); // green
+  room.setDiscProperties(9, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 0, radius: 5.2, color: 0xFE4141 }); // red
+  room.setDiscProperties(10, { x: teleportX, y: teleportY, xspeed: 1, yspeed: 1, radius: 5.2, color: 0xF43C33 }); // green
+  room.setDiscProperties(11, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 0, radius: 5.2, color: 0xF7726B }); // sky blue
+  room.setDiscProperties(12, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 1, radius: 5.2, color: 0xA0160F }); // pink
+  room.setDiscProperties(13, { x: teleportX, y: teleportY, xspeed: 0, yspeed: -1, radius: 5.2, color: 0xC6605B }); // yellow
+  room.setDiscProperties(14, { x: teleportX, y: teleportY, xspeed: -1, yspeed: 2, radius: 5.2, color: 0xEC2D50 }); // red
+  room.setDiscProperties(15, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 0, radius: 5.2, color: 0x4463D4 }); // green
+  room.setDiscProperties(16, { x: teleportXdua, y: teleportYdua, xspeed: 1, yspeed: 1, radius: 5.2, color: 0x87CEEB }); // sky blue
+  room.setDiscProperties(17, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 0, radius: 5.2, color: 0x0C00FF }); // pink
+  room.setDiscProperties(18, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 1, radius: 5.2, color: 0x001597 }); // yellow
+  room.setDiscProperties(19, { x: teleportXdua, y: teleportYdua, xspeed: 0, yspeed: -1, radius: 5.2, color: 0x3A4275 }); // red
+  room.setDiscProperties(20, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 2, radius: 5.2, color: 0x18CACC }); // green
+}
+
+function teleportDiscsfire() {
+  const playerWhoScored = lastPlayersTouched[0];
+  
+  if (playerWhoScored && playerWhoScored.team !== 0) { // Ensure the player is in a team
+    const discProperties = room.getPlayerDiscProperties(playerWhoScored.id);
+    
+    if (discProperties) {
+      var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+      // Calculate the angle step for distributing the discs in different directions
+      const numDiscs = 15; // Number of discs to shoot
+      const angleStep = (2 * Math.PI) / numDiscs; // Full circle divided by the number of discs
+      const speed = 10; // Speed of the discs
+
+      for (let i = 0; i < numDiscs; i++) {
+        const angle = i * angleStep;
+        const xspeed = speed * Math.cos(angle);
+        const yspeed = speed * Math.sin(angle);
+
+        room.setDiscProperties(15 + i, {
+          x: discProperties.x,
+          y: discProperties.y,
+          xspeed: xspeed,
+          yspeed: yspeed,
+          radius: 5.6,
+          color: discColor
+        });
+      }
+    }
+  }
 }
 
 // Function to reset discs to their original positions
@@ -4105,9 +4281,21 @@ function resetDiscs() {
   }
 }
 
+let previousChoice = -1;
+
 room.onTeamGoal = function (team) {
-  teleportDiscs();
+  function getNewChoice(previous) {
+    return previous === 0 ? 1 : 0;
+  }
+  let randomChoice = getNewChoice(previousChoice);
+  if (randomChoice === 0) {
+    teleportDiscs();
+  } else {
+    teleportDiscsfire();
+  }
+  previousChoice = randomChoice;
   setTimeout(resetDiscs, 2000);
+
   let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
   teamgoaler = team;
   let assistencia = "";
