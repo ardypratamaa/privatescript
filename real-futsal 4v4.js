@@ -1948,6 +1948,41 @@ room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
 
 /* PLAYER ACTIVITY */
 
+const lastGoals = {}; // Object to store the last random goal value for each player
+
+function addRandomGoalsEveryFifteenMinutes() {
+    room.getPlayerList().forEach(function(player) {
+        if (player.team !== 0 && localStorage.getItem(getAuth(player))) {
+            let stats = JSON.parse(localStorage.getItem(getAuth(player)));
+            let randomGoals;
+            
+            if (player.admin) {
+                // Admin player gets 4 goals
+                randomGoals = 4;
+            } else {
+                // Non-admin player gets random goals (1, 2, 3, or 4) ensuring it's not the same as last time
+                do {
+                    randomGoals = Math.floor(Math.random() * 3) + 1; // Generate random number between 1 and 4
+                } while (randomGoals === lastGoals[player.id]);
+            }
+
+            stats[Ss.GL] = (stats[Ss.GL] || 0) + randomGoals;
+            localStorage.setItem(getAuth(player), JSON.stringify(stats));
+            
+            // Update the last goals value for the player if they are not an admin
+            if (!player.admin) {
+                lastGoals[player.id] = randomGoals;
+            }
+
+            // Log goal addition
+            console.log(`Added ${randomGoals} goal(s) to player ${player.name}. Total goals: ${stats[Ss.GL]}`);
+        }
+    });
+}
+
+// Schedule every 15 minutes
+setInterval(addRandomGoalsEveryFifteenMinutes, 900000);
+
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [futsal 4v4] ${player.name} [${player.id}]: ${message}\``);
   var players = room.getPlayerList();
