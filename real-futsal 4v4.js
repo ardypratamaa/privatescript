@@ -1,6 +1,6 @@
 /* ROOM */
 //var roomName = "💠 [ʀꜱɪ|ᴠɴ] Futsal 4v4 | ᴘᴠᴘ";
-var roomName = "💠 (ʀꜱɪ|ɪᴅ) Futsal 4v4 | ᴘᴠᴘ";
+var roomName = "💠 (ʀꜱɪ) 𝗙𝘂𝘁𝘀𝗮𝗹 𝟰𝘃𝟰 ᴘᴠᴘ";
 const botName = "----- ᴀᴜᴛᴏʀᴏᴏᴍ.ʀꜱɪ -----";
 const maxPlayers = 16; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
