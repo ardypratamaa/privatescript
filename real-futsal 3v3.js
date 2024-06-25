@@ -1,5 +1,5 @@
 /* ROOM */
-var roomName = "💠 [ʀꜱɪ|ɪᴅ] Futsal 3v3 | ᴘᴠᴘ ⚽";
+var roomName = "💠 (ʀꜱɪ) 𝗙𝘂𝘁𝘀𝗮𝗹 𝟯𝘃𝟯 ᴘᴠᴘ";
 //var roomName = "💠 [ʀꜱɪ|ᴠɴ] Futsal 3v3 | ᴘᴠᴘ";
 const botName = "----- ᴀᴜᴛᴏʀᴏᴏᴍ.ʀꜱɪ -----";
 const maxPlayers = 15; // maximum number of players in the room
