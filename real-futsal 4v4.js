@@ -3000,172 +3000,102 @@ room.onPlayerChat = function (player, message) {
     );
 
     return false;
-  } else if (["!goats"].includes(message[0].toLowerCase())) {
-    var tableau = [];
+  } else if (["!goat"].includes(message[0].toLowerCase())) {
+    var leaderboard = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key) && JSON.parse(localStorage.getItem(key))[Ss.WI] > 400) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.WI]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerGoals = JSON.parse(localStorage.getItem(key))[Ss.GL];
+                if (playerGoals > 6) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        goals: playerGoals
+                    });
+                }
+            }
+        });
     } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0x73ec59);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] ✅ GOATS> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
-    return false;
-  } else if (["!goals"].includes(message[0].toLowerCase())) {
-    var tableau = [];
-    try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.GL]]);
-        }
-      });
-    } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[📄] Didn't play enough games", player.id, 0x73ec59);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
+    leaderboard.sort(function (a, b) {
+        return b.goals - a.goals;
     });
-    room.sendAnnouncement(
-      "[📄] ⚽️ Goals> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
-    return false;
-  } else if (["!assists"].includes(message[0].toLowerCase())) {
-    var tableau = [];
-    try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.AS]]);
-        }
-      });
-    } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[RSI] Didn't play enough games", player.id);
-      return false;
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have scored goals yet", player.id, 0x73ec59);
+        return false;
     }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] 👟 Assists> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
+    var leaderboardMessage = "[📄] GOAT nominated based on Goals ⚽️\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        var goatMarker = i === 0 ? "  (🐐 Greatest Of All Time)" : "";
+        leaderboardMessage += "[-] " + leaderboard[i].name + " : " + leaderboard[i].goals + " goals" + goatMarker + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), null, 0x73ec59);
     return false;
-  } else if (["!cs"].includes(message[0].toLowerCase())) {
+  } else if (["!assist"].includes(message[0].toLowerCase())) {
+    var leaderboard = [];
+    try {
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerAssists = JSON.parse(localStorage.getItem(key))[Ss.AS];
+                if (playerAssists > 0) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        assists: playerAssists
+                    });
+                }
+            }
+        });
+    } catch {}
+
+    leaderboard.sort(function (a, b) {
+        return b.assists - a.assists;
+    });
+
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have recorded assists yet", player.id, 0x73ec59);
+        return false;
+    }
+
+    var leaderboardMessage = "[📄] Player with most Assists 👟\n";
+    for (var i = 0; i < leaderboard.length && i < 5; i++) {
+        leaderboardMessage += "[-]" + (i + 1) + " " + leaderboard[i].name + ": " + leaderboard[i].assists + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), null, 0x73ec59);
+    return false;
+  } else if (["!winstreak"].includes(message[0].toLowerCase())) {
     var tableau = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.CS]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerData = JSON.parse(localStorage.getItem(key));
+                var winstreak = playerData[Ss.CS];
+                if (winstreak > 0) {
+                    tableau.push({ name: playerData[Ss.NK], winstreak: winstreak });
+                }
+            }
+        });
     } catch {}
+
     if (tableau.length < 5) {
-      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0x73ec59);
-      return false;
+        room.sendAnnouncement("No player have winstreak", player.id, 0x73ec59);
+        return false;
     }
+
     tableau.sort(function (a, b) {
-      return b[1] - a[1];
+        return b.winstreak - a.winstreak;
     });
-    room.sendAnnouncement(
-      "[📄] 🤚 Undefeated matches> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
+
+    var leaderboard = tableau.slice(0, 5); // Take the top 5 players
+
+    var leaderboardMessage = "[📄] Players with the highest Winstreaks\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        leaderboardMessage += "[-] #" + (i + 1) + " " + leaderboard[i].name + ": " + leaderboard[i].winstreak + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage, player.id, 0x73ec59);
 
     return false;
   } else if (["!setadm"].includes(message[0].toLowerCase())) {
