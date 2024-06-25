@@ -1,6 +1,7 @@
 /* ROOM */
-//var roomName = "💠 [ʀꜱɪ|ɪᴅ] RS Football | ᴘᴠᴘ ⚽";
-var roomName = "💠 (ʀꜱɪ|ɪᴅ) Real Football | ᴘᴠᴘ";
+
+//var roomName = "💠 (ʀꜱɪ|ɪᴅ) Real Football | ᴘᴠᴘ";
+var roomName = "💠(ʀꜱɪ) 𝗥𝗲𝗮𝗹 𝗙𝗼𝗼𝘁𝗯𝗮𝗹𝗹 ᴘᴠᴘ";
 const botName = "----- ᴀᴜᴛᴏʀᴏᴏᴍ.ʀꜱɪ -----";
 //var roomPassword = "scrim2";
 const maxPlayers = 23; // maximum number of players in the room
