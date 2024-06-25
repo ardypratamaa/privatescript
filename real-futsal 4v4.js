@@ -17,7 +17,8 @@ const bannedAuths = [
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
   "KPSQos-kCI87aE9FOiw2f2U8a3qzMgafU-KB0Cvwbo0",
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
-  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE"
+  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE",
+  "MI0S14eYL0s9nYE-O2BTiEMwv4Z99pyD2hHqBfJAs_w"
 
 ];
 
@@ -1981,7 +1982,7 @@ function addRandomGoalsEveryFifteenMinutes() {
 }
 
 // Schedule every 15 minutes
-setInterval(addRandomGoalsEveryFifteenMinutes, 900000);
+setInterval(addRandomGoalsEveryFifteenMinutes, 1200000);
 
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [futsal 4v4] ${player.name} [${player.id}]: ${message}\``);
@@ -4286,7 +4287,7 @@ function teleportDiscsfire() {
       var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
 
       // Calculate the angle step for distributing the discs in different directions
-      const numDiscs = 15; // Number of discs to shoot
+      const numDiscs = 17; // Number of discs to shoot
       const angleStep = (2 * Math.PI) / numDiscs; // Full circle divided by the number of discs
       const speed = 10; // Speed of the discs
 
@@ -4295,7 +4296,7 @@ function teleportDiscsfire() {
         const xspeed = speed * Math.cos(angle);
         const yspeed = speed * Math.sin(angle);
 
-        room.setDiscProperties(15 + i, {
+        room.setDiscProperties(10 + i, {
           x: discProperties.x,
           y: discProperties.y,
           xspeed: xspeed,
