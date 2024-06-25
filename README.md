@@ -33,4 +33,3 @@ https://haxball.com/headless
 
 ## RSI Discord
 - [RSI Haxball](https://discord.gg/pm55tVsQMX)
-- 
