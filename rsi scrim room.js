@@ -4200,7 +4200,7 @@ const originalDiscPositions = {
   57: { x: -374, y: 766 }
 };
 
-/function teleportDiscs() {
+function teleportDiscs() {
   const lastPlayerTouched = lastPlayersTouched[0];
   if (lastPlayerTouched && lastPlayerTouched.team !== 0) { // Ensure the player is in a team
     const discProperties = room.getPlayerDiscProperties(lastPlayerTouched.id);
