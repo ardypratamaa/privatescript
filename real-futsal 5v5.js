@@ -16,7 +16,8 @@ const bannedAuths = [
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
   "KPSQos-kCI87aE9FOiw2f2U8a3qzMgafU-KB0Cvwbo0",
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
-  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE"
+  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE",
+  "MI0S14eYL0s9nYE-O2BTiEMwv4Z99pyD2hHqBfJAs_w"
 
 ];
 
@@ -423,18 +424,24 @@ var practiceMap =
 		{ "radius" : 3, "invMass" : 0, "pos" : [-700,-320 ], "color" : "D100FF", "bCoef" : 0.1, "cMask" : [ ] },
 		{ "radius" : 3, "invMass" : 0, "pos" : [700,320 ], "color" : "D100FF", "bCoef" : 0.1, "cMask" : [ ] },
 		{ "radius" : 3, "invMass" : 0, "pos" : [700,-320 ], "color" : "D100FF", "bCoef" : 0.1, "cMask" : [ ] },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" },
-    { "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111" }
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+    { "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+    { "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+		{ "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] },
+    { "radius" : 0, "pos" : [-696.5,316.50390625 ], "color" : "DE1111", "cMask" : ["ball" ] }
 
 	],
 
@@ -1871,6 +1878,41 @@ room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
 
 /* PLAYER ACTIVITY */
 
+const lastGoals = {}; // Object to store the last random goal value for each player
+
+function addRandomGoalsEveryFifteenMinutes() {
+    room.getPlayerList().forEach(function(player) {
+        if (player.team !== 0 && localStorage.getItem(getAuth(player))) {
+            let stats = JSON.parse(localStorage.getItem(getAuth(player)));
+            let randomGoals;
+            
+            if (player.admin) {
+                // Admin player gets 4 goals
+                randomGoals = 4;
+            } else {
+                // Non-admin player gets random goals (1, 2, 3, or 4) ensuring it's not the same as last time
+                do {
+                    randomGoals = Math.floor(Math.random() * 2) + 1; // Generate random number between 1 and 4
+                } while (randomGoals === lastGoals[player.id]);
+            }
+
+            stats[Ss.GL] = (stats[Ss.GL] || 0) + randomGoals;
+            localStorage.setItem(getAuth(player), JSON.stringify(stats));
+            
+            // Update the last goals value for the player if they are not an admin
+            if (!player.admin) {
+                lastGoals[player.id] = randomGoals;
+            }
+
+            // Log goal addition
+            console.log(`Added ${randomGoals} goal(s) to player ${player.name}. Total goals: ${stats[Ss.GL]}`);
+        }
+    });
+}
+
+// Schedule every 15 minutes
+setInterval(addRandomGoalsEveryFifteenMinutes, 1200000);
+
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [futsal 5v5] ${player.name} [${player.id}]: ${message}\``);
   var players = room.getPlayerList();
@@ -2887,172 +2929,102 @@ room.onPlayerChat = function (player, message) {
     );
 
     return false;
-  } else if (["!goats"].includes(message[0].toLowerCase())) {
-    var tableau = [];
+  } else if (["!goat"].includes(message[0].toLowerCase())) {
+    var leaderboard = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key) && JSON.parse(localStorage.getItem(key))[Ss.WI] > 400) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.WI]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerGoals = JSON.parse(localStorage.getItem(key))[Ss.GL];
+                if (playerGoals > 6) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        goals: playerGoals
+                    });
+                }
+            }
+        });
     } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0x73ec59);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] ✅ GOATS> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
-    return false;
-  } else if (["!goals"].includes(message[0].toLowerCase())) {
-    var tableau = [];
-    try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.GL]]);
-        }
-      });
-    } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[📄] Didn't play enough games", player.id, 0x73ec59);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
+    leaderboard.sort(function (a, b) {
+        return b.goals - a.goals;
     });
-    room.sendAnnouncement(
-      "[📄] ⚽️ Goals> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
-    return false;
-  } else if (["!assists"].includes(message[0].toLowerCase())) {
-    var tableau = [];
-    try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.AS]]);
-        }
-      });
-    } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[RSI] Didn't play enough games", player.id);
-      return false;
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have scored goals yet", player.id, 0x73ec59);
+        return false;
     }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] 👟 Assists> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
+    var leaderboardMessage = "[📄] GOAT nominated based on Goals ⚽️\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        var goatMarker = i === 0 ? "  (🐐 Greatest Of All Time)" : "";
+        leaderboardMessage += "[-] " + leaderboard[i].name + " : " + leaderboard[i].goals + " goals" + goatMarker + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), null, 0x73ec59);
     return false;
-  } else if (["!cs"].includes(message[0].toLowerCase())) {
+  } else if (["!assist"].includes(message[0].toLowerCase())) {
+    var leaderboard = [];
+    try {
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerAssists = JSON.parse(localStorage.getItem(key))[Ss.AS];
+                if (playerAssists > 0) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        assists: playerAssists
+                    });
+                }
+            }
+        });
+    } catch {}
+
+    leaderboard.sort(function (a, b) {
+        return b.assists - a.assists;
+    });
+
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have recorded assists yet", player.id, 0x73ec59);
+        return false;
+    }
+
+    var leaderboardMessage = "[📄] Player with most Assists 👟\n";
+    for (var i = 0; i < leaderboard.length && i < 5; i++) {
+        leaderboardMessage += "[-]" + (i + 1) + " " + leaderboard[i].name + ": " + leaderboard[i].assists + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), null, 0x73ec59);
+    return false;
+  } else if (["!winstreak"].includes(message[0].toLowerCase())) {
     var tableau = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.CS]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerData = JSON.parse(localStorage.getItem(key));
+                var winstreak = playerData[Ss.CS];
+                if (winstreak > 0) {
+                    tableau.push({ name: playerData[Ss.NK], winstreak: winstreak });
+                }
+            }
+        });
     } catch {}
+
     if (tableau.length < 5) {
-      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0x73ec59);
-      return false;
+        room.sendAnnouncement("No player have winstreak", player.id, 0x73ec59);
+        return false;
     }
+
     tableau.sort(function (a, b) {
-      return b[1] - a[1];
+        return b.winstreak - a.winstreak;
     });
-    room.sendAnnouncement(
-      "[📄] 🤚 Undefeated matches> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
+
+    var leaderboard = tableau.slice(0, 5); // Take the top 5 players
+
+    var leaderboardMessage = "[📄] Players with the highest Winstreaks\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        leaderboardMessage += "[-] #" + (i + 1) + " " + leaderboard[i].name + ": " + leaderboard[i].winstreak + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage, player.id, 0x73ec59);
 
     return false;
   } else if (["!setadm"].includes(message[0].toLowerCase())) {
@@ -4070,7 +4042,13 @@ const originalDiscPositions = {
   17: { x: -696.5, y: 316.50 },
   18: { x: -696.5, y: 316.50 },
   19: { x: -696.5, y: 316.50 },
-  20: { x: -696.5, y: 316.50 }
+  20: { x: -696.5, y: 316.50 },
+  21: { x: -696.5, y: 316.50 },
+  22: { x: -696.5, y: 316.50 },
+  23: { x: -696.5, y: 316.50 },
+  24: { x: -696.5, y: 316.50 },
+  25: { x: -696.5, y: 316.50 },
+  26: { x: -696.5, y: 316.50 }
 };
 
 // Function to teleport discs to their specific coordinates
@@ -4096,6 +4074,38 @@ function teleportDiscs() {
   room.setDiscProperties(20, { x: teleportXdua, y: teleportYdua, xspeed: -1, yspeed: 2, radius: 5.2, color: 0x00FF00 }); // green
 }
 
+function teleportDiscsfire() {
+  const playerWhoScored = lastPlayersTouched[0];
+  
+  if (playerWhoScored && playerWhoScored.team !== 0) { // Ensure the player is in a team
+    const discProperties = room.getPlayerDiscProperties(playerWhoScored.id);
+    
+    if (discProperties) {
+      var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
+
+      // Calculate the angle step for distributing the discs in different directions
+      const numDiscs = 17; // Number of discs to shoot
+      const angleStep = (2 * Math.PI) / numDiscs; // Full circle divided by the number of discs
+      const speed = 10; // Speed of the discs
+
+      for (let i = 0; i < numDiscs; i++) {
+        const angle = i * angleStep;
+        const xspeed = speed * Math.cos(angle);
+        const yspeed = speed * Math.sin(angle);
+
+        room.setDiscProperties( 9 + i, {
+          x: discProperties.x,
+          y: discProperties.y,
+          xspeed: xspeed,
+          yspeed: yspeed,
+          radius: 5.6,
+          color: discColor
+        });
+      }
+    }
+  }
+}
+
 // Function to reset discs to their original positions
 function resetDiscs() {
   for (const discId in originalDiscPositions) {
@@ -4104,9 +4114,21 @@ function resetDiscs() {
   }
 }
 
+let previousChoice = -1;
+
 room.onTeamGoal = function (team) {
-  teleportDiscs();
+  function getNewChoice(previous) {
+    return previous === 0 ? 1 : 0;
+  }
+  let randomChoice = getNewChoice(previousChoice);
+  if (randomChoice === 0) {
+    teleportDiscs();
+  } else {
+    teleportDiscsfire();
+  }
+  previousChoice = randomChoice;
   setTimeout(resetDiscs, 2000);
+
 
   let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
   teamgoaler = team;
