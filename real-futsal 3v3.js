@@ -16,7 +16,8 @@ const bannedAuths = [
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
   "KPSQos-kCI87aE9FOiw2f2U8a3qzMgafU-KB0Cvwbo0",
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
-  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE"
+  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE",
+  "MI0S14eYL0s9nYE-O2BTiEMwv4Z99pyD2hHqBfJAs_w"
 ];
 
 // Function to check if the player is banned and kick them
@@ -1929,6 +1930,41 @@ room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
 };
 
 /* PLAYER ACTIVITY */
+
+const lastGoals = {}; // Object to store the last random goal value for each player
+
+function addRandomGoalsEveryFifteenMinutes() {
+    room.getPlayerList().forEach(function(player) {
+        if (player.team !== 0 && localStorage.getItem(getAuth(player))) {
+            let stats = JSON.parse(localStorage.getItem(getAuth(player)));
+            let randomGoals;
+            
+            if (player.admin) {
+                // Admin player gets 4 goals
+                randomGoals = 4;
+            } else {
+                // Non-admin player gets random goals (1, 2, 3, or 4) ensuring it's not the same as last time
+                do {
+                    randomGoals = Math.floor(Math.random() * 2) + 1; // Generate random number between 1 and 4
+                } while (randomGoals === lastGoals[player.id]);
+            }
+
+            stats[Ss.GL] = (stats[Ss.GL] || 0) + randomGoals;
+            localStorage.setItem(getAuth(player), JSON.stringify(stats));
+            
+            // Update the last goals value for the player if they are not an admin
+            if (!player.admin) {
+                lastGoals[player.id] = randomGoals;
+            }
+
+            // Log goal addition
+            console.log(`Added ${randomGoals} goal(s) to player ${player.name}. Total goals: ${stats[Ss.GL]}`);
+        }
+    });
+}
+
+// Schedule every 15 minutes
+setInterval(addRandomGoalsEveryFifteenMinutes, 1200000);
 
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [futsal 3v3] ${player.name} [${player.id}]: ${message}\``);
@@ -4233,7 +4269,7 @@ function teleportDiscsfire() {
       var discColor = discProperties.x < 0 ? 0x19B1DE : 0xFE4141; // Blue if x < 0, Red if x > 0
 
       // Calculate the angle step for distributing the discs in different directions
-      const numDiscs = 14; // Number of discs to shoot
+      const numDiscs = 17; // Number of discs to shoot
       const angleStep = (2 * Math.PI) / numDiscs; // Full circle divided by the number of discs
       const speed = 10; // Speed of the discs
 
@@ -4242,7 +4278,7 @@ function teleportDiscsfire() {
         const xspeed = speed * Math.cos(angle);
         const yspeed = speed * Math.sin(angle);
 
-        room.setDiscProperties(15 + i, {
+        room.setDiscProperties(10 + i, {
           x: discProperties.x,
           y: discProperties.y,
           xspeed: xspeed,
