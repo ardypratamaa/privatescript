@@ -8,7 +8,7 @@ Script headless untuk menjalankan Autoroom dan Manual room
 ## ⚡ Programming Language
 
 - [Javascript](https://www.javascript.com/) : Main Function
-- [HBS] : Maps
+- HBS : Maps
 
 ## 🚩 How To Run
 1. Copy isi file js
