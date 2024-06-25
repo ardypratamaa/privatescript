@@ -2520,6 +2520,27 @@ room.onPlayerChat = function (player, message) {
   var players = room.getPlayerList();
   let args = message.split(" ");
 
+  if (message.length > 1 && message[0].toLowerCase() == "t" && message[1] == " ") {
+    if (player.team != 0) {
+        const teamChatPrefix = player.team == 1 ? "🔴 [ᴛᴇᴀᴍ ᴄʜᴀᴛ] " : "🔵 [ᴛᴇᴀᴍ ᴄʜᴀᴛ] ";
+        room.getPlayerList().forEach((element) => {
+            if (element.team == player.team) room.sendAnnouncement(teamChatPrefix + player.name + ": " + message.substr(2), element.id, player.team == 1 ? /*16725591*/ 3261685 : 3261685, "normal", 0);
+        });
+        return false;
+    } else {
+        room.sendAnnouncement("You're not on a team.", player.id);
+        return false;
+    }
+  }
+
+  if (message.length > 1 && message[0].toLowerCase() == "a" && message[1] == " ") {
+    const anonymousMessage = "[Anonymous]: " + message.substr(2);
+    room.getPlayerList().forEach((element) => {
+        room.sendAnnouncement(anonymousMessage, element.id, 16777215, "normal", 0); // White color
+    });
+    return false;
+  } 
+
   /* RSI ANTI SPAM */
   var playerId = player.id;
   var currentTime = Date.now();
@@ -4539,15 +4560,15 @@ function realSoccerRef() {
   blockThrowIn();
   blockGoalKick();
   removeBlock();
-  if (game.time == gameTime * 60 && game.extraTimeAnnounced == false) {
-    extraTime();
-    game.extraTimeAnnounced = true;
-  }
+  // if (game.time == gameTime * 60 && game.extraTimeAnnounced == false) {
+  //   extraTime();
+  //   game.extraTimeAnnounced = true;
+  // }
 
-  if (game.time == game.extraTimeEnd && game.lastPlayAnnounced == false) {
-    announce("Peluang Terakhir", null, null, null, 1);
-    game.lastPlayAnnounced = true;
-  }
+  // if (game.time == game.extraTimeEnd && game.lastPlayAnnounced == false) {
+  //   announce("Peluang Terakhir", null, null, null, 1);
+  //   game.lastPlayAnnounced = true;
+  // }
 
   if (game.rsCorner == true || game.rsGoalKick == true) {
     //add extra time
@@ -5186,12 +5207,12 @@ function sendDiscordRecording() {
 }
 
 setInterval(function () {
-  room.sendAnnouncement("🔊 Join our Discord: discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "nomal", 0);
+  room.sendAnnouncement("🔊 Join our Discord. https://discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "nomal", 0);
   setTimeout(function () {
-    room.sendAnnouncement("⚽ RSI Scrim Room", null, 0x61ddff, "normal", 0);
+    room.sendAnnouncement("⚽ Command: !ᴅᴄ, !ꜰɪxꜱᴛᴀʀᴛ, !ᴀꜰᴋ, !ʙʙ, !ꜱᴛᴀᴛꜱ, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ], ᴀ [anon chat] ", null, 0x61ddff, "normal", 0);
   }, 50000); // Wait 40 seconds after the first announcement
 }, 220000);
 
-msg1 = setInterval(function () {
-  room.sendAnnouncement("🏆 Searching For The Champions", null, 0xff8a4a, "normal");
-}, msg1Time);
+// msg1 = setInterval(function () {
+//   room.sendAnnouncement("🏆 Searching For The Champions", null, 0xff8a4a, "normal");
+// }, msg1Time);
