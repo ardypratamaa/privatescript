@@ -1,6 +1,6 @@
 /* ROOM */
 // var roomName = "💠 (ʀꜱɪ|ɪᴅ) Scrim Room 1 | ᴘᴠᴘ ⚽";
-var roomName = "💠(ʀꜱɪ) 𝗦𝗰𝗿𝗶𝗺 𝗥𝗼𝗼𝗺1 ᴘᴠᴘ";
+var roomName = "💠 (ʀꜱɪ) 𝗦𝗰𝗿𝗶𝗺 𝗥𝗼𝗼𝗺1 ᴘᴠᴘ";
 //var roomPassword = "scrim2";
 const maxPlayers = 30; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
@@ -40,7 +40,7 @@ const room = HBInit({
   geo: geo[0],
 });
 
-const scoreLimitPractice = 10;
+const scoreLimitPractice = 0;
 const timeLimitPractice = 5;
 
 let Cor = {
@@ -175,6 +175,7 @@ const bannedWords = [
     "shit",
     "banci",
     "nigga",
+    "niga",
     "gay",
     "coli",
   ];
@@ -208,7 +209,6 @@ var vip1 = [];
 var vip2 = [];
 var vip3 = [];
 
-let isTurneyStarted = false;
 
 // RSI RANDOM KIT
 var redTeamColors = [
@@ -2422,11 +2422,6 @@ room.onPlayerJoin = function (player) {
     });
   }, 2700); 
 
-  setTimeout(() => {
-    room.sendAnnouncement("use ( t ) before text if you want to send message", player.id, 0xedc021, "normal");
-    room.sendAnnouncement("example: t hello", player.id, 0xedc021, "normal");
-  }, 3200);
-
   if (localStorage.getItem(player.auth) != null) {
     var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
     if (playerRole == "admin" || playerRole == "master") {
@@ -2641,37 +2636,60 @@ room.onPlayerChat = function (player, message) {
     }
   }
 
-  if (message.startsWith("kick #")) {
+  if (message.startsWith('!addgoals')) {
     if (player.admin) {
-      // Extract the player ID from the message, removing the "kick #" prefix
-      var playerId = message.substr(6);
-  
-      // Call the function to kick the player
-      var success = kickPlayerById(playerId);
-  
-      if (!success) {
-        room.sendChat("⚠️ Player not found.");
-      }
+        const args = message.split(' ');
+        if (args.length === 3) {
+            const targetPlayerID = parseInt(args[1]);
+            const numberOfGoals = parseInt(args[2]);
+            const targetPlayer = room.getPlayer(targetPlayerID);
+
+            if (targetPlayer && !isNaN(numberOfGoals)) {
+                let stats = JSON.parse(localStorage.getItem(getAuth(targetPlayer))) || {};
+                stats[Ss.GL] = (stats[Ss.GL] || 0) + numberOfGoals;
+                localStorage.setItem(getAuth(targetPlayer), JSON.stringify(stats));
+                
+                room.sendAnnouncement(`Added ${numberOfGoals} goals to player ${targetPlayer.name}.`, player.id, 0x99ffff);
+                return false;
+            } else {
+                room.sendAnnouncement(`Invalid player ID or number of goals.`, player.id, 0xff0000);
+                return false;
+            }
+        } else {
+            room.sendAnnouncement(`Usage: !addgoals <playerID> <numberOfGoals>`, player.id, 0xff0000);
+            return false;
+        }
     }
-    return false;
   }
 
-  if (message.startsWith("kick #")) {
-    if (player.admin) {
-      // Extract the player ID from the message, removing the "kick #" prefix
-      var playerId = message.substr(6);
-  
-      // Call the function to kick the player
-      var success = kickPlayerById(playerId);
-  
-      if (!success) {
-        room.sendChat("⚠️ Player not found.");
+  if (message.startsWith('!delgoals')) {
+      if (player.admin) {
+        const args = message.split(' ');
+        if (args.length === 3) {
+            const targetPlayerID = parseInt(args[1]);
+            const numberOfGoals = parseInt(args[2]);
+            const targetPlayer = room.getPlayer(targetPlayerID);
+
+            if (targetPlayer && !isNaN(numberOfGoals)) {
+                let stats = JSON.parse(localStorage.getItem(getAuth(targetPlayer))) || {};
+                stats[Ss.GL] = (stats[Ss.GL] || 0) - numberOfGoals;
+                if (stats[Ss.GL] < 0) stats[Ss.GL] = 0; // Ensure goals don't go negative
+                localStorage.setItem(getAuth(targetPlayer), JSON.stringify(stats));
+                
+                room.sendAnnouncement(`Removed ${numberOfGoals} goals from player ${targetPlayer.name}.`, player.id, 0x99ffff);
+                return false;
+            } else {
+                room.sendAnnouncement(`Invalid player ID or number of goals.`, player.id, 0xff0000);
+                return false;
+            }
+        } else {
+            room.sendAnnouncement(`Usage: !delgoals <playerID> <numberOfGoals>`, player.id, 0xff0000);
+            return false;
+        }
       }
-    }
-    return false;
   }
 
-  if (message.startsWith("kick #")) {
+  if (message.startsWith("!kick #")) {
     if (player.admin) {
       // Extract the player ID from the message, removing the "kick #" prefix
       var playerId = message.substr(6);
@@ -2990,131 +3008,103 @@ room.onPlayerChat = function (player, message) {
     );
 
     return false;
-  } else if (["!goats"].includes(message[0].toLowerCase())) {
-    var tableau = [];
+  } else if (["!goat"].includes(message[0].toLowerCase())) {
+    var leaderboard = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key) && JSON.parse(localStorage.getItem(key))[Ss.WI] > 400) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.WI]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerGoals = JSON.parse(localStorage.getItem(key))[Ss.GL];
+                if (playerGoals > 6) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        goals: playerGoals
+                    });
+                }
+            }
+        });
     } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[ʀꜱɪ] ᴅɪᴅɴ'ᴛ ᴘʟᴀʏ ᴇɴᴏᴜɢʜ ɢᴀᴍᴇꜱ", player.id, 0x73ec59);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] ✅ GOATS> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
+    leaderboard.sort(function (a, b) {
+        return b.goals - a.goals;
+    });
+
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have scored goals yet", player.id, 0x73ec59);
+        return false;
+    }
+
+    var leaderboardMessage = "[📄] GOAT nominated based on Goals ⚽️\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        var goatMarker = i === 0 ? "  (🐐 Greatest Of All Time)" : "";
+        leaderboardMessage += "[-] " + leaderboard[i].name + " : " + leaderboard[i].goals + " goals" + goatMarker + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), null, 0x73ec59);
     return false;
   } else if (["!goals"].includes(message[0].toLowerCase())) {
-    var tableau = [];
+    var leaderboard = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.GL]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerGoals = JSON.parse(localStorage.getItem(key))[Ss.GL];
+                if (playerGoals > 0) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        goals: playerGoals
+                    });
+                }
+            }
+        });
     } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[📄] Didn't play enough games", player.id, 0x73ec59);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] ⚽️ Goals> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
+    leaderboard.sort(function (a, b) {
+        return b.goals - a.goals;
+    });
+
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have scored goals yet", player.id, 0x73ec59);
+        return false;
+    }
+
+    var leaderboardMessage = "[📄] All Player GOALS ⚽️\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        var goatMarker = i === 0 ? "  (Top Score" : "";
+        leaderboardMessage += "[-] " + leaderboard[i].name + " : " + leaderboard[i].goals + " goals" + goatMarker + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), player.id, 0x73ec59);
     return false;
-  } else if (["!assists"].includes(message[0].toLowerCase())) {
-    var tableau = [];
+  } else if (["!assist"].includes(message[0].toLowerCase())) {
+    var leaderboard = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.AS]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerAssists = JSON.parse(localStorage.getItem(key))[Ss.AS];
+                if (playerAssists > 0) {
+                    leaderboard.push({
+                        name: JSON.parse(localStorage.getItem(key))[Ss.NK],
+                        assists: playerAssists
+                    });
+                }
+            }
+        });
     } catch {}
-    if (tableau.length < 5) {
-      room.sendAnnouncement("[ʀꜱɪ] ᴅɪᴅɴ'ᴛ ᴘʟᴀʏ ᴇɴᴏᴜɢʜ ɢᴀᴍᴇꜱ", player.id);
-      return false;
-    }
-    tableau.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    room.sendAnnouncement(
-      "[📄] 👟 Assists> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
 
+    leaderboard.sort(function (a, b) {
+        return b.assists - a.assists;
+    });
+
+    if (leaderboard.length < 1) {
+        room.sendAnnouncement("[📄] No players have recorded assists yet", player.id, 0x73ec59);
+        return false;
+    }
+
+    var leaderboardMessage = "[📄] Player with most Assists 👟\n";
+    for (var i = 0; i < leaderboard.length && i < 5; i++) {
+        leaderboardMessage += "[-]" + (i + 1) + " " + leaderboard[i].name + ": " + leaderboard[i].assists + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage.trim(), null, 0x73ec59);
     return false;
   } else if (["!winstreak"].includes(message[0].toLowerCase())) {
     var tableau = [];
@@ -4147,8 +4137,6 @@ room.onPlayerBallKick = function (player) {
 
 room.onGameStart = function (byPlayer) {
   //room.setDiscProperties(0, { invMass: 1.05 });
-  isTurneyStarted = true;
-  console.log(`isTurneyStarted = true`);
   game = new Game(Date.now(), room.getScores(), []);
   countAFK = true;
   activePlay = false;
@@ -4163,7 +4151,7 @@ room.onGameStart = function (byPlayer) {
 
   room.sendAnnouncement(centerText("🥅 KICK OFF 🥅"), null, Cor.White, "bold");
   room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0x2ef55d, "bold");
-  room.sendAnnouncement(centerText("RSI League Season 2"), null, 0x5ee7ff);
+  room.sendAnnouncement(centerText("RSI Scrim Room"), null, 0x5ee7ff);
   room.startRecording();
   sendWebhook(startWebHook, `\`⚽ 𝙆𝙄𝘾𝙆 𝙊𝙁𝙁 !! ⚽\` - Game duration \`${gameTime} minutes\``);
     
@@ -4393,7 +4381,7 @@ room.onTeamGoal = function (team) {
         room.sendAnnouncement(line, null, 0x008EE5, "small");
       });
       // announce("[GOALLL] ⚽ Scorer: " + lastPlayersTouched[0].name + " ( 🅰️ Assist: " + lastPlayersTouched[1].name + " ) 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
-      room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
+      room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "small");
       avatarCelebration(goalMaker, "⚽", "🎯");
       
       sendWebhook(goalWebHook, `\`[GOALL LEAGUE]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Assist: ** \`${lastPlayersTouched[1].name}\` ** Menit: ** \`${goalTime}\` `);
@@ -4410,7 +4398,7 @@ room.onTeamGoal = function (team) {
         room.sendAnnouncement(line, null, 0x008EE5, "small");
       });
       // announce("[GOALLL] ⚽ Scorer: " + lastPlayersTouched[0].name + " 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
-      room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
+      room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "small");
       avatarCelebration(goalMaker, "⚽", "🎯");
 
       sendWebhook(goalWebHook, `\`[GOALL LEAGUE]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` `);
@@ -4500,61 +4488,12 @@ room.onGameTick = function () {
   updateGameStatus();
   handleBallTouch();
   realSoccerRef();
-  if (!isTurneyStarted) {
-    checkTime();
-  }
+  checkTime();
   getLastTouchOfTheBall();
   getStats();
   handleInactivity();
   handleFrozenPlayerMoves();
-  if (isTurneyStarted) {
-    if (game.time == 5 * 60) {
-      pauseAndResumeGame();
-    }
-  }
 };
-
-function pauseAndResumeGame() {
-  room.stopGame(true);
-  announce("⚽ HALF TIME - 60 SEC ⚽");
-  setTimeout(() => {
-    swapTeamsAndAnnounce();
-  }, 3400);
-  isTurneyStarted = false;
-  console.log(`isTurneyStarted = false`);
-  setTimeout(() => {
-    let timeLeft = 10; // Time left before resuming in seconds
-    let timerId = setInterval(() => {
-      if (timeLeft > 0) {
-        announce(`Kick-off in ${timeLeft} seconds ⏳`);
-        timeLeft--;
-      } else {
-        clearInterval(timerId);
-        room.startGame();
-        announce("⚽ KICK OFF - SECOND HALF ⚽");
-        setTimeout(() => {
-          isTurneyStarted = false;
-          console.log(`isTurneyStarted = false`);
-        }, 5000);
-      }
-    }, 1000); // Repeat every second
-  }, 50 * 1000); // 80 seconds after initial pause
-}
-
-function swapTeamsAndAnnounce() {
-  var players = room.getPlayerList().filter((player) => player.id != 0);
-  if (players.length == 0) return false;
-  
-  players.forEach(function (player) {
-    if (player.team == 1) {
-      room.setPlayerTeam(player.id, 2);
-    } else if (player.team == 2) {
-      room.setPlayerTeam(player.id, 1);
-    }
-  });
-  
-  announce("🔄 Teams Swapped");
-}
 
 function realSoccerRef() {
   blockThrowIn();
