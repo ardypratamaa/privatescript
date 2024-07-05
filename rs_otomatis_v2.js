@@ -35,7 +35,7 @@ var gkTimeOut = 600; // 10 seconds (var is in game ticks)
 var ckTimeOut = 600; // 10 seconds (var is in game ticks)
 var throwinDistance = 270; // distance players can move the ball during throw in
 var powerShotMode = true;
-var gameTime = 3; //default game time if 0 is selected
+var gameTime = 5; //default game time if 0 is selected
 
 const room = HBInit({
   roomName: roomName,
@@ -47,7 +47,7 @@ const room = HBInit({
 });
 
 const scoreLimitPractice = 5;
-const timeLimitPractice = 3;
+const timeLimitPractice = 5;
 
 let Cor = {
   Vermelho: 0xfa5646,
@@ -229,6 +229,7 @@ let countdownTimeouts = [];
 var captchaRequired = false;
 var bisaPick = true;
 var saveUniform = false
+let penKick = false;
 
 var savedRedUniform = null;
 var savedBlueUniform = null;
@@ -243,7 +244,7 @@ var gamePausedDueToVoteKick = false;
 var redTeamColors = [
   // COUNTRY
   {angle: 132, textColor: 0xffffff, colors: [0x1fa303, 0xfc0000], name: "Portugal", type: "country"},
-  // {angle: 180, textColor: 0x000000, colors: [0x2a74d1, 0xfcfcfc, 0x2a74d1], name: "Argentina", type: "country"},
+  {angle: 180, textColor: 0x000000, colors: [0x2a74d1, 0xfcfcfc, 0x2a74d1], name: "Argentina", type: "country"},
   {angle: 90, textColor: 0x000000, colors: [0xffee1c, 0x1fd111], name: "Brazil", type: "country"},
   {angle: 90, textColor: 0xffffff, colors: [0xff5f05], name: "Netherlands", type: "country"},
   {angle: 90, textColor: 0x000000, colors: [0xEBEBEB, 0xD40000, 0xEBEBEB], name: "England", type: "country"},
@@ -318,7 +319,7 @@ function moveBotToBottom() {
 var playerRadius = 15;
 var ballRadius = 6.25;
 var triggerDistance = playerRadius + ballRadius + 0.01;
-//default ballphysic 1.06 invmass 0.13 acceleration player  radius 8.5      "bounciness": 0.8       "kickStrength": 5.5
+//default ballphysic 1.06 invmass 0.13 acceleration player  radius 8.5      "bounciness": 0.8       "kickStrength": 5.872 def
 
 var practiceMap = //rsi map
   `{
@@ -340,7 +341,7 @@ var practiceMap = //rsi map
       "acceleration" : 0.1455,
       "kickingAcceleration" : 0.08,
       "kickingDamping" : 0.96,
-      "kickStrength" : 5.872,
+      "kickStrength" : 5.52,
       "kickback" : 0
 
     },
@@ -789,7 +790,7 @@ var practiceMap = //rsi map
     ],
   
     "discs" : [
-      { "radius" : 9, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
+      { "radius" : 9, "invMass" : 1.114, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.987, "bounciness" : 0.8, "friction" : 0.05 },
       { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
       { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
@@ -1541,15 +1542,179 @@ var preMap =
     "canBeStored" : false
   }`;
 
-var winMap =
-  '{"name":"RSI Podium","width":625,"height":425,"cameraWidth":800,"cameraHeight":400,"maxViewWidth":0,"cameraFollow":"player","spawnDistance":170,"redSpawnPoints":[[-78,120],[-88,95],[-51,138],[-91,138],[-126,138],[-65,98],[43,138],[83,138],[119,138],[52,98],[100,98],[-105,98]],"blueSpawnPoints":[],"canBeStored":false,"kickOffReset":"partial","bg":{"color":"000000","type":"","height":300,"width":700},"traits":{"ballArea":{"vis":false,"bCoef":1,"cMask":["ball"]},"goalPost":{"radius":8,"invMass":0,"bCoef":0.5},"goalNet":{"vis":true,"bCoef":0.1,"cMask":["ball"]},"kickOffBarrier":{"vis":false,"bCoef":0.1,"cGroup":["redKO","blueKO"],"cMask":["red","blue"]}},"vertexes":[{"x":11.081942101065067,"y":-129.79789097167054,"color":"D5E0ED"},{"x":15.55703514486793,"y":-190.29927927552478,"color":"D5E0ED"},{"x":15.55703514486793,"y":-190.29927927552478,"color":"D5E0ED"},{"x":13.2211349296961,"y":-158.71888428175475,"color":"D5E0ED"},{"x":73.85289026559778,"y":-123.62335695075618,"color":"D5E0ED"},{"x":79.38943004457802,"y":-162.384737031572,"color":"D5E0ED"},{"x":147.45558187337076,"y":-171.00866240720683,"color":"D5E0ED"},{"x":129.41204476329852,"y":-116.85879125006346,"color":"D5E0ED"},{"x":147.12315666291002,"y":-171.03325083052437,"curve":150.21796687738058,"color":"D5E0ED"},{"x":129.0796195528378,"y":-116.88337967338113,"curve":150.21796687738058,"color":"D5E0ED"},{"x":185.45374790269742,"y":-97.79515375933777,"color":"D5E0ED"},{"x":205.1971736226124,"y":-155.94417139466253,"color":"D5E0ED"},{"x":216.89887480332533,"y":-87.01535811176599,"color":"D5E0ED"},{"x":236.61625656684035,"y":-145.83053350376662,"color":"D5E0ED"},{"x":-194.23277651575052,"y":-98.43836650584149,"color":"D5E0ED"},{"x":-211.57116786861846,"y":-155.78655838659566,"color":"D5E0ED"},{"x":-233.85779843955075,"y":-85.99373694515512,"color":"D5E0ED"},{"x":-250.89528731286202,"y":-142.3896743047696,"color":"D5E0ED"},{"x":-240.91964372390382,"y":-111.38262155722116,"curve":0,"color":"D5E0ED"},{"x":-120.53251478624477,"y":-119.81853430415934,"color":"D5E0ED"},{"x":-155.68882406587616,"y":-173.22401182235035,"color":"D5E0ED"},{"x":-158.4152500800906,"y":-109.25084087398324,"color":"D5E0ED"},{"x":-156.31245839076283,"y":-133.16086760383874,"color":"D5E0ED"},{"x":-134.75495954879634,"y":-139.9224271963485,"color":"D5E0ED"},{"x":-267.2993267628896,"y":-71.49987663718129,"color":"D5E0ED"},{"x":-287.9154677595333,"y":-127.17230405732306,"color":"D5E0ED"},{"x":273.4877755964566,"y":-97.79366344055533,"color":"D5E0ED"},{"x":296.91168866418275,"y":-124.18578894681069,"color":"D5E0ED"},{"x":268.61270977320015,"y":-101.82003655770109,"color":"D5E0ED"},{"x":241.94636294379006,"y":-78.70878520871675,"color":"D5E0ED"},{"x":-85.7961824235166,"y":183,"color":"2b2b2b","bias":-5},{"x":-62.64483161082165,"y":121.54459176664852,"bias":-5,"color":"2b2b2b"},{"x":76.60373430671126,"y":183,"color":"2b2b2b","bias":5},{"x":61.282987445369,"y":121.88505280801168,"bias":5,"color":"2b2b2b"},{"x":-36.853332071199844,"y":-130.15404391640783,"color":"D5E0ED"},{"x":-40.35644407845471,"y":-191.24555437988448,"color":"D5E0ED"},{"x":-89.96663748361871,"y":-126.0608097495306,"color":"D5E0ED"},{"x":-95.99343335063955,"y":-184.6650374925445,"color":"D5E0ED"},{"x":-66.7007247167524,"y":-160.43825023359915,"color":"D5E0ED"},{"x":-201.99628564948182,"y":-124.40600580790013,"curve":0,"color":"D5E0ED"},{"x":84.39355674804591,"y":-189.76438274811215,"color":"D5E0ED"},{"x":82.60074220318313,"y":-179.38082322199756,"color":"D5E0ED"},{"x":84.30525630151726,"y":-189.77091404805577,"curve":150.21796687738058,"color":"D5E0ED"},{"x":-14.554140727501618,"y":-34.053978026179664,"color":"2b2b2b"},{"x":12.205572063184235,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":26.614648181245855,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":18,"color":"2b2b2b"},{"x":-29.649363327375767,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-15.926433691126476,"y":-14.155730053618413,"color":"2b2b2b"},{"x":-39.255414072750284,"y":-36.112417471617135,"color":"2b2b2b"},{"x":17.694743917684093,"y":-15.5280230172433,"color":"2b2b2b"},{"x":34.848405962995514,"y":-37.48471043524202,"color":"2b2b2b"},{"x":54.74665393555688,"y":-37.48471043524202,"curve":31,"color":"2b2b2b"},{"x":-59.15366204531148,"y":-36.112417471617135,"curve":-31,"color":"2b2b2b"},{"x":-39.255414072750284,"y":-36.112417471617135,"color":"2b2b2b"},{"x":-9.751115354814402,"y":75.04331258200133,"curve":-31,"color":"2b2b2b"},{"x":8.774839654121934,"y":75.04331258200133,"curve":31,"color":"2b2b2b"},{"x":8.774839654121934,"y":84.64936332737572,"color":"2b2b2b"},{"x":-9.751115354814402,"y":83.96321684556324,"color":"2b2b2b"},{"x":-57.09522259987415,"y":-34.053978026179664,"color":"2b2b2b"},{"x":-39.255414072750284,"y":-34.053978026179664,"color":"2b2b2b"},{"x":-55.03678315443665,"y":-31.99553858074222,"color":"2b2b2b"},{"x":-39.255414072750284,"y":-31.99553858074222,"color":"2b2b2b"},{"x":34.848405962995514,"y":-35.426270989804635,"color":"2b2b2b"},{"x":52.68821449011941,"y":-35.426270989804635,"color":"2b2b2b"},{"x":34.848405962995514,"y":-33.36783154436722,"color":"2b2b2b"},{"x":50.62977504468199,"y":-33.36783154436722,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":1.2272283541849731,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":3.285667799622246,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":5.344107245059519,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":7.402546690497104,"y":-21.703341353555516,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":9.460986135934405,"y":-23.761780798992845,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":11.519425581371678,"y":-26.506366726242618,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":13.577865026809206,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-2.889650536689885,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-4.948089982127186,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-7.006529427564487,"y":-21.01719487174296,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-9.064968873001988,"y":-22.38948783536793,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":-12.495701282064232,"y":-24.447927280805402,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.72945906381378,"curve":0,"color":"2b2b2b"},{"x":-17.298726654751448,"y":-33.36783154436722,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-15.240287209314147,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":-10.43726183662696,"y":-23.075634317180374,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-19.35716610018892,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-21.415605545626306,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-23.47404499106358,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-27.59092388193838,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-25.53248443650108,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-23.47404499106358,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":75.04331258200133,"curve":0,"color":"2b2b2b"},{"x":-26.90477740012588,"y":-18.95875542630563,"color":"2b2b2b"},{"x":-27.59092388193838,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":15.636304472246508,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":17.694743917684093,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":19.753183363121366,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":21.811622808558667,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":23.87006225399614,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":24.556208735808582,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":0,"color":"2b2b2b"},{"x":22.497769290371195,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":18,"color":"2b2b2b"},{"x":20.439329844933667,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":18,"color":"2b2b2b"},{"x":18.380890399496366,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":74.35716610018888,"curve":18,"color":"2b2b2b"},{"x":25.24235521762091,"y":-34.053978026179664,"curve":990,"color":"2b2b2b"},{"x":-2.2035040548772713,"y":74.35716610018888,"curve":18,"color":"2b2b2b"},{"x":26.614648181245855,"y":-34.053978026179664,"color":"2b2b2b"},{"x":11.519425581371678,"y":-34.053978026179664,"curve":0,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":-47.368985211351315,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","curve":180,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":-20.89991294949766,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","curve":180,"color":"2b2b2b"},{"x":-0.8312110912523281,"y":-36.025097099128345,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-6.773247721464486,"y":-33.324171358122896,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-13.795654648078738,"y":-37.6456525437317,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":5.110825538959546,"y":-32.78398620992178,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":12.673417613774916,"y":-36.565282247329435,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-9.474173462469878,"y":-25.76157928330747,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":8.351936428166084,"y":-24.14102383870437,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-0.2910259430514941,"y":-27.922319876111942,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-5.69287742506242,"y":-21.98028324589984,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":4.570640390758399,"y":-21.44009809769892,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-1.3713962394534462,"y":-36.025097099128345,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":8.351936428166084,"y":-42.507318877541564,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-8.393803166067698,"y":-45.20824461854704,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-9.751115354814402,"y":79.1601914728761,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-20.043312582001363,"y":92.88312110912528,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b","curve":45},{"x":9.460986135934405,"y":79.1601914728761,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":20,"y":92.88312110912528,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b","curve":45},{"x":-24.101752027438664,"y":121,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b","curve":-60},{"x":24,"y":121,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b","curve":-60},{"x":-21.415605545626306,"y":101.80302537268722,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":21.811622808558667,"y":101.80302537268722,"bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","color":"2b2b2b"},{"x":-53.664490190811705,"y":-20.33104838993046},{"x":-36.510828145500454,"y":-10.03885116274364},{"x":-49.54761129993713,"y":-3.8635328264314808},{"x":-32.39394925462557,"y":9.859396809817724},{"x":-43.37229296362494,"y":16.034715146129855},{"x":-26.90477740012588,"y":25.640765891504202},{"x":-36.510828145500454,"y":32.50223070962875},{"x":-20.729459063813692,"y":42.10828145500324},{"x":-26.218630918313522,"y":52.400478682190126},{"x":-13.181847763876874,"y":53.77277164581503},{"x":-16.61258017293909,"y":66.12340831843932},{"x":34.162259481183014,"y":-20.33104838993046},{"x":45.826749671994776,"y":-10.03885116274364},{"x":31.41767355393307,"y":-3.8635328264314808},{"x":41.0237242993077,"y":9.859396809817724},{"x":27.300794663058355,"y":16.034715146129855},{"x":36.220698926620486,"y":25.640765891504202},{"x":21.811622808558667,"y":32.50223070962875},{"x":29.359234108495798,"y":42.10828145500324},{"x":12.89171854499665,"y":52.400478682190126},{"x":14.26401150862165,"y":67.49570128206427},{"x":-0.8312110912523281,"y":75.72945906381378},{"x":-8.329623411350411,"y":113.56037474846096,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":-8.329623411350411,"y":100.81805000090878,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":-1.7112863291720544,"y":100.81805000090878,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":2.7944353499259194,"y":106.0276192347146,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":2.7944353499259194,"y":100.81805000090878,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":9.231180605778547,"y":100.81805000090878,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":9.231180605778547,"y":113.63077433270165,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":-8.329623411350411,"y":113.56037474846096,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":9.231180605778547,"y":113.63077433270165,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":-1.7112863291720544,"y":113.63077433270165,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":-1.7112863291720544,"y":108.42120509889568,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":2.7944353499259194,"y":113.63077433270165,"bCoef":0,"cMask":["c0"],"cGroup":["c0"],"color":"222222"},{"x":-297,"y":105,"bCoef":-0.5,"cGroup":["c0"],"curve":0,"color":"2b2b2b"},{"x":303,"y":104,"bCoef":-0.5,"cGroup":["c0"],"curve":0,"color":"2b2b2b"},{"x":-295.3952879581152,"y":76.27272727272725,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-8,"radius":10},{"x":-255.6047120418848,"y":76.27272727272725,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-8,"radius":10},{"x":-295.3952879581152,"y":84.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-180},{"x":-255.6047120418848,"y":84.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-180},{"x":-303.35340314136124,"y":84.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":-247.64659685863876,"y":84.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":-303.35340314136124,"y":93.72727272727275,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":-247.64659685863876,"y":93.72727272727275,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":-287.4371727748691,"y":117,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-25},{"x":-263.5628272251309,"y":117,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-25},{"x":-287.4371727748691,"y":126.14285714285717,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":-263.5628272251309,"y":126.14285714285717,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":-293.0078534031414,"y":126.97402597402595,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":-257.9921465968586,"y":126.97402597402595,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":-293.0078534031414,"y":133.6233766233766,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":30},{"x":-257.9921465968586,"y":133.6233766233766,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":-281.07068062827227,"y":181,"bCoef":-0.5,"cGroup":["c0"],"curve":50,"color":"2b2b2b"},{"x":-269.92931937172773,"y":181,"bCoef":-0.5,"cGroup":["c0"],"curve":50,"color":"2b2b2b"},{"x":-275.5,"y":117,"bCoef":-0.5,"cGroup":["c0"],"curve":75,"color":"2b2b2b"},{"x":-292.21204188481676,"y":94.55844155844159,"bCoef":-0.5,"cGroup":["c0"],"curve":-75,"color":"2b2b2b"},{"x":-258.78795811518324,"y":94.55844155844159,"bCoef":-0.5,"cGroup":["c0"],"curve":75,"color":"2b2b2b"},{"x":260.1047120418848,"y":77.27272727272725,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-8},{"x":299.8952879581152,"y":77.27272727272725,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-8},{"x":260.1047120418848,"y":85.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-180},{"x":299.8952879581152,"y":85.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-180},{"x":252.14659685863876,"y":85.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":307.85340314136124,"y":85.58441558441558,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":252.14659685863876,"y":94.72727272727275,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":307.85340314136124,"y":94.72727272727275,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":268.0628272251309,"y":118,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-25},{"x":291.9371727748691,"y":118,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-25},{"x":268.0628272251309,"y":127.14285714285717,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":291.9371727748691,"y":127.14285714285717,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":262.4921465968587,"y":127.97402597402595,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":297.5078534031413,"y":127.97402597402595,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":0},{"x":262.4921465968587,"y":134.6233766233766,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":30},{"x":297.5078534031413,"y":134.6233766233766,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b","curve":-165},{"x":274.42931937172773,"y":182,"bCoef":-0.5,"cGroup":["c0"],"curve":50,"color":"2b2b2b"},{"x":285.57068062827227,"y":182,"bCoef":-0.5,"cGroup":["c0"],"curve":50,"color":"2b2b2b"},{"x":280,"y":118,"bCoef":-0.5,"cGroup":["c0"],"curve":75,"color":"2b2b2b"},{"x":263.28795811518324,"y":95.55844155844159,"bCoef":-0.5,"cGroup":["c0"],"curve":-75,"color":"2b2b2b"},{"x":296.71204188481676,"y":95.55844155844159,"bCoef":-0.5,"cGroup":["c0"],"curve":75,"color":"2b2b2b"},{"x":-252,"y":105,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b"},{"x":256,"y":104,"bCoef":-0.5,"cGroup":["c0"],"color":"2b2b2b"},{"x":-625,"y":183,"color":"2b2b2b"},{"x":625,"y":183,"color":"2b2b2b"},{"x":-506.5,"y":183,"color":"2b2b2b"},{"x":508.5,"y":183,"color":"2b2b2b"},{"x":-625,"y":183,"cMask":["c0"],"cGroup":["c0"],"color":"2b2b2b"},{"x":625,"y":183,"cMask":["c0"],"cGroup":["c0"],"color":"2b2b2b"}],"segments":[{"v0":0,"v1":1,"color":"D5E0ED"},{"v0":2,"v1":3,"curve":212.28867756056664,"color":"D5E0ED"},{"v0":4,"v1":5,"curve":0,"color":"D5E0ED"},{"v0":6,"v1":7,"curve":-165.44801395883317,"color":"D5E0ED"},{"v0":8,"v1":9,"curve":176.0526558299046,"color":"D5E0ED"},{"v0":10,"v1":11,"color":"D5E0ED"},{"v0":11,"v1":12,"color":"D5E0ED"},{"v0":12,"v1":13,"color":"D5E0ED"},{"v0":14,"v1":15,"color":"D5E0ED"},{"v0":16,"v1":17,"color":"D5E0ED"},{"v0":19,"v1":20,"color":"D5E0ED"},{"v0":20,"v1":21,"color":"D5E0ED"},{"v0":22,"v1":23,"color":"D5E0ED"},{"v0":24,"v1":25,"curve":208.94058820013151,"color":"D5E0ED"},{"v0":26,"v1":27,"curve":208.94058820013151,"color":"D5E0ED"},{"v0":28,"v1":29,"curve":208.94058820013151,"color":"D5E0ED"},{"v0":30,"v1":31,"curve":0,"color":"2b2b2b","bias":-5},{"v0":32,"v1":33,"curve":0,"color":"2b2b2b","bias":5},{"v0":31,"v1":33,"curve":0,"color":"2b2b2b"},{"v0":34,"v1":35,"color":"D5E0ED"},{"v0":36,"v1":37,"color":"D5E0ED"},{"v0":37,"v1":38,"color":"D5E0ED"},{"v0":38,"v1":35,"color":"D5E0ED"},{"v0":18,"v1":39,"curve":0,"color":"D5E0ED"},{"v0":40,"v1":41,"curve":-52.103997010176776,"color":"D5E0ED"},{"v0":43,"v1":44,"curve":-187.53277594193364,"color":"2b2b2b","y":-206},{"v0":45,"v1":46,"curve":18,"color":"2b2b2b"},{"v0":47,"v1":48,"curve":-13.81432544760929,"color":"2b2b2b"},{"v0":49,"v1":50,"curve":97.89037245807509,"color":"2b2b2b"},{"v0":52,"v1":51,"curve":97.89037245807509,"color":"2b2b2b"},{"v0":52,"v1":53,"curve":0,"color":"2b2b2b"},{"v0":54,"v1":55,"curve":0,"color":"2b2b2b"},{"v0":56,"v1":57,"curve":0,"color":"2b2b2b"},{"v0":57,"v1":58,"curve":0,"color":"2b2b2b"},{"v0":58,"v1":59,"curve":0,"color":"2b2b2b"},{"v0":59,"v1":56,"curve":0,"color":"2b2b2b"},{"v0":60,"v1":61,"curve":0,"color":"2b2b2b","y":-209},{"v0":62,"v1":63,"curve":0,"color":"2b2b2b","y":-206},{"v0":64,"v1":65,"curve":0,"color":"2b2b2b","y":-209},{"v0":66,"v1":67,"curve":0,"color":"2b2b2b","y":-206},{"v0":54,"v1":56,"curve":-31,"color":"2b2b2b"},{"v0":53,"v1":57,"curve":31,"color":"2b2b2b"},{"v0":56,"v1":62,"curve":31,"color":"2b2b2b"},{"v0":56,"v1":60,"curve":31,"color":"2b2b2b"},{"v0":67,"v1":57,"curve":31,"color":"2b2b2b"},{"v0":65,"v1":57,"curve":31,"color":"2b2b2b"},{"v0":48,"v1":63,"curve":31,"color":"2b2b2b"},{"v0":66,"v1":48,"curve":31,"color":"2b2b2b"},{"v0":68,"v1":48,"curve":0,"color":"2b2b2b","x":32},{"v0":70,"v1":69,"curve":0,"color":"2b2b2b","x":35},{"v0":72,"v1":71,"curve":0,"color":"2b2b2b","x":38},{"v0":74,"v1":73,"curve":0,"color":"2b2b2b","x":41},{"v0":76,"v1":75,"curve":0,"color":"2b2b2b","x":44},{"v0":78,"v1":77,"curve":0,"color":"2b2b2b","x":47},{"v0":80,"v1":79,"curve":0,"color":"2b2b2b","x":50},{"v0":82,"v1":81,"curve":0,"color":"2b2b2b","x":53},{"v0":84,"v1":83,"curve":0,"color":"2b2b2b","x":29},{"v0":86,"v1":85,"curve":0,"color":"2b2b2b","x":26},{"v0":88,"v1":87,"curve":0,"color":"2b2b2b","x":23},{"v0":90,"v1":89,"curve":0,"color":"2b2b2b","x":20},{"v0":92,"v1":91,"curve":0,"color":"2b2b2b","x":17},{"v0":94,"v1":93,"curve":0,"color":"2b2b2b","x":14},{"v0":96,"v1":95,"curve":0,"color":"2b2b2b","x":11},{"v0":98,"v1":97,"curve":0,"color":"2b2b2b","x":8},{"v0":100,"v1":99,"curve":0,"color":"2b2b2b","x":5},{"v0":102,"v1":101,"curve":0,"color":"2b2b2b","x":2},{"v0":104,"v1":103,"curve":0,"color":"2b2b2b","x":-1},{"v0":47,"v1":105,"curve":0,"color":"2b2b2b","x":-10},{"v0":106,"v1":107,"curve":0,"color":"2b2b2b","x":-7},{"v0":108,"v1":109,"curve":0,"color":"2b2b2b","x":-4},{"v0":110,"v1":111,"curve":0,"color":"2b2b2b","x":-1},{"v0":49,"v1":111,"curve":0,"color":"2b2b2b"},{"v0":112,"v1":111,"curve":0,"color":"2b2b2b"},{"v0":113,"v1":114,"curve":-12.08818432448223,"color":"2b2b2b"},{"v0":115,"v1":116,"curve":0,"color":"2b2b2b","x":56},{"v0":117,"v1":118,"curve":0,"color":"2b2b2b","x":59},{"v0":119,"v1":120,"curve":0,"color":"2b2b2b","x":62},{"v0":121,"v1":122,"curve":0,"color":"2b2b2b","x":65},{"v0":123,"v1":124,"curve":0,"color":"2b2b2b","x":68},{"v0":125,"v1":126,"curve":0,"color":"2b2b2b","x":69},{"v0":127,"v1":128,"curve":18,"color":"2b2b2b","x":66},{"v0":129,"v1":130,"curve":18,"color":"2b2b2b","x":63},{"v0":131,"v1":132,"curve":18,"color":"2b2b2b","x":60},{"v0":133,"v1":134,"curve":18,"color":"2b2b2b"},{"v0":47,"v1":43,"curve":0,"color":"2b2b2b"},{"v0":136,"v1":135,"curve":0,"color":"2b2b2b"},{"v0":137,"v1":138,"curve":180,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":138,"v1":137,"curve":180,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":137,"v1":139,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":139,"v1":140,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":140,"v1":141,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":139,"v1":142,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":142,"v1":143,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":140,"v1":144,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":142,"v1":145,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":139,"v1":146,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":146,"v1":147,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":146,"v1":148,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":149,"v1":150,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":139,"v1":151,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":152,"v1":153,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":154,"v1":155,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":155,"v1":153,"curve":45,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":153,"v1":156,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":156,"v1":157,"curve":4.582836827638469,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier","y":121},{"v0":157,"v1":155,"vis":true,"color":"2b2b2b","bCoef":0.1,"cMask":["c0"],"cGroup":["c0"],"trait":"kickOffBarrier"},{"v0":63,"v1":160,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":160,"v1":161,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":161,"v1":162,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":162,"v1":163,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":163,"v1":164,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":164,"v1":165,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":165,"v1":166,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":166,"v1":167,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":167,"v1":168,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":168,"v1":169,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":169,"v1":170,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":170,"v1":134,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":67,"v1":171,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":171,"v1":172,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":172,"v1":173,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":173,"v1":174,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":174,"v1":175,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":175,"v1":176,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":176,"v1":177,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":177,"v1":178,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":178,"v1":179,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":179,"v1":180,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":181,"v1":180,"curve":0,"vis":true,"color":"2b2b2b"},{"v0":182,"v1":183,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"],"x":-141},{"v0":183,"v1":184,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"],"y":-45.5},{"v0":184,"v1":185,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"]},{"v0":185,"v1":186,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"]},{"v0":186,"v1":187,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"],"y":-45.5},{"v0":187,"v1":188,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"]},{"v0":189,"v1":191,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"],"y":197},{"v0":191,"v1":192,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"]},{"v0":192,"v1":193,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"]},{"v0":193,"v1":190,"color":"222222","bCoef":0,"cMask":["c0"],"cGroup":["c0"],"y":45.5},{"v0":196,"v1":197,"curve":-8,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":370,"radius":10},{"v0":198,"v1":199,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":196,"v1":198,"curve":-180.00000000000176,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":199,"v1":197,"curve":-170.7333876736081,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":200,"v1":201,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":202,"v1":203,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":375},{"v0":200,"v1":202,"curve":-180.00000000000952,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":203,"v1":201,"curve":-179.99999999999528,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":202,"v1":203,"curve":-165.63127608781159,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":204,"v1":205,"curve":-26.073554859371015,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":206,"v1":207,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":375},{"v0":204,"v1":206,"curve":-180.00000000000247,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":-15},{"v0":207,"v1":205,"curve":-202.72687443951966,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":15},{"v0":208,"v1":209,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":210,"v1":211,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":454},{"v0":208,"v1":210,"curve":-179.99999999999508,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":-22},{"v0":211,"v1":209,"curve":-180.00000000000824,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":22},{"v0":210,"v1":212,"curve":29.081223606830164,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":213,"v1":211,"curve":28.775195329981987,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":213,"v1":212,"curve":51.93451319677356,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":215,"v1":214,"curve":-72.6314325682926,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":216,"v1":214,"curve":72.63143256829309,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":217,"v1":218,"curve":-8,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":370},{"v0":219,"v1":220,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":217,"v1":219,"curve":-180.00000000000176,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":220,"v1":218,"curve":-170.7333876736081,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":221,"v1":222,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":223,"v1":224,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":375},{"v0":221,"v1":223,"curve":-180.00000000000952,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":224,"v1":222,"curve":-179.99999999999528,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":223,"v1":224,"curve":-165.63127608781159,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":225,"v1":226,"curve":-26.073554859371015,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":227,"v1":228,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":375},{"v0":225,"v1":227,"curve":-180.00000000000247,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":-15},{"v0":228,"v1":226,"curve":-202.72687443951966,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":15},{"v0":229,"v1":230,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":380},{"v0":231,"v1":232,"curve":0,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":0,"y":454},{"v0":229,"v1":231,"curve":-179.99999999999508,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":-22},{"v0":232,"v1":230,"curve":-180.00000000000824,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"],"x":22},{"v0":231,"v1":233,"curve":29.081223606830164,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":234,"v1":232,"curve":28.775195329981987,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":234,"v1":233,"curve":51.93451319677356,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":236,"v1":235,"curve":-72.6314325682926,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":237,"v1":235,"curve":72.63143256829309,"color":"2b2b2b","bCoef":-0.5,"cGroup":["c0"]},{"v0":240,"v1":241,"curve":125.79648024076617,"color":"2b2b2b"},{"v0":242,"v1":243,"curve":125.79648024076617,"color":"2b2b2b"},{"v0":244,"v1":245,"color":"2b2b2b","cMask":["c0"],"cGroup":["c0"]}],"goals":[],"discs":[{"radius":10,"invMass":1,"pos":[-273,33],"color":"DB8727","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[-284,59],"color":"EBAB4D","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[-281,43],"color":"DBD52A","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[-269,43],"color":"C44221","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[-274,56],"color":"DB8727","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[-266,63],"color":"DBD142","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[290,46],"color":"DBD52A","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[281,33],"color":"DB8727","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[270,59],"color":"EBAB4D","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[273,43],"color":"DBD52A","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[285,43],"color":"C44221","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[280,56],"color":"DB8727","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":10,"invMass":1,"pos":[288,63],"color":"DBD142","bCoef":1,"cMask":["blueKO"],"cGroup":["score"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":95,"invMass":0,"pos":[274,86],"color":"000000","cMask":["red","blue"],"cGroup":["wall"],"damping":1,"speed":[0,0],"gravity":[0,0]},{"radius":1,"invMass":1,"pos":[0,130],"color":"2b2b2b","cMask":["ball"],"cGroup":["all"],"damping":1,"speed":[0,-1],"gravity":[0,0]},{"radius":0,"invMass":1,"pos":[-118,-380],"color":"d7de18","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-133,-365],"color":"d7de18","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-67,-407],"color":"97f7e4","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-61,-389],"color":"97f7e4","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-7,-412],"color":"ffb330","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-13,-397],"color":"ffb330","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[49,-415],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[49,-394],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[128,-410],"color":"36a832","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[137,-394],"color":"36a832","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[98,-415],"color":"4a7529","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[94,-398],"color":"4a7529","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[14,-414],"color":"d7de18","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[19,-399],"color":"d7de18","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-31,-414],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-38,-398],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-203,-400],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-190,-388],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[114,-396],"color":"da5fe3","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[113,-378],"color":"da5fe3","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-113,-413],"color":"ffb330","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-99,-402],"color":"ffb330","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-165,-387],"color":"2883b0","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-174,-367],"color":"2883b0","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[175,-410],"color":"97f7e4","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[190,-393],"color":"d7de18","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[155,-382],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[174,-374],"color":"de122a","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[218,-409],"color":"ffb330","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[170,-397],"color":"97f7e4","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[218,-393],"color":"ffb330","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[207,-374],"color":"d7de18","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[5,-381],"color":"4a7529","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[22,-369],"color":"4a7529","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-29,-375],"color":"36a832","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-39,-359],"color":"36a832","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[107,-362],"color":"97f7e4","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[133,-349],"color":"97f7e4","cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[77,-377],"color":"2883b0","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[62,-358],"color":"2883b0","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-250,-410],"color":"2b2b2b","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-269,-394],"color":"2b2b2b","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-225,-409],"color":"da5fe3","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":0,"invMass":1,"pos":[-233,-390],"color":"da5fe3","bCoef":1,"cMask":["c0"],"cGroup":["c0"],"damping":0.75,"speed":[0,0],"gravity":[0,0.2]},{"radius":95,"invMass":0,"pos":[-274,86],"color":"000000","cMask":["red","blue"],"cGroup":["wall"],"damping":1,"speed":[0,0],"gravity":[0,0]},{"radius":6,"invMass":1.0e+250,"pos":[0,130],"color":"ffffff","cMask":["ball"],"cGroup":["kick"],"damping":1000000,"speed":[0,0],"gravity":[0,0]}],"planes":[{"normal":[0,-1],"dist":-73,"bCoef":1.0e-7,"cMask":["score"],"cGroup":["blueKO"],"_data":{"extremes":{"normal":[0,-1],"dist":-73,"canvas_rect":[-902,-425,902,425],"a":[-902,73],"b":[902,73]}}},{"normal":[0,1],"dist":18,"bCoef":10000000,"cMask":["score"],"cGroup":["blueKO"],"_data":{"extremes":{"normal":[0,1],"dist":18,"canvas_rect":[-902,-425,902,425],"a":[-902,18],"b":[902,18]}}}],"joints":[{"d0":56,"d1":57,"strength":"rigid","color":"transparent","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":56,"d1":57,"strength":"rigid","color":"36a832","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":58,"d1":59,"strength":"rigid","color":"da5fe3","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":34,"d1":35,"strength":"rigid","color":"da5fe3","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":38,"d1":39,"strength":"rigid","color":"2883b0","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":32,"d1":33,"strength":"rigid","color":"de122a","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":16,"d1":17,"strength":"rigid","color":"d7de18","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":36,"d1":37,"strength":"rigid","color":"ffb330","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":18,"d1":19,"strength":"rigid","color":"97f7e4","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":50,"d1":51,"strength":"rigid","color":"36a832","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":30,"d1":31,"strength":"rigid","color":"de122a","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":20,"d1":21,"strength":"rigid","color":"ffb330","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":28,"d1":29,"strength":"rigid","color":"d7de18","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":48,"d1":49,"strength":"rigid","color":"4a7529","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":22,"d1":23,"strength":"rigid","color":"de122a","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":54,"d1":55,"strength":"rigid","color":"2883b0","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":26,"d1":27,"strength":"rigid","color":"4a7529","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":52,"d1":53,"strength":"rigid","color":"97f7e4","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"damping":0.75},{"d0":24,"d1":25,"strength":"rigid","color":"36a832","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":42,"d1":43,"strength":"rigid","color":"de122a","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":41,"d1":47,"strength":"rigid","color":"d7de18","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":40,"d1":45,"strength":"rigid","color":"97f7e4","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":44,"d1":46,"strength":"rigid","color":"ffb330","length":null,"radius":0,"speed":[0,0],"gravity":[0,0.2],"cMask":["c0"],"cGroup":["c0"],"bCoef":1,"damping":0.75},{"d0":60,"d1":61,"strength":"rigid","color":"transparent","length":null},{"d0":14,"d1":61,"strength":"rigid","color":"transparent","length":null}],"playerPhysics":{"radius":14,"bCoef":0.5,"invMass":0.5,"damping":0.96,"cGroup":["red","blue"],"acceleration":0.1,"gravity":[0,0],"kickingAcceleration":0.07,"kickingDamping":0.96,"kickStrength":5,"kickback":0},"ballPhysics":{"radius":0,"bCoef":0.5,"cMask":["all"],"damping":0.99,"invMass":1,"gravity":[0,0],"color":"ffffff","cGroup":["ball"]}}';
+  var penMap =
+  `{
+ 
+   "name" : "RSI Penalty",
+ 
+   "width" : 360,
+ 
+   "height" : 310,
+ 
+   "spawnDistance" : 215,
+ 
+   "bg" : { "type" : "grass", "width" : 340, "height" : 300, "kickOffRadius" : 0, "cornerRadius" : 0, "color" : "454955" },
+ 
+   "vertexes" : [
+     /* 0 */ { "x" : 215, "y" : 250, "trait" : "line" },
+     /* 1 */ { "x" : -95, "y" : 250, "trait" : "line" },
+     /* 2 */ { "x" : 215, "y" : -250, "trait" : "line" },
+     /* 3 */ { "x" : -95, "y" : -250, "trait" : "line" },
+     /* 4 */ { "x" : 215, "y" : 150, "trait" : "line" },
+     /* 5 */ { "x" : 95, "y" : 150, "trait" : "line" },
+     /* 6 */ { "x" : 215, "y" : -150, "trait" : "line" },
+     /* 7 */ { "x" : 95, "y" : -150, "trait" : "line" },
+     /* 8 */ { "x" : -95, "y" : -130, "trait" : "line" },
+     /* 9 */ { "x" : -95, "y" : 130, "trait" : "line" },
+     /* 10 */ { "x" : 0, "y" : 4, "trait" : "line" },
+     /* 11 */ { "x" : 0, "y" : -4, "trait" : "line" },
+     
+     /* 12 */ { "x" : 215, "y" : 112, "trait" : "goalNet" },
+     /* 13 */ { "x" : 280, "y" : 112, "trait" : "goalNet" },
+     /* 14 */ { "x" : 215, "y" : -112, "trait" : "goalNet" },
+     /* 15 */ { "x" : 280, "y" : -112, "trait" : "goalNet" },
+     
+     /* 16 */ { "x" : 280, "y" : 112, "trait" : "line" },
+     /* 17 */ { "x" : 315, "y" : 150, "trait" : "line" },
+     /* 18 */ { "x" : 280, "y" : -111, "trait" : "line" },
+     /* 19 */ { "x" : 315, "y" : -150, "trait" : "line" },
+     /* 20 */ { "x" : 0, "y" : -298, "trait" : "line" },
+     /* 21 */ { "x" : 0, "y" : 298, "trait" : "line" },
+     
+     /* 22 */ { "x" : 191, "y" : -300, "trait" : "blueLimit" },
+     /* 23 */ { "x" : 191, "y" : 300, "trait" : "blueLimit" },
+     
+     /* 24 */ { "x" : 217, "y" : 300, "trait" : "line" },
+     /* 25 */ { "x" : 216, "y" : -301, "trait" : "line" }
+ 
+   ],
+ 
+   "segments" : [
+     { "v0" : 20, "v1" : 21, "trait" : "line", "color" : "6A8F59" },
+     { "v0" : 0, "v1" : 1, "trait" : "line" },
+     { "v0" : 1, "v1" : 3, "trait" : "line" },
+     { "v0" : 2, "v1" : 3, "trait" : "line" },
+     { "v0" : 4, "v1" : 5, "trait" : "line" },
+     { "v0" : 5, "v1" : 7, "trait" : "line" },
+     { "v0" : 6, "v1" : 7, "trait" : "line" },
+     { "v0" : 8, "v1" : 9, "trait" : "line", "curve" : -130 },
+     { "v0" : 10, "v1" : 11, "trait" : "line", "curve" : -180 },
+     { "v0" : 10, "v1" : 11, "trait" : "line", "curve" : 180 },
+     { "v0" : 10, "v1" : 11, "trait" : "line", "curve" : 90 },
+     { "v0" : 10, "v1" : 11, "trait" : "line", "curve" : -90 },
+     { "v0" : 10, "v1" : 11, "trait" : "line" },
+     
+     { "v0" : 13, "v1" : 15, "trait" : "goalNet", "curve" : 0.5209125406123253 },
+     { "v0" : 12, "v1" : 13, "trait" : "goalNet", "curve" : -2.290030455344583 },
+     { "v0" : 14, "v1" : 15, "trait" : "goalNet", "curve" : 1.8262384781321854 },
+     
+     { "v0" : 16, "v1" : 17, "trait" : "line", "color" : "FFFFFF" },
+     { "v0" : 18, "v1" : 19, "trait" : "line", "color" : "FFFFFF" },
+     
+     { "v0" : 22, "v1" : 23, "trait" : "blueLimit" },
+     
+     { "v0" : 24, "v1" : 25, "trait" : "line" }
+ 
+   ],
+ 
+   "goals" : [
+     { "p0" : [225,110 ], "p1" : [225,-110 ], "team" : "blue" },
+     { "p0" : [215,-112 ], "p1" : [-10,-10 ], "team" : "red" },
+     { "p0" : [-10,-10 ], "p1" : [-10,10 ], "team" : "red" },
+     { "p0" : [-10,10 ], "p1" : [215,112 ], "team" : "red" }
+ 
+   ],
+ 
+   "discs" : [
+     { "radius" : 9, "invMass" : 1.11, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
+     { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
+     { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
+     { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
+     
+     { "radius" : 9.1, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
+     { "radius" : 1.5, "pos" : [0,0 ], "trait" : "jb" },
+     { "radius" : 1.15, "pos" : [6.8476,2.2249 ], "trait" : "jb" },
+     { "radius" : 1.15, "pos" : [0,7.2 ], "trait" : "jb" },
+     { "radius" : 1.15, "pos" : [-6.8476,2.2249 ], "trait" : "jb" },
+     { "radius" : 1.15, "pos" : [-4.2321,-5.8249 ], "trait" : "jb" },
+     { "radius" : 1.15, "pos" : [4.2321,-5.8249 ], "trait" : "jb" },
+     
+     { "pos" : [215,112 ], "trait" : "goalPost", "color" : "FFFFFF" },
+     { "pos" : [215,-112 ], "trait" : "goalPost", "color" : "FFFFFF" },
+     
+     { "pos" : [315,150 ], "trait" : "stanchion", "color" : "000000" },
+     { "pos" : [315,-150 ], "trait" : "stanchion", "color" : "000000" }
+ 
+   ],
+ 
+   "planes" : [
+     { "normal" : [0,1 ], "dist" : -300, "bCoef" : 0 },
+     { "normal" : [0,-1 ], "dist" : -300, "bCoef" : 0 },
+     { "normal" : [1,0 ], "dist" : -259, "bCoef" : 0 },
+     { "normal" : [-1,0 ], "dist" : -285, "bCoef" : 0 },
+     
+     { "normal" : [-1,0 ], "dist" : -20, "bCoef" : 0, "cMask" : ["red" ], "_selected" : true, "trait" : "kickOffBarrier" },
+     
+     { "normal" : [-1,0 ], "dist" : -250, "trait" : "blueLimit" }
+ 
+   ],
+ 
+   "traits" : {
+     "jb" : { "damping" : 0.992, "cMask" : [ ], "cGroup" : ["c0" ], "invMass" : 1e+250, "radius" : 0.8, "color" : "000000" },
+     "ballArea" : { "vis" : false, "bCoef" : 0, "cMask" : ["ball" ] },
+     "goalPost" : { "radius" : 5, "invMass" : 0, "bCoef" : 0.5 },
+     "stanchion" : { "radius" : 3, "cMask" : ["" ] },
+     "goalNet" : { "vis" : true, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "color" : "FFFFFF" },
+     "line" : { "vis" : true, "cMask" : ["" ], "color" : "C7E6BD" },
+     "blueLimit" : { "vis" : false, "bCoef" : 0, "cMask" : ["blue" ] },
+     "kickOffBarrier" : { "vis" : false, "bCoef" : 0.1, "cGroup" : ["redKO","blueKO" ], "cMask" : ["red","blue" ] }
+ 
+   },
+ 
+   "playerPhysics" : {
+     "acceleration" : 0.12,
+     "kickStrength" : 5.92
+ 
+   },
+ 
+   "ballPhysics" : "disc0",
+ 
+   "joints" : [
+     { "d0" : 0, "d1" : 4, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 4, "d1" : 5, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 0, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 4, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 7, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 8, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 0, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 4, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 8, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 9, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 0, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 4, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 9, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 10, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 0, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 4, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 10, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 6, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 0, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 4, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 6, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
+     { "d0" : 7, "d1" : 10, "strength" : "rigid", "color" : "transparent" }
+ 
+   ],
+
+   "canBeStored" : false
+ }`;
+ 
 
 
   /* MODE */
 
 var afkLimit = 90; // limite de afk (12 segundos)
 var drawTimeLimit = 1; // minutos
-var maxTeamSize = 6; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
+var maxTeamSize = 5; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
 var slowMode = 1;
 
 /* TIM */
@@ -2053,6 +2218,17 @@ function checkTime() {
       goldenGoal = false;
     }
   }
+}
+
+function penaltiKick() {
+  penKick = true;
+  room.stopGame();
+  loadMap(penMap);
+  room.setScoreLimit(5);
+  room.startGame();
+  setTimeout(() => {
+    teleportPlayersForPenalti();
+  }, 1000); // Adjust the timeout as necessary to ensure the map has loaded
 }
 
 function endGame(winner) {
@@ -2721,6 +2897,7 @@ const specialAuths = [
   "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
   "LnEtoSdVonFZdGMYKDUVPAWb-SzD-PsUMJC2nDPHO5w", //roti
   "EKGPaC2usPnvew9o0KH9P6J3nSmBOpKf3meC25VidQo", //stickmar
+  "oCk6n6FWrfoalDXXPijIKiPkZG9O1qZsoNmUnJ8ECbg", //fox2
   "RJ4Gabk5YrcFaGkD1FC3JOVjCvUcsQr_eRnMJcdfF7I", //nightkaz
   "4sNwsfwEjsR37sYEkXMatM8YkcjM3KaJ5uoC2WJ02rY" //bizkit
 ];
@@ -4815,6 +4992,8 @@ room.onPlayerChat = function (player, message) {
         }
   } else if (["!rsmap"].includes(message[0].toLowerCase())) {
     if (player.admin) {
+        penKick = false;
+        console.log(`penKick = false`);
         room.stopGame();
         loadMap(practiceMap);
         room.startGame();
@@ -4910,14 +5089,26 @@ room.onPlayerChat = function (player, message) {
     } else {
         whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
     }
-} else if (["!winmap"].includes(message[0].toLowerCase())) {
+} else if (["!penmap"].includes(message[0].toLowerCase())) {
     if (player.admin) {
+        penKick = true;
+        console.log(`penKick = true`);
         room.stopGame();
-        loadMap(winMap);
+        loadMap(penMap);
         room.startGame();
       } else {
         whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
       }
+  } else if (["!pentrue"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+        penKick = true;
+        console.log(`penKick = true`);
+      } 
+  } else if (["!penfalse"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+        penKick = false;
+        console.log(`penKick = false`);
+      } 
   } else if (["!gkkred"].includes(message[0].toLowerCase())) {
       if (player.admin) {
         room.setDiscProperties(3, { x: -1060, y: 0, radius: 18 });
@@ -5326,11 +5517,7 @@ room.onPlayerBallKick = function (player) {
 
 room.onGameStart = function (byPlayer) {
   isTurneyStarted = true;
-  setTimeout(() => {
-    saveUniform = false
-    console.log(`saveUniform = false`);
-  }, 3000);
-  console.log(`isTurneyStarted = true`);
+
   moveBotToBottom();
   bisaPick = true;
   console.log(`bisaPick = true`);
@@ -5369,43 +5556,26 @@ room.onGameStart = function (byPlayer) {
   }
 
   // RSI RANDOM UNIFORM
-  var redUniform, blueUniform;
-
-  if (saveUniform && savedRedUniform && savedBlueUniform) {
-    // Use saved uniforms if the tournament is started
-    redUniform = savedBlueUniform;
-    blueUniform = savedRedUniform;
-
-  } else {
-    // Generate new uniforms
-    redUniform = getRandomItem(redTeamColors);
-    blueUniform = getRandomItem(blueTeamColors);
-
-    // Ensure red and blue uniforms are not the same and are either both country or both club
-    while (areUniformsEqual(redUniform, blueUniform) || redUniform.type !== blueUniform.type) {
+  var redUniform = getRandomItem(redTeamColors);
+  var blueUniform = getRandomItem(blueTeamColors);
+  // Ensure red and blue uniforms are not the same and are either both country or both club
+  while (areUniformsEqual(redUniform, blueUniform) || redUniform.type !== blueUniform.type) {
       blueUniform = getRandomItem(blueTeamColors);
-    }
-
-    // Save the uniforms if the tournament is started
-    if (isTurneyStarted) {
-      savedRedUniform = redUniform;
-      savedBlueUniform = blueUniform;
-    }
   }
-
-  // Set the team colors
   room.setTeamColors(1, redUniform.angle, redUniform.textColor, redUniform.colors);
   room.setTeamColors(2, blueUniform.angle, blueUniform.textColor, blueUniform.colors);
+  // room.sendChat("Red team is wearing the uniform of " + redUniform.name);
+  // room.sendChat("Blue team is wearing the uniform of " + blueUniform.name);
 
   if (redUniform.type === "club" && blueUniform.type === "club") {
     room.sendAnnouncement(centerText("🥅 CHAMPIONS LEAGUE KICK OFF 🥅"), null, Cor.White, "bold");
     room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
-    // room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
+    room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
     room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
   } else if (redUniform.type === "country" && blueUniform.type === "country") {
     room.sendAnnouncement(centerText("🥅 INT FRIENDLY KICK OFF 🥅"), null, Cor.White, "bold");
     room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
-    // room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
+    room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
     room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
   }
 
@@ -5771,29 +5941,6 @@ room.onTeamGoal = function (team) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  // Function to get a new random choice that is not the same as the previous one
-  function getNewChoice(previous, min, max) {
-    let newChoice;
-    do {
-      newChoice = getRandomInt(min, max);
-    } while (newChoice === previous);
-    return newChoice;
-  }
-
-  // Get a new random choice
-  let randomChoice = getNewChoice(previousChoice, 0, 3);
-  
-  // Call the chosen function
-  if (randomChoice === 0) {
-    teleportDiscs();
-  } else if (randomChoice === 1) {
-    teleportDiscsfire();
-  } else {
-    teleportDiscsTiga();
-  }
-  previousChoice = randomChoice;
-  setTimeout(resetDiscs, 2000);
-
   // const players = room.getPlayerList();
   // const playerWhoScored = players.find(player => player.team === team);
 
@@ -5812,6 +5959,32 @@ room.onTeamGoal = function (team) {
   activePlay = false;
   countAFK = false;
   const scores = room.getScores();
+
+  if (!penKick) {
+    // Function to get a new random choice that is not the same as the previous one
+    function getNewChoice(previous, min, max) {
+      let newChoice;
+      do {
+        newChoice = getRandomInt(min, max);
+      } while (newChoice === previous);
+      return newChoice;
+    }
+
+    // Get a new random choice
+    let randomChoice = getNewChoice(previousChoice, 0, 3);
+    
+    // Call the chosen function
+    if (randomChoice === 0) {
+      teleportDiscs();
+    } else if (randomChoice === 1) {
+      teleportDiscsfire();
+    } else {
+      teleportDiscsTiga();
+    }
+    previousChoice = randomChoice;
+    setTimeout(resetDiscs, 2000);
+  }
+
   game.scores = scores;
   if (lastPlayersTouched[0] != null && lastPlayersTouched[0].team == team) {
     if (lastPlayersTouched[1] != null && lastPlayersTouched[1].team == team) {
@@ -5930,26 +6103,16 @@ room.onStadiumChange = function (newStadiumName, byPlayer) {};
 
 room.onGameTick = function () {
   updateGameStatus();
-  handleBallTouch();
-  realSoccerRef();
-  if (!isTurneyStarted) {
-    checkTime();
+  if (!penKick) {
+    handleBallTouch();
+    realSoccerRef();
   }
+  checkTime();
   getLastTouchOfTheBall();
   getStats();
   handleInactivity();
   handleFrozenPlayerMoves();
-  if (isTurneyStarted) {
-    const gameTimeRemaining = game.time;
 
-    // Check if it's time to pause and resume the game (5 minutes mark)
-    if (gameTimeRemaining === 150) {
-      pauseAndResumeGame();
-    }
-    if (gameTimeRemaining === 150 - 10 && countdownTimeouts.length === 0) {
-      countdownToHalfTime();
-    }
-  }
 };
 
 function pauseAndResumeGame() {
@@ -5965,11 +6128,11 @@ function pauseAndResumeGame() {
   room.sendAnnouncement(centerText((Rposs * 100).toPrecision(3).toString() + "% | Ball possession | " + (Bposs * 100).toPrecision(3).toString() + "% "), null, Cor.White, "normal");
   bisaPick = false;
   console.log(`bisaPick = false`);
-  }, 1000);
+  }, 700);
 
   setTimeout(() => {
     swapTeamsAndAnnounce();
-  }, 2000);
+  }, 1800);
   
   isTurneyStarted = false;
   
