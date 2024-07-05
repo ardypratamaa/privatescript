@@ -1831,7 +1831,7 @@ function Goal(time, team, striker, assist) {
 // Webhooks
 // -------------------------------------------------
 
-let replayWebHook = "https://discord.com/api/webhooks/1227094504989921340/4Me4_Lm-Ovcfa5XwWVUMxCQQoXSs1g8OvjTsuMLhfgLB4SxecVwkn30HdVqSpiDYfX_E";
+let replayWebHook = "https://discord.com/api/webhooks/1258735159482519562/-gU7jVizuZx53PqwVt0yt4-j0oC9VJecXcFgpuDShvt1WmJwM8h0UFPxR9eOLSTfrpNt";
 let goalWebHook = "https://discord.com/api/webhooks/1227774180343287890/gi34423X3uBqB--UM_-aIB5MqPShDFmftAUwTMIw8aB2U-30TYcqu9a9HMQ7C3HrLzMt";
 let chatWebHook = "https://discord.com/api/webhooks/1227802111459459072/Db2vLhw6Mxcp0Xu9aNVYl684ANho_4Nuqz-roujkQQPYhbjG_PqENhDOgGnnqE5R4P4n";
 let joinWebHook = "https://discord.com/api/webhooks/1228203622366449695/h_oYpebe1f6D8i7sMhs5J4wUn3-iHRIqUPXT-Lsvq98cf6z_BsRj_I8zAP93S4wgi-gD";
