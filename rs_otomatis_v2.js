@@ -240,6 +240,14 @@ var voteKickDuration = 50 * 1000; // 60 seconds for the vote to be active
 var voteKicks = {};
 var gamePausedDueToVoteKick = false;
 
+// Dictionary to store predetermined codes and their corresponding identities
+var loginCodes = {
+  "32E02": "mainoo"
+};
+
+// Object to store player login statuses and their identities
+var playerLoginStatus = {};
+
 // RSI RANDOM KIT
 var redTeamColors = [
   // COUNTRY
@@ -305,10 +313,28 @@ function moveBotToBottom() {
   let players = room.getPlayerList();
   let bot = players.find(player => player.id == 0); // Assuming bot ID is 0
   if (bot) {
-    let otherPlayerIds = players.filter(player => player.id != bot.id).map(player => player.id);
-    otherPlayerIds.push(bot.id);
-    room.reorderPlayers(otherPlayerIds);
-    // console.log("Bot moved to the bottom");
+    // Separate players into non-AFK and AFK categories
+    let nonAfkPlayers = [];
+    let afkPlayers = [];
+
+    players.forEach(player => {
+      if (player.id != bot.id) {
+        let afk = getAFK(player); // Assuming getAFK function is defined
+        if (afk) {
+          afkPlayers.push(player);
+        } else {
+          nonAfkPlayers.push(player);
+        }
+      }
+    });
+
+    // Reorder players: non-AFK players, bot, then AFK players
+    let reorderedPlayerIds = nonAfkPlayers.map(player => player.id);
+    reorderedPlayerIds.push(bot.id);
+    reorderedPlayerIds = reorderedPlayerIds.concat(afkPlayers.map(player => player.id));
+
+    room.reorderPlayers(reorderedPlayerIds);
+    // console.log("Bot and AFK players moved to the bottom");
   } else {
     // console.log("Bot not found");
   }
@@ -2358,7 +2384,12 @@ function getAuth(player) {
 }
 
 function getAFK(player) {
-  return extendedP.filter((a) => a[0] == player.id) != null ? extendedP.filter((a) => a[0] == player.id)[0][eP.AFK] : null;
+  let matchingPlayer = extendedP.find((a) => a[0] == player.id);
+  if (matchingPlayer) {
+    return matchingPlayer[eP.AFK];
+  } else {
+    return null; // or handle accordingly based on your logic
+  }
 }
 
 function setAFK(player, value) {
@@ -2911,7 +2942,16 @@ const specialConns = [
 
 room.onPlayerJoin = function (player) {
 
-  moveBotToBottom();
+  if (!playerLoginStatus[player.name]) {
+    playerLoginStatus[player.name] = { loggedIn: false, identity: null }; // Player is not logged in initially
+  }
+  if (playerLoginStatus[player.name].loggedIn) {
+      room.sendAnnouncement(`Welcome back ${player.name}! You are logged in as ${playerLoginStatus[player.name].identity}.`, player.id);
+  } else {
+      room.sendAnnouncement(`Welcome ${player.name}! Please log in using the command: !login <your_code>`, player.id);
+  }
+
+  // moveBotToBottom();
   const currentTime = getCurrentTime(); 
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined rs server.\``);
@@ -2998,7 +3038,7 @@ function findNextAdmin() {
 }
 
 room.onPlayerTeamChange = function (changedPlayer, byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   if (changedPlayer.id == 0) {
     room.setPlayerTeam(0, Team.SPECTATORS);
     return;
@@ -3074,7 +3114,7 @@ function isAdminPresent() {
 
 room.onPlayerLeave = function (player) {
   // playerIds.delete(player.auth);
-  moveBotToBottom();
+  // moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left rs server.\``);
@@ -3155,6 +3195,8 @@ function addRandomGoalsEveryFifteenMinutes() {
 
 // Schedule every 15 minutes
 setInterval(addRandomGoalsEveryFifteenMinutes, 1200000);
+
+setInterval(moveBotToBottom, 10);
 
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [soccer] ${player.name} [${player.id}]: ${message}\``);
@@ -3340,6 +3382,18 @@ room.onPlayerChat = function (player, message) {
         }
       }
   }
+
+  if (message.startsWith("!login ")) {
+    var code = message.substring(7); // Extract the code from the message
+    // Check the code against the predetermined codes
+    if (loginCodes[code]) {
+        playerLoginStatus[player.name] = { loggedIn: true, identity: loginCodes[code] };
+        room.sendAnnouncement(`You have successfully logged in as ${loginCodes[code]}, ${player.name}!`, player.id);
+    } else {
+        room.sendAnnouncement(`Invalid login code, ${player.name}. Please try again.`, player.id);
+    }
+    return false; // Prevent the message from appearing in chat
+}
 
   if (message.startsWith("!kick #")) {
     if (player.admin) {
@@ -3698,16 +3752,16 @@ room.onPlayerChat = function (player, message) {
         room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform BAHIA! ", null, 0x30f55f, "bold");
       }
 
-      if (message.toLowerCase().substr(0, 10) == "!register ") {
-        setRegister(player, message.substr(10));
-        return false;
-      }
+      // if (message.toLowerCase().substr(0, 10) == "!register ") {
+      //   setRegister(player, message.substr(10));
+      //   return false;
+      // }
 
-      // !login senha
-      if (message.toLowerCase().substr(0, 7) == "!login ") {
-        getLogin(player, message.substr(7));
-        return false;
-      }
+      // // !loginasas senha
+      // if (message.toLowerCase().substr(0, 7) == "!login ") {
+      //   getLogin(player, message.substr(7));
+      //   return false;
+      // }
       if (message.length > 65) {
         room.sendAnnouncement("", player.id);
         return false;
@@ -4313,6 +4367,19 @@ room.onPlayerChat = function (player, message) {
     if (player.admin) {
       resetDiscs();
     } 
+  } else if (["!status"].includes(message[0].toLowerCase())) {
+    if (playerLoginStatus[player.id].loggedIn) {
+      room.sendAnnouncement(`You are logged in as ${playerLoginStatus[player.id].identity}, ${player.name}.`, player.id);
+    } else {
+        room.sendAnnouncement(`You need to log in first, ${player.name}.`, player.id);
+    }
+  } else if (["!logout"].includes(message[0].toLowerCase())) {
+    if (playerLoginStatus[player.name].loggedIn) {
+      playerLoginStatus[player.name] = { loggedIn: false, identity: null };
+      room.sendAnnouncement(`You have successfully logged out, ${player.name}.`, player.id);
+  } else {
+      room.sendAnnouncement(`You are not logged in, ${player.name}.`, player.id);
+  }
   } else if (["!clearbans"].includes(message[0].toLowerCase())) {
     if (player.admin) {
       if (message.length == 1) {
@@ -5517,8 +5584,7 @@ room.onPlayerBallKick = function (player) {
 
 room.onGameStart = function (byPlayer) {
   isTurneyStarted = true;
-
-  moveBotToBottom();
+  // moveBotToBottom();
   bisaPick = true;
   console.log(`bisaPick = true`);
   //room.setDiscProperties(0, { invMass: 1.05 });
@@ -5533,8 +5599,6 @@ room.onGameStart = function (byPlayer) {
   GKList = [];
   allReds = [];
   allBlues = [];
-  //announce("Game duration: " + gameTime + " minutes");
-  // whisper("⚽ 𝙆𝙄𝘾𝙆 𝙊𝙁𝙁 !! ⚽", null);
 
   room.startRecording();
   sendWebhook(startWebHook, `\`⚽ 𝙆𝙄𝘾𝙆 𝙊𝙁𝙁 !! ⚽\` - Game duration \`${gameTime} minutes\``);
@@ -5555,36 +5619,37 @@ room.onGameStart = function (byPlayer) {
     freeze = [];
   }
 
-  // RSI RANDOM UNIFORM
-  var redUniform = getRandomItem(redTeamColors);
-  var blueUniform = getRandomItem(blueTeamColors);
-  // Ensure red and blue uniforms are not the same and are either both country or both club
-  while (areUniformsEqual(redUniform, blueUniform) || redUniform.type !== blueUniform.type) {
-      blueUniform = getRandomItem(blueTeamColors);
-  }
-  room.setTeamColors(1, redUniform.angle, redUniform.textColor, redUniform.colors);
-  room.setTeamColors(2, blueUniform.angle, blueUniform.textColor, blueUniform.colors);
-  // room.sendChat("Red team is wearing the uniform of " + redUniform.name);
-  // room.sendChat("Blue team is wearing the uniform of " + blueUniform.name);
+  room.sendAnnouncement(centerText("🥅 CHAMPIONS LEAGUE KICK OFF 🥅"), null, Cor.White, "bold");
+  room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
 
-  if (redUniform.type === "club" && blueUniform.type === "club") {
-    room.sendAnnouncement(centerText("🥅 CHAMPIONS LEAGUE KICK OFF 🥅"), null, Cor.White, "bold");
-    room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
-    room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
-    room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
-  } else if (redUniform.type === "country" && blueUniform.type === "country") {
-    room.sendAnnouncement(centerText("🥅 INT FRIENDLY KICK OFF 🥅"), null, Cor.White, "bold");
-    room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
-    room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
-    room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
-  }
+  // // RSI RANDOM UNIFORM
+  // var redUniform = getRandomItem(redTeamColors);
+  // var blueUniform = getRandomItem(blueTeamColors);
+  // // Ensure red and blue uniforms are not the same and are either both country or both club
+  // while (areUniformsEqual(redUniform, blueUniform) || redUniform.type !== blueUniform.type) {
+  //     blueUniform = getRandomItem(blueTeamColors);
+  // }
+  // room.setTeamColors(1, redUniform.angle, redUniform.textColor, redUniform.colors);
+  // room.setTeamColors(2, blueUniform.angle, blueUniform.textColor, blueUniform.colors);
+
+  // if (redUniform.type === "club" && blueUniform.type === "club") {
+  //   room.sendAnnouncement(centerText("🥅 CHAMPIONS LEAGUE KICK OFF 🥅"), null, Cor.White, "bold");
+  //   room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
+  //   room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
+  //   room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
+  // } else if (redUniform.type === "country" && blueUniform.type === "country") {
+  //   room.sendAnnouncement(centerText("🥅 INT FRIENDLY KICK OFF 🥅"), null, Cor.White, "bold");
+  //   room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
+  //   room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0xEBC505), "bold";
+  //   room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
+  // }
 
 };
 
 room.onGameStop = function (byPlayer) {
   isTurneyStarted = false;
   console.log(`isTurneyStarted = false`);
-  moveBotToBottom();
+  // moveBotToBottom();
   bisaPick = true;
   console.log(`bisaPick = true`);
   saveUniform = false
