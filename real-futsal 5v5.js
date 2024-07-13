@@ -1022,14 +1022,34 @@ function moveBotToBottom() {
   let players = room.getPlayerList();
   let bot = players.find(player => player.id == 0); // Assuming bot ID is 0
   if (bot) {
-    let otherPlayerIds = players.filter(player => player.id != bot.id).map(player => player.id);
-    otherPlayerIds.push(bot.id);
-    room.reorderPlayers(otherPlayerIds);
-    console.log("Bot moved to the bottom");
+    // Separate players into non-AFK and AFK categories
+    let nonAfkPlayers = [];
+    let afkPlayers = [];
+
+    players.forEach(player => {
+      if (player.id != bot.id) {
+        let afk = getAFK(player); // Assuming getAFK function is defined
+        if (afk) {
+          afkPlayers.push(player);
+        } else {
+          nonAfkPlayers.push(player);
+        }
+      }
+    });
+
+    // Reorder players: non-AFK players, bot, then AFK players
+    let reorderedPlayerIds = nonAfkPlayers.map(player => player.id);
+    reorderedPlayerIds.push(bot.id);
+    reorderedPlayerIds = reorderedPlayerIds.concat(afkPlayers.map(player => player.id));
+
+    room.reorderPlayers(reorderedPlayerIds);
+    // console.log("Bot and AFK players moved to the bottom");
   } else {
-    console.log("Bot not found");
+    // console.log("Bot not found");
   }
 }
+
+setInterval(moveBotToBottom, 10);
 
 /* GAME FUNCTIONS */
 
@@ -1763,7 +1783,7 @@ const specialConns = [
 
 room.onPlayerJoin = function (player) {
   
-  moveBotToBottom();
+  // moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined futsal 5v5 server.\``);
@@ -1839,7 +1859,7 @@ function findNextAdmin() {
 }
 
 room.onPlayerTeamChange = function (changedPlayer, byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   if (changedPlayer.id == 0) {
     room.setPlayerTeam(0, Team.SPECTATORS);
     return;
@@ -1905,7 +1925,7 @@ function isAdminPresent() {
 
 room.onPlayerLeave = function (player) {
   // playerIds.delete(player.auth);
-  moveBotToBottom();
+  // moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left futsal 5v5 server.\``);
@@ -3999,7 +4019,7 @@ room.onPlayerBallKick = function (player) {
 /* GAME MANAGEMENT */
 
 room.onGameStart = function (byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   game = new Game(Date.now(), room.getScores(), []);
   countAFK = true;
   activePlay = false;
@@ -4057,7 +4077,7 @@ room.onGameStart = function (byPlayer) {
 };
 
 room.onGameStop = function (byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   if (byPlayer.id == 0 && endGameVariable) {
     updateTeams();
     if (inChooseMode) {
