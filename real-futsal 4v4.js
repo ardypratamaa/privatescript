@@ -773,7 +773,7 @@ function sendWebhook(url, content) {
 // Webhooks
 // -------------------------------------------------
 
-let replayWebHook = "https://discord.com/api/webhooks/1241940524236013598/ruX69lVXmp-xNx8lPi5NO2oiDXXTACh9lgzDsrGvnMMhxRFlixzTwowKsxCBtQhQC9By";
+let replayWebHook = "https://discord.com/api/webhooks/1258735313421865051/AMtr_B4ir1UxMuRzAc2FFqoWqjBWYhBVBApyxcfF6GfhS9U1r4ja9NT5f7wAGq1y02kX";
 let goalWebHook = "https://discord.com/api/webhooks/1241940107595087953/qot0jivPhDEZMcguiQroqQ1u0zHuEyLVuI5eazLHKNfFNOnpPbHtneb01h2TejW9DJfG";
 let chatWebHook = "https://discord.com/api/webhooks/1241181657256693840/ISaq2QVmYM7_xdrHrdi8guatXTE6Zn6oaza9UT2SuFbBciMhscAMF-wyYQl0FX0Gfr7I";
 let joinWebHook = "https://discord.com/api/webhooks/1241182001256730697/q3i9d-wOqTzPX3LGjsccVaH9m3vtNZ8vsLmVVWgqlJwK5CbXzrD2ylUcYbz_Rnr9VjSu";
@@ -1063,12 +1063,30 @@ function moveBotToBottom() {
   let players = room.getPlayerList();
   let bot = players.find(player => player.id == 0); // Assuming bot ID is 0
   if (bot) {
-    let otherPlayerIds = players.filter(player => player.id != bot.id).map(player => player.id);
-    otherPlayerIds.push(bot.id);
-    room.reorderPlayers(otherPlayerIds);
-    console.log("Bot moved to the bottom");
+    // Separate players into non-AFK and AFK categories
+    let nonAfkPlayers = [];
+    let afkPlayers = [];
+
+    players.forEach(player => {
+      if (player.id != bot.id) {
+        let afk = getAFK(player); // Assuming getAFK function is defined
+        if (afk) {
+          afkPlayers.push(player);
+        } else {
+          nonAfkPlayers.push(player);
+        }
+      }
+    });
+
+    // Reorder players: non-AFK players, bot, then AFK players
+    let reorderedPlayerIds = nonAfkPlayers.map(player => player.id);
+    reorderedPlayerIds.push(bot.id);
+    reorderedPlayerIds = reorderedPlayerIds.concat(afkPlayers.map(player => player.id));
+
+    room.reorderPlayers(reorderedPlayerIds);
+    // console.log("Bot and AFK players moved to the bottom");
   } else {
-    console.log("Bot not found");
+    // console.log("Bot not found");
   }
 }
 
@@ -1812,7 +1830,7 @@ room.onPlayerJoin = function (player) {
   //   });
   // }, 5300)
 
-  moveBotToBottom();
+  // moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined futsal 4v4 server.\``);
@@ -1902,7 +1920,7 @@ function findNextAdmin() {
 }
 
 room.onPlayerTeamChange = function (changedPlayer, byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   if (changedPlayer.id == 0) {
     room.setPlayerTeam(0, Team.SPECTATORS);
     return;
@@ -1968,7 +1986,7 @@ function isAdminPresent() {
 
 room.onPlayerLeave = function (player) {
   // playerIds.delete(player.auth);
-  moveBotToBottom();
+  // moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left futsal 4v4 server.\``);
@@ -2051,6 +2069,8 @@ function addRandomGoalsEveryFifteenMinutes() {
 
 // Schedule every 15 minutes
 setInterval(addRandomGoalsEveryFifteenMinutes, 1200000);
+
+setInterval(moveBotToBottom, 10);
 
 room.onPlayerChat = function (player, message) {
   sendWebhook(chatWebHook, `\`💬 [futsal 4v4] ${player.name} [${player.id}]: ${message}\``);
@@ -4123,7 +4143,7 @@ room.onPlayerBallKick = function (player) {
 /* GAME MANAGEMENT */
 
 room.onGameStart = function (byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   game = new Game(Date.now(), room.getScores(), []);
   countAFK = true;
   activePlay = false;
@@ -4181,7 +4201,7 @@ room.onGameStart = function (byPlayer) {
 };
 
 room.onGameStop = function (byPlayer) {
-  moveBotToBottom();
+  // moveBotToBottom();
   if (byPlayer.id == 0 && endGameVariable) {
     updateTeams();
     if (inChooseMode) {
