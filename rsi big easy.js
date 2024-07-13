@@ -1,6 +1,6 @@
 /* ROOM */
 //var roomName = "💠 [ʀꜱɪ|ɪᴅ] Scrim Room | ᴘᴠᴘ ⚽";
-var roomName = "💠 (ʀꜱɪ) 𝗕𝗶𝗴 𝗘𝗮𝘀𝘆 ᴘᴠᴘ";
+var roomName = "💠 (ʀꜱɪ) 𝗕𝗶𝗴 𝗘𝗮𝘀𝘆 𝗘𝘃𝗲𝗻𝘁 ᴘᴠᴘ";
 //var roomPassword = "scrim2";
 const maxPlayers = 30; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
