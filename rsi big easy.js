@@ -3,7 +3,7 @@
 var roomName = "💠 (ʀꜱɪ) 𝗕𝗶𝗴 𝗘𝗮𝘀𝘆 ᴘᴠᴘ";
 //var roomPassword = "scrim2";
 const maxPlayers = 30; // maximum number of players in the room
-const roomPublic = false; // true = public room | false = players only enter via the room link (it does not appear in the room list)
+const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
 const geo = [{ lat: -6.17, lon: 106.85990, code: "id" }]; //liga 1
 //const geo = [{ lat: -6.17, lon: 106.85989, code: "id" }]; //liga 2
 
@@ -25,6 +25,69 @@ function checkAndKickPlayer(player) {
 }
 
 var gameTime = 7; //default game time if 0 is selected
+
+// var auctionActive = false;
+// var auctionEndTime = 0;
+// var coinBalances = {};
+// var bids = {}; // Initialize the bids object
+
+// const MAX_COINS = 200;
+
+// function resetAuction() {
+//   auctionActive = false;
+//   auctionEndTime = 0;
+//   bids = {}; // Reset current bids
+// }
+
+// function initializePlayer(player) {
+//   if (!(player.id in coinBalances)) {
+//     coinBalances[player.id] = MAX_COINS;
+//   }
+// }
+
+// function displayAuctionResults() {
+//   globalChatEnabled = true;
+//   auctionActive = false;
+//   var result = "";
+//   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
+//   room.sendAnnouncement("BID FINISH", null, 0x99ffff, "bold");
+//   room.sendAnnouncement("Results :", null, 0x99ffff, "small");
+//   var highestBid = 0;
+//   var highestBidder = "";
+//   var players = room.getPlayerList().filter(p => p.id !== 0);
+  
+//   for (var player of players) {
+//     var bid = bids[player.id] || 0;
+//     result += player.name + " [" + bid + "] | ";
+//     if (bid > highestBid) {
+//       highestBid = bid;
+//       highestBidder = player.name;
+//     }
+//   }
+  
+//   result = result.slice(0, -3); // Remove the last " | "
+//   room.sendAnnouncement(result, null, 0xebeb09, "normal", "small");
+//   room.sendAnnouncement("BID WINNER : " + highestBidder, null, 0x99ffff, "small");
+
+//   // Show remaining coins for each player
+//   setTimeout(() => {
+//     room.sendAnnouncement("COINS LEFT", null, 0x99ffff, "bold");
+//     var coinInfo = "";
+//     for (var player of players) {
+//       var remainingCoins = coinBalances[player.id] || MAX_COINS; // Default to MAX_COINS if balance is undefined
+//       coinInfo += player.name + ": " + remainingCoins + " coins\n";
+//     }
+//     room.sendAnnouncement(coinInfo, null, 0x99ffff, "small");
+//     room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
+//   }, 10000);
+
+//   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
+  
+//   setTimeout(() => {
+//     resetAuction();
+//     console.log("Bid reset");
+//   }, 2000);
+// }
 
 const room = HBInit({
   roomName: roomName,
@@ -498,8 +561,6 @@ var practiceMap =
 		"kickOffBarrier" : { "vis" : false, "bCoef" : 0.1, "cGroup" : ["redKO","blueKO" ], "cMask" : ["red","blue" ] }
 
 	},
-
-  "cameraFollow" : "player",
 
 	"canBeStored" : true
 }`;
@@ -1394,7 +1455,7 @@ function Goal(time, team, striker, assist) {
 
 let replayWebHook = "https://discord.com/api/webhooks/1260951226087112714/GOoirNjwgMNuZIQFtNOkWy2fDoYBRcZxRWd-ywok6Eh5nLVZrVJKi2gkUxFuOiRi9r-u";
 let goalWebHook = "https://discord.com/api/webhooks/1260951226087112714/GOoirNjwgMNuZIQFtNOkWy2fDoYBRcZxRWd-ywok6Eh5nLVZrVJKi2gkUxFuOiRi9r-u";
-let chatWebHook = "https://discord.com/api/webhooks/1260943456897990726/T4F1-a_uc5n1g2RKaDoPR_aFZcsMC8tvfofUZc-pk4PV-ImpJOeaUA-ElIKJ1Av5dR2G";
+let chatWebHook = "https://discord.com/api/webhooks/1261187385387913267/7CQWauXCzx970HW6mWPjiaGTRwY5ERzfxmxLrXSrsvDUpH1oT1pfCAiCocZuNGzTHxYU";
 let joinWebHook = "https://discord.com/api/webhooks/1228203622366449695/h_oYpebe1f6D8i7sMhs5J4wUn3-iHRIqUPXT-Lsvq98cf6z_BsRj_I8zAP93S4wgi-gD";
 let startWebHook = "https://discord.com/api/webhooks/1228211340519149661/kmFJSfdirOOWRnH-bynJrDxisbtI-5kg5AesFc4RaktI0NSwgoo6KBbj5bkyshJfcQhq";
 let adminWebHook = "https://discord.com/api/webhooks/1228918067854311544/marqckLcQDbMX9GUXCzp3rMfbkEYlUTdzS4vZHoXlrz34FL-K2i06pUJiN6TCOFGztVe";
@@ -2161,7 +2222,7 @@ const specialConns = [
 ];
 
 room.onPlayerJoin = function (player) {
-
+  // initializePlayer(player);
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
   sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined rs server.\``);
@@ -2455,6 +2516,38 @@ room.onPlayerChat = function (player, message) {
     }
   }
 
+  // if (message.startsWith("!bid ") && auctionActive) {
+
+  //   // if (player.id in bids) {
+  //   //   room.sendAnnouncement("Already bid", player.id, 0xebeb09, "small-bold");
+  //   //   return false;
+  //   // }
+
+  //   var bidAmount = parseInt(message.split(" ")[1], 10);
+  //   if (isNaN(bidAmount) || bidAmount <= 0) {
+  //     room.sendAnnouncement("Invalid bid amount!", player.id, 0x99ffff, "small");
+  //     return false;
+  //   }
+    
+  //   if (coinBalances[player.id] < bidAmount) {
+  //     room.sendAnnouncement("You don't have enough coins", player.id, 0x99ffff, "small");
+  //     return false;
+  //   }
+    
+  //   if (player.id in bids) {
+  //     coinBalances[player.id] += bids[player.id]; // Refund the previous bid amount
+  //     coinBalances[player.id] -= bidAmount; // Deduct the new bid amount
+  //     bids[player.id] = bidAmount;
+  //     room.sendAnnouncement("Changed bid into " + bidAmount + " coins.. (" + coinBalances[player.id] + " coins left)", player.id, 0xebeb09, "small");
+  //   } else {
+  //     coinBalances[player.id] -= bidAmount; // Deduct the bid amount
+  //     bids[player.id] = bidAmount;
+  //     room.sendAnnouncement("You bid " + bidAmount + " coins.. (" + coinBalances[player.id] + " coins left)", player.id, 0xebeb09, "small");
+  //   }
+
+  //   return false;
+  // }
+
   if (message.startsWith('!addgoals')) {
     if (player.admin) {
         const args = message.split(' ');
@@ -2598,9 +2691,16 @@ room.onPlayerChat = function (player, message) {
     return players.find(player => player.id === id);
   }
 
-  if (message.startsWith("!subs ") && player.admin) {
+  if (message.startsWith("!subs " || message.startsWith("s "))) {
+    // Check if the player issuing the command is on the Red or Blue team
+    var issuingPlayerTeam = player.team;
+    if (issuingPlayerTeam !== 1 && issuingPlayerTeam !== 2) {
+        whisper("You can't make a subs.", player.id);
+        return false;
+    }
+
     if (args.length !== 3) {
-        room.sendChat("Usage: !subs #<player_id_out> #<player_id_in>");
+        whisper("Usage: !subs #<player_id_out> #<player_id_in>", player.id);
         return false;
     }
     
@@ -2611,29 +2711,29 @@ room.onPlayerChat = function (player, message) {
     var playerIn = findPlayerById(playerIdIn);
     
     if (!playerOut || !playerIn) {
-        room.sendChat("Invalid player IDs.");
+        whisper("Invalid player IDs.", player.id);
         return false;
     }
     
     if (playerOut.team === 0 || playerIn.team !== 0) {
-        room.sendChat("Ensure player out is on a team and player in is a spectator.");
+        whisper("You type wrong id, make sure first id is player out not spectator.", player.id);
         return false;
     }
+
     room.pauseGame(true);
     setTimeout(() => {
-      // Substitute the players
-      var teamOut = playerOut.team;
-      room.setPlayerTeam(playerOut.id, 0); // Move playerOut to spectators
-      room.setPlayerTeam(playerIn.id, teamOut); // Move playerIn to the team of playerOut
+        // Substitute the players
+        var teamOut = playerOut.team;
+        room.setPlayerTeam(playerOut.id, 0); // Move playerOut to spectators
+        room.setPlayerTeam(playerIn.id, teamOut); // Move playerIn to the team of playerOut
 
-      var teamName = teamOut === 1 ? "🟥 Red" : "🟦 Blue";
-      room.sendAnnouncement(`${teamName} team subs (Player out: ${playerOut.name}) (Player in: ${playerIn.name}) by captain ${player.name}`, null, 0xffffe0, "normal", 1);
-      
-      setTimeout(() => {
-        room.pauseGame(false);
-      }, 100);
+        var teamName = teamOut === 1 ? "🟥 Red" : "🟦 Blue";
+        room.sendAnnouncement(`${teamName} team subs (Player out: ${playerOut.name}) (Player in: ${playerIn.name}) by captain ${player.name}`, null, 0xffffe0, "normal", 1);
+        
+        setTimeout(() => {
+            room.pauseGame(false);
+        }, 100);
     }, 300);
-    
     
     return false; // Prevent the message from being broadcasted to all players
   }
@@ -3242,13 +3342,61 @@ room.onPlayerChat = function (player, message) {
     }
   } else if (["!bb", "!bye", "!gn"].includes(message[0].toLowerCase())) {
     room.kickPlayer(player.id, "👋 (leave) Until later!", false);
-  } else if (["!pause"].includes(message[0].toLowerCase())) {
+  } else if (["!startbid"].includes(message[0].toLowerCase())) {
+    // if (player.admin) {
+    //   if (auctionActive) {
+    //     room.sendAnnouncement("An auction is already in progress.", player.id, 0x99ffff, "small");
+    //     return false;
+    //   }
+    //   globalChatEnabled = false;
+    //   auctionActive = true;
+    //   auctionEndTime = Date.now() + 60000; // Auction ends in 1 minute (60000 ms)
+    //   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
+    //   room.sendAnnouncement("AUCTION STARTS", null, 0x99ffff, "bold");
+    //   room.sendAnnouncement("You have 1 minute to place your bids using !bid <amount>", null, 0x99ffff, "small");
+    //   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
+      
+    //   setTimeout(() => {
+    //     room.sendAnnouncement("15 seconds before finish", null, 0x99ffff, "small");
+    //   }, 45000);
+    //   setTimeout(() => {
+    //     room.sendAnnouncement("10 seconds before finish", null, 0x99ffff, "small");
+    //   }, 50000);
+    //   setTimeout(() => {
+    //     room.sendAnnouncement("5 seconds before finish", null, 0x99ffff, "small");
+    //   }, 55000);
+
+    //   setTimeout(function () {
+    //     auctionActive = false;
+    //     displayAuctionResults();
+    //   }, 60000);
+    // }
+  } else if (["!resetcoin"].includes(message[0].toLowerCase())) {
+    // if (player.admin) {
+    //   for (var playerId in coinBalances) {
+    //     coinBalances[playerId] = MAX_COINS;
+    //   }
+      
+    //   // room.sendChat("All players' coins have been reset to " + MAX_COINS + " coins.");
+    //   room.sendAnnouncement("Coins has been reseted", player.id, 0x99ffff, "small-bold");
+    // } 
+  } else if (["!cekcoins"].includes(message[0].toLowerCase())) {
+    // var balance = coinBalances[player.id] || MAX_COINS; // Default to MAX_COINS if balance is undefined
+    // var balanceInfo = "Your Balance: " + balance + " coins";
+
+    // room.sendAnnouncement(balanceInfo, player.id, 0xebeb09, "small");
+  } else if (["!pause", "!p", "P"].includes(message[0].toLowerCase())) {
     if (isPaused) {
-      room.sendAnnouncement("Game already paused", player.id, 0xffffe0, "normal", 1);
+      room.sendAnnouncement("Game already paused", player.id, 0xffffe0, "small", 1);
       return false;
     }
 
     var team = player.team;
+    if (team !== 1 && team !== 2) {
+        // room.sendAnnouncement("Only Red or Blue team members can pause the game", player.id, 0xffffe0, "normal", 1);
+        return false;
+    }
+
     var teamName = team === 1 ? "🟥 Red" : team === 2 ? "🟦 Blue" : "Spectator";
 
     if (team === 1 && redPauseCount >= maxPauses) {
@@ -4174,6 +4322,7 @@ room.onPlayerBallKick = function (player) {
 /* GAME MANAGEMENT */
 
 room.onGameStart = function (byPlayer) {
+  setKickRateLimit()
   game = new Game(Date.now(), room.getScores(), []);
   countAFK = true;
   activePlay = false;
@@ -4217,6 +4366,12 @@ room.onGameUnpause = function (byPlayer) {
   //   deactivateChooseMode();
   // }
 };
+
+// Function to set the kick rate limit
+function setKickRateLimit() {
+  room.setKickRateLimit(1, 1, 1);
+  //room.sendAnnouncement("Kick rate limit set (min: 0, rate: 0, burst: 0)", null, 0x00FF00, "normal", 2);
+}
 
 const originalDiscPositions = {
   9: { x: -558.5, y: 253.5 },
@@ -4322,17 +4477,17 @@ room.onTeamGoal = function (team) {
   const scores = room.getScores();
   game.scores = scores;
 
-  function getNewChoice(previous) {
-    return previous === 0 ? 1 : 0;
-  }
-  let randomChoice = getNewChoice(previousChoice);
-  if (randomChoice === 0) {
-    teleportDiscs();
-  } else {
-    teleportDiscsfire();
-  }
-  previousChoice = randomChoice;
-  setTimeout(resetDiscs, 2000);
+  // function getNewChoice(previous) {
+  //   return previous === 0 ? 1 : 0;
+  // }
+  // let randomChoice = getNewChoice(previousChoice);
+  // if (randomChoice === 0) {
+  //   teleportDiscs();
+  // } else {
+  //   teleportDiscsfire();
+  // }
+  // previousChoice = randomChoice;
+  // setTimeout(resetDiscs, 2000);
 
   if (lastPlayersTouched[0] != null && lastPlayersTouched[0].team == team) {
     if (lastPlayersTouched[1] != null && lastPlayersTouched[1].team == team) {
@@ -4542,7 +4697,7 @@ function getDate() {
 
 function sendDiscordRecording() {
   const form = new FormData();
-  form.append("file", new File([room.stopRecording()], `COPA-FUT-1.hbr2`, { type: "text/plain" }));
+  form.append("file", new File([room.stopRecording()], `BIG-EASY-1.hbr2`, { type: "text/plain" }));
   var request = new XMLHttpRequest();
   request.open("POST", replayWebHook);
   request.send(form);
