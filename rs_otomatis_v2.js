@@ -1746,7 +1746,7 @@ var preMap =
 
 var afkLimit = 90; // limite de afk (12 segundos)
 var drawTimeLimit = 1; // minutos
-var maxTeamSize = 2; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
+var maxTeamSize = 5; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
 var slowMode = 1;
 
 /* TIM */
