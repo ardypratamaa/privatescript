@@ -224,6 +224,12 @@ var vip1 = [];
 var vip2 = [];
 var vip3 = [];
 
+let afkCooldowns = {};
+
+function getCooldownTime(player) {
+    return afkCooldowns[player.id] ? Math.max(0, 30 - Math.floor((Date.now() - afkCooldowns[player.id]) / 1000)) : 0;
+}
+
 let isTurneyStarted = false;
 let countdownTimeouts = [];
 var captchaRequired = false;
@@ -1740,7 +1746,7 @@ var preMap =
 
 var afkLimit = 90; // limite de afk (12 segundos)
 var drawTimeLimit = 1; // minutos
-var maxTeamSize = 5; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
+var maxTeamSize = 2; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
 var slowMode = 1;
 
 /* TIM */
@@ -2609,11 +2615,31 @@ function choosePlayer() {
 }
 
 function getSpecList(player) {
-  var specList = "";
-  for (var i = 0; i < teamS.length; i++) {
-    specList += "[" + (i + 1) + "] " + teamS[i].name + "\n";
+  var specList = "────────────────── 🇹​🇾​🇵​🇪​ 🇵​🇱​🇦​🇾​🇪​🇷​ 🇳​🇺​🇲​🇧​🇪​🇷​​​​​ ──────────────────\n";
+  
+  // Start the list with (0) Random
+  specList += "     [0] Random | ";
+
+  // First line with limit of 4 items
+  for (var i = 0; i < 4 && i < teamS.length; i++) {
+    specList += "[" + (i + 1) + "] " + teamS[i].name + " | ";
   }
-  room.sendAnnouncement(specList, player.id, 0xebeb09, "small");
+  specList = specList.slice(0, -3); // Remove the last pipe and space characters
+  specList += "\n     ";
+
+  // Subsequent lines with limit of 5 items each
+  for (var i = 4; i < teamS.length; i += 5) {
+    for (var j = 0; j < 5 && (i + j) < teamS.length; j++) {
+      specList += "[" + (i + j + 1) + "] " + teamS[i + j].name + " | ";
+    }
+    specList = specList.slice(0, -3); // Remove the last pipe and space characters
+    if (i + 5 < teamS.length) {
+      specList += "\n     ";
+    }
+  }
+  
+  specList += "\n────────────────────────────────────────────────\n";
+  room.sendAnnouncement(specList, player.id, 0xebeb09, "normal");
 }
 
 /* STATISTICS FUNCTIONS */
@@ -3841,25 +3867,39 @@ room.onPlayerChat = function (player, message) {
     room.sendAnnouncement("Last rank: Legend - [⚽:60]", player.id, 0xf77104, "bold");
     room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "bold");
   } else if (["!afk"].includes(message[0].toLowerCase())) {
-    if (players.length != 1 && player.team != Team.SPECTATORS) {
-      if (player.team == Team.RED && streak > 0 && room.getScores() == null) {
-        room.setPlayerTeam(player.id, Team.SPECTATORS);
-      } else {
-        room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴ'ᴛ ɢᴏ ᴀꜰᴋ ᴡʜɪʟᴇ ᴘʟᴀʏɪɴɢ!", player.id, 0xff7b08);
+    let cooldownTime = getCooldownTime(player);
+
+    if (cooldownTime > 0) {
+        room.sendAnnouncement("!afk cooldown (" + cooldownTime + " seconds left)", player.id, 0xffffff, "small");
         return false;
-      }
-    } else if (players.length == 1 && !getAFK(player)) {
-      room.setPlayerTeam(player.id, Team.SPECTATORS);
     }
+
+    afkCooldowns[player.id] = Date.now();
+
+    if (players.length != 1 && player.team != Team.SPECTATORS) {
+        if (player.team == Team.RED && streak > 0 && room.getScores() == null) {
+            room.setPlayerTeam(player.id, Team.SPECTATORS);
+        } else {
+            room.sendAnnouncement("You can't go AFK while playing", player.id, 0xff7b08, "small");
+            return false;
+        }
+    } else if (players.length == 1 && !getAFK(player)) {
+        room.setPlayerTeam(player.id, Team.SPECTATORS);
+    }
+
     setAFK(player, !getAFK(player));
-    room.sendAnnouncement(player.name + (getAFK(player) ? " ɪꜱ ᴀꜰᴋ!" : " ɪꜱ ɴᴏᴡ ᴏɴʟɪɴᴇ!"), null, getAFK(player) ? 0xff7b08 : 0x8fff8f);
-    room.sendAnnouncement((getAFK(player) ? "ᴛʏᴘᴇ !ᴀꜰᴋ ᴛᴏ ʀᴇᴛᴜʀɴ" : ""), player.id, getAFK(player) ? 0xff7b08 : 0x8fff8f);
+    if (getAFK(player)) {
+      room.sendAnnouncement(player.name + " is AFK", null, 0xff7b08);
+      room.sendAnnouncement("Type !afk to return", player.id, 0xff7b08, "bold");
+    } else {
+      room.sendAnnouncement(player.name + " is now online!", null, 0x8fff8f);
+    }
     getAFK(player) ? updateRoleOnPlayerOut() : updateRoleOnPlayerIn();
     localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player"]);
     setTimeout(() => {
-      if (getAFK(player) && stats[Ss.RL] != "vip") {
-        room.kickPlayer(player.id, "𝗔𝗙𝗞 𝘁𝗶𝗺𝗲𝗼𝘂𝘁", false);
-      }
+        if (getAFK(player) && stats[Ss.RL] != "vip") {
+            room.kickPlayer(player.id, "𝗔𝗙𝗞 𝘁𝗶𝗺𝗲𝗼𝘂𝘁", false);
+        }
     }, 30 * 60 * 1000);
     return false;
   } else if (["!afks", "!afklist"].includes(message[0].toLowerCase())) {
@@ -4373,6 +4413,10 @@ room.onPlayerChat = function (player, message) {
     } else {
         room.sendAnnouncement(`You need to log in first, ${player.name}.`, player.id);
     }
+  } else if (["!speclist"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      getSpecList(TeamR.length <= TeamB.length ? TeamR[0] : TeamB[0]);
+    } 
   } else if (["!logout"].includes(message[0].toLowerCase())) {
     if (playerLoginStatus[player.name].loggedIn) {
       playerLoginStatus[player.name] = { loggedIn: false, identity: null };
@@ -5329,7 +5373,7 @@ room.onPlayerChat = function (player, message) {
           clearTimeout(timeOutCap);
           room.sendAnnouncement(player.name + " chose first from the list!", null, 0x55bae2, "normal");
           return false;
-        } else if (["random", "rand"].includes(message[0].toLowerCase())) {
+        } else if (["0", "random"].includes(message[0].toLowerCase())) {
           room.setPlayerTeam(teamS[getRandomInt(teamS.length)].id, Team.BLUE);
           blueCaptainChoice = "random";
           clearTimeout(timeOutCap);
