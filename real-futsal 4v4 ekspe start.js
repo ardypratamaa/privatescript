@@ -44,7 +44,7 @@ function addNewPlayerById(id, auth, stars) {
 
 function checkPlayerInDatabase(auth, callback) {
   var xhr = new XMLHttpRequest();
-  var url = 'http://localhost/HaxIndo/database/getPlayer.php'; 
+  var url = 'http://localhost/haxindo/database/getPlayer.php'; 
 
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
@@ -4675,7 +4675,7 @@ function sendDiscordRecording() {
 
 function sendDataToServer(player) {
   var xhr = new XMLHttpRequest();
-  var url = 'http://localhost/HaxIndo/database/updatePlayer.php'; 
+  var url = 'http://localhost/haxindo/database/updatePlayer.php'; 
       
   var data = {
       auth: player.auth, 
