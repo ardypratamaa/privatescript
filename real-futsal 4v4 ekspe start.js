@@ -4101,42 +4101,42 @@ room.onPlayerChat = function (player, message) {
   var announcement = "";
   var chatColor = "";
 
-  if (stars < 10) {
-    announcement += "[💠Dark System] ";
-    chatColor = "0xB6B6B6";
+ if (stars < 10) {
+    announcement += "[💀Dark System] ";
+    chatColor = "0xf9f9f9";
   } else if (player.admin == true) {
     announcement += "[💠Admin] ";
     chatColor = "0x99ffff";
-  } else if (stars < 20) {
+  } else if (stars < 25) {
     announcement += "[💠Bronze] ";
-    chatColor = "0xC63D2F";
-  } else if (stars < 30) {
-    announcement += "[💠Elite] ";
-    chatColor = "0x73777B";
-  } else if (stars < 40) {
-    announcement += "[💠Master] ";
-    chatColor = "0xD4D925";
+    chatColor = "0xaf8a6d";
   } else if (stars < 50) {
-    announcement += "[💠Grandmaster] ";
-    chatColor = "0xB3C8CF";
-  } else if (stars < 70) {
-    announcement += "[💠Epic] ";
-    chatColor = "0x75A47F";
-  } else if (stars < 80) {
-    announcement += "[💠Legend] ";
-    chatColor = "0xFFB200";
-  } else if (stars < 90) {
-    announcement += "[💠Mythic] ";
-    chatColor = "0xF8DE22";
+    announcement += "[💠Elite] ";
+    chatColor = "0x01af02";
+  } else if (stars < 75) {
+    announcement += "[💠Master] ";
+    chatColor = "0xd51719";
   } else if (stars < 100) {
-    announcement += "[🥉Glory] ";
-    chatColor = "0x36C2CE";
-  } else if (stars < 120){
-    announcement += "[🥈Immortal] ";
-    chatColor = "0xDF2E38";
+    announcement += "[💠Grandmaster] ";
+    chatColor = "0xffe76b";
+  } else if (stars < 150) {
+    announcement += "[💠Epic] ";
+    chatColor = "0xfbb61a";
+  } else if (stars < 200) {
+    announcement += "[🌟Legend] ";
+    chatColor = "0xfbd324";
+  } else if (stars < 300) {
+    announcement += "[💥Mythic] ";
+    chatColor = "0xf0382f";
+  } else if (stars < 400) {
+    announcement += "[🔥Glory] ";
+    chatColor = "0xffa242";
+  } else if (stars < 500) {
+    announcement += "[💎Immortal] ";
+    chatColor = "0xc1fefe";
   } else {
-    announcement += "[🥇Legendary] ";
-    chatColor = "0xF824FB";
+    announcement += "[🏅Legendary] ";
+    chatColor = "0xf7ce46";
   } 
 
   // Concatenate player.name and message with a space
@@ -4530,7 +4530,7 @@ room.onTeamVictory = function(scores) {
 
   winningPlayers.forEach(player => {
       var currentPlayer = getPlayerById(player.id); 
-      currentPlayer.stars += 10; 
+      currentPlayer.stars += 1; 
       room.sendChat("Winner: " + player.name + " (" + currentPlayer.stars + " Stars)");
 
       sendDataToServer(currentPlayer);
@@ -4538,7 +4538,7 @@ room.onTeamVictory = function(scores) {
 
   losingPlayers.forEach(player => {
       var currentPlayer = getPlayerById(player.id);
-      currentPlayer.stars -= 5; 
+      currentPlayer.stars -= 1; 
       room.sendChat("Loser: " + player.name + " (" + currentPlayer.stars + " Stars)");
 
       sendDataToServer(currentPlayer);
