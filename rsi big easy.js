@@ -1,20 +1,23 @@
 /* ROOM */
-//var roomName = "💠 [ʀꜱɪ|ɪᴅ] Scrim Room | ᴘᴠᴘ ⚽";
-var roomName = "💠 (ʀꜱɪ) 𝗕𝗶𝗴 𝗘𝗮𝘀𝘆 𝗘𝘃𝗲𝗻𝘁 ᴘᴠᴘ";
-//var roomPassword = "scrim2";
-const maxPlayers = 30; // maximum number of players in the room
+var roomName = "💠 (ʀꜱɪ) 𝗕𝗶𝗴 𝗘𝗮𝘀𝘆 ᴘᴠᴘ";
+//var roomName = "💠 [ʀꜱɪ|ᴠɴ] Futsal 3v3 | ᴘᴠᴘ";
+const botName = "----- ᴀᴜᴛᴏʀᴏᴏᴍ.ʀꜱɪ -----";
+const maxPlayers = 15; // maximum number of players in the room
 const roomPublic = true; // true = public room | false = players only enter via the room link (it does not appear in the room list)
-const geo = [{ lat: -6.17, lon: 106.85990, code: "id" }]; //liga 1
-//const geo = [{ lat: -6.17, lon: 106.85989, code: "id" }]; //liga 2
+//const geo = [{ lat: 1.2, lon: 104, code: "id" }];
+const geo = [{ lat: 10.77491, lon: 106.647  , code: "id" }]; //liga 1
+// const geo = [{ lat: -6.17, lon: 106.862, code: "id" }]; //indo
 
 // RSI BANNED SYSTEM
 const bannedAuths = [
   "KRn32GyswvGZi8DEofaQoPzbzOV9ToaYmBR1dWwQbJY",  // chiefo
-  "HogP5Ng_2oA8GsbK_-7-0cVDuhrmOqXfYKm8rTYb9NI",  // chiefo
+  "vPs42cOMUfmHBEGhvyxMsNDjwTuUjTtqjgGAqqKAyn8",  // chiefo
   "N1LbelFP2dIua7xrBIeWTjGHyt391bWaxQ60VAjfDG8", //mamaramzi
   "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
   "KPSQos-kCI87aE9FOiw2f2U8a3qzMgafU-KB0Cvwbo0",
-  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE"
+  "C7ViJCyzSbdtMod9IXcVO7nKw50F8o8XqnehKPWSgbk",
+  "5UB2rvYvGnnwUh1NB-Gu7xe0CD03AY38SJ7RcnvDorE",
+  "MI0S14eYL0s9nYE-O2BTiEMwv4Z99pyD2hHqBfJAs_w"
 ];
 
 // Function to check if the player is banned and kick them
@@ -24,82 +27,16 @@ function checkAndKickPlayer(player) {
   }
 }
 
-var gameTime = 7; //default game time if 0 is selected
-
-// var auctionActive = false;
-// var auctionEndTime = 0;
-// var coinBalances = {};
-// var bids = {}; // Initialize the bids object
-
-// const MAX_COINS = 200;
-
-// function resetAuction() {
-//   auctionActive = false;
-//   auctionEndTime = 0;
-//   bids = {}; // Reset current bids
-// }
-
-// function initializePlayer(player) {
-//   if (!(player.id in coinBalances)) {
-//     coinBalances[player.id] = MAX_COINS;
-//   }
-// }
-
-// function displayAuctionResults() {
-//   globalChatEnabled = true;
-//   auctionActive = false;
-//   var result = "";
-//   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
-//   room.sendAnnouncement("BID FINISH", null, 0x99ffff, "bold");
-//   room.sendAnnouncement("Results :", null, 0x99ffff, "small");
-//   var highestBid = 0;
-//   var highestBidder = "";
-//   var players = room.getPlayerList().filter(p => p.id !== 0);
-  
-//   for (var player of players) {
-//     var bid = bids[player.id] || 0;
-//     result += player.name + " [" + bid + "] | ";
-//     if (bid > highestBid) {
-//       highestBid = bid;
-//       highestBidder = player.name;
-//     }
-//   }
-  
-//   result = result.slice(0, -3); // Remove the last " | "
-//   room.sendAnnouncement(result, null, 0xebeb09, "normal", "small");
-//   room.sendAnnouncement("BID WINNER : " + highestBidder, null, 0x99ffff, "small");
-
-//   // Show remaining coins for each player
-//   setTimeout(() => {
-//     room.sendAnnouncement("COINS LEFT", null, 0x99ffff, "bold");
-//     var coinInfo = "";
-//     for (var player of players) {
-//       var remainingCoins = coinBalances[player.id] || MAX_COINS; // Default to MAX_COINS if balance is undefined
-//       coinInfo += player.name + ": " + remainingCoins + " coins\n";
-//     }
-//     room.sendAnnouncement(coinInfo, null, 0x99ffff, "small");
-//     room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
-//   }, 10000);
-
-//   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
-  
-//   setTimeout(() => {
-//     resetAuction();
-//     console.log("Bid reset");
-//   }, 2000);
-// }
-
 const room = HBInit({
   roomName: roomName,
   maxPlayers: maxPlayers,
   public: roomPublic,
-  noPlayer: true,
-  //password: roomPassword,
+  playerName: botName,
   geo: geo[0],
 });
 
-const scoreLimitPractice = 0;
-const timeLimitPractice = 7;
+const scoreLimitPractice = 3;
+const timeLimitPractice = 4;
 
 let Cor = {
   Vermelho: 0xfa5646,
@@ -157,86 +94,6 @@ const frasesGols = [
   "More and more and more, clutch shoot from ",
   "Gollazooo, goles de los mejores jugadores del campo que es ",
 ];
-const bannedWords = [
-    "ajg",
-    "anj",
-    "anjg",
-    "anjing",
-    "anjeng",
-    "jembut",
-    "jnck",
-    "jncuk",
-    "jancok",
-    "jancox",
-    "jancuk",
-    "jncx",
-    "peler",
-    "pler",
-    "plr",
-    "pepek",
-    "pe pek",
-    "ppk",
-    "fuck",
-    "kontol",
-    "ktl",
-    "kntl",
-    "memmek",
-    "titit",
-    "konntol",
-    "konthol",
-    "kintil",
-    "bgsd",
-    "bangsat",
-    "bgst",
-    "bangst",
-    "bgsd",
-    "entot",
-    "ngewe",
-    "bngsd",
-    "babi",
-    "yatim",
-    "yteam",
-    "asw",
-    "asu",
-    "bapakau",
-    "tl0l",
-    "pala kau",
-    "njeng",
-    "njing",
-    "boodoh",
-    "ciu",
-    "pantek",
-    "memek",
-    "mmk",
-    "puki",
-    "taik",
-    "taii",
-    "paok",
-    "bodoh",
-    "bloon",
-    "dongo",
-    "goblok",
-    "goblog",
-    "gblk",
-    "blok",
-    "blogg",
-    "bego",
-    "be go",
-    "bacot",
-    "beego",
-    "tolol",
-    "to lol",
-    "tlool",
-    "tlol",
-    "tlloooll",
-    "idiot",
-    "shit",
-    "banci",
-    "nigga",
-    "niga",
-    "gay",
-    "coli",
-  ];
 // here you can place/edit assistance messages, always respecting the " , ". Example: "Nice pass," the player's name will always be after the comma.
 const frasesasis = [" with the beautiful of ", " accompanied by the beautiful pass of ", " with the ball in the mouth of the goal by ", " with the phenomenal assistance of ", " and we cannot forget the magnificent pass of"];
 // here you can post/edit messages for mockery, for own goals, always respecting the " , ". Example: "Try to kick to the other side," the player's name will always be after the comma.
@@ -249,44 +106,19 @@ room.setTeamsLock(true);
 var message;
 var Botdivulga;
 var msg1;
-var msg1Time = 300000;
+var msg1Time = 230000;
 var Deus = [];
-var BotdivulgaTime = 900000;
-var adminPassword = "claim";
+var BotdivulgaTime = 210000;
+var adminPassword = "2542";
 var freeze = []; //Holds the name of the frozen players.
 var playerInformations = []; //Holds players names, ID's and positions (undefined if not frozen).
 // Cooldown period in milliseconds
 var cooldownPeriod = 3000; // 2 seconds
 var maxMessages = 2; // Maximum messages allowed in the cooldown period
 
-var isPaused = false;
-var pauseTimer;
-var redPauseCount = 0;
-var bluePauseCount = 0;
-const maxPauses = 3;
-
-let playerIds = new Set();
-let whitelist = new Set([
-  "m1wppzf2sVGJOZlxFr6ivtFbtayhin_3xIHQSXfzTso", //mainoo 
-  "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
-  "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA" //foxwilds
-
-]);
-
-let previousPlayerCount = 0;
-
 // Store last message times and counts for players
 var lastMessageTime = {};
 var messageCounts = {};
-
-var vip1 = [];
-var vip2 = [];
-var vip3 = [];
-var globalChatEnabled = true;
-
-let isTurneyStarted = false;
-let countdownTimeouts = [];
-let penKick = false;
 
 // RSI RANDOM KIT
 var redTeamColors = [
@@ -347,12 +179,33 @@ function areUniformsEqual(uniform1, uniform2) {
   return JSON.stringify(uniform1) === JSON.stringify(uniform2);
 }
 
-/* STADIUM*/
+let previousPlayerCount = 0;
 
-var playerRadius = 15;
+var vip1 = [];
+var vip2 = [];
+var vip3 = [];
+
+var captchaRequired = false;
+
+var voteKickThreshold = 0.5; // 60% of active players need to vote to kick
+var noVoteKickThreshold = 0.5; // 60% of active players need to vote to not kick
+var voteKickDuration = 50 * 1000; // 60 seconds for the vote to be active
+var voteKicks = {};
+var gamePausedDueToVoteKick = false;
+
+let playerIds = new Set();
+let whitelist = new Set([
+  "m1wppzf2sVGJOZlxFr6ivtFbtayhin_3xIHQSXfzTso", //mainoo 
+  "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
+  "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA" //foxwilds
+
+]);
+
+/* ESTÁDIO */
+
+const playerRadius = 15;
 var ballRadius = 6.25;
-var triggerDistance = playerRadius + ballRadius + 0.01;
-//default ballphysic 1.06 invmass 0.13 acceleration player  radius 8.5      "bounciness": 0.8       "kickStrength": 5.5
+const triggerDistance = playerRadius + ballRadius + 0.01;
 
 var practiceMap =
   `{
@@ -564,782 +417,14 @@ var practiceMap =
 
 	"canBeStored" : true
 }`;
+/* OPÇÕES */
 
-  var preMap = 
-  `{
-
-    "name" : "RSI Pre Match",
-  
-    "width" : 1320,
-  
-    "height" : 800,
-  
-    "spawnDistance" : 560,
-  
-    "bg" : { "type" : "grass", "width" : 1270, "height" : 720, "kickOffRadius" : 180, "cornerRadius" : 0, "color" : "454955" },
-  
-    "playerPhysics" : {
-      "bCoef" : 0.05,
-      "invMass" : 0.5,
-      "damping" : 0.95,
-      "acceleration" : 0.1424,
-      "kickingAcceleration" : 0.08,
-      "kickingDamping" : 0.96,
-      "kickStrength" : 6.32,
-      "kickback" : 0
-  
-    },
-  
-    "ballPhysics" : "disc0",
-  
-    "vertexes" : [
-      /* 0 */ { "x" : 1, "y" : 657, "trait" : "kickOffBarrier" },
-      /* 1 */ { "x" : 0, "y" : 180, "trait" : "kickOffBarrier" },
-      /* 2 */ { "x" : 0, "y" : -180, "trait" : "kickOffBarrier" },
-      /* 3 */ { "x" : 0, "y" : -675, "trait" : "kickOffBarrier" },
-      
-      /* 4 */ { "x" : 1150, "y" : 320, "trait" : "line" },
-      /* 5 */ { "x" : 840, "y" : 320, "trait" : "line" },
-      /* 6 */ { "x" : 1150, "y" : -320, "trait" : "line" },
-      /* 7 */ { "x" : 840, "y" : -320, "trait" : "line" },
-      /* 8 */ { "x" : 1150, "y" : 180, "trait" : "line" },
-      /* 9 */ { "x" : 1030, "y" : 180, "trait" : "line" },
-      /* 10 */ { "x" : 1150, "y" : -180, "trait" : "line" },
-      /* 11 */ { "x" : 1030, "y" : -180, "trait" : "line" },
-      /* 12 */ { "x" : 840, "y" : -130, "trait" : "line", "curve" : -130 },
-      /* 13 */ { "x" : 840, "y" : 130, "trait" : "line", "curve" : -130 },
-      /* 14 */ { "x" : -1150, "y" : -320, "trait" : "line" },
-      /* 15 */ { "x" : -840, "y" : -320, "trait" : "line" },
-      /* 16 */ { "x" : -1150, "y" : 320, "trait" : "line" },
-      /* 17 */ { "x" : -840, "y" : 320, "trait" : "line" },
-      /* 18 */ { "x" : -1150, "y" : -175, "trait" : "line" },
-      /* 19 */ { "x" : -1030, "y" : -175, "trait" : "line" },
-      /* 20 */ { "x" : -1150, "y" : 175, "trait" : "line" },
-      /* 21 */ { "x" : -1030, "y" : 175, "trait" : "line" },
-      /* 22 */ { "x" : -840, "y" : 130, "trait" : "line", "curve" : -130 },
-      /* 23 */ { "x" : -840, "y" : -130, "trait" : "line", "curve" : -130 },
-      /* 24 */ { "x" : 935, "y" : 3, "trait" : "line" },
-      /* 25 */ { "x" : 935, "y" : -3, "trait" : "line" },
-      /* 26 */ { "x" : -935, "y" : 3, "trait" : "line" },
-      /* 27 */ { "x" : -935, "y" : -3, "trait" : "line" },
-      /* 28 */ { "x" : -1150, "y" : 570, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 29 */ { "x" : -1120, "y" : 600, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 30 */ { "x" : -1120, "y" : -600, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 31 */ { "x" : -1150, "y" : -570, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 32 */ { "x" : 1120, "y" : 600, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 33 */ { "x" : 1150, "y" : 570, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 34 */ { "x" : 1150, "y" : -570, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 35 */ { "x" : 1120, "y" : -600, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      /* 36 */ { "x" : 0, "y" : 180, "bCoef" : 0.1, "cMask" : ["red","blue" ], "cGroup" : ["blueKO" ], "trait" : "kickOffBarrier", "curve" : -180 },
-      /* 37 */ { "x" : 0, "y" : -180, "bCoef" : 0.1, "cMask" : ["red","blue" ], "cGroup" : ["redKO" ], "trait" : "kickOffBarrier", "curve" : 180 },
-      /* 38 */ { "x" : 0, "y" : 180, "bCoef" : 0.1, "cMask" : ["red","blue" ], "cGroup" : ["redKO" ], "trait" : "kickOffBarrier", "curve" : 180 },
-      
-      /* 39 */ { "x" : -1030, "y" : -40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : 70, "color" : "576C46", "vis" : false },
-      /* 40 */ { "x" : -1030, "y" : 40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : 70, "color" : "576C46", "vis" : false },
-      /* 41 */ { "x" : 1030, "y" : -40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : -70, "color" : "576C46", "vis" : false },
-      /* 42 */ { "x" : 1030, "y" : 40, "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "curve" : -70, "color" : "576C46", "vis" : false },
-      /* 43 */ { "x" : 1030, "y" : -40, "trait" : "line", "color" : "576C46", "vis" : false },
-      /* 44 */ { "x" : 1030, "y" : 40, "trait" : "line", "color" : "576C46", "vis" : false },
-      /* 45 */ { "x" : -1030, "y" : -40, "trait" : "line", "color" : "576C46", "vis" : false },
-      /* 46 */ { "x" : -1030, "y" : 40, "trait" : "line", "color" : "576C46", "vis" : false },
-      /* 47 */ { "x" : 0, "y" : 3, "trait" : "line" },
-      /* 48 */ { "x" : 0, "y" : -3, "trait" : "line" },
-      
-      /* 49 */ { "x" : -1300, "y" : -460, "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["red","blue" ], "color" : "ec644b", "vis" : false },
-      /* 50 */ { "x" : 1300, "y" : -460, "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["red","blue" ], "color" : "ec644b", "vis" : false },
-      /* 51 */ { "x" : -1300, "y" : 460, "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["red","blue" ], "color" : "ec644b", "vis" : false },
-      /* 52 */ { "x" : 1300, "y" : 460, "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["red","blue" ], "color" : "ec644b", "vis" : false },
-      /* 53 */ { "x" : -1295, "y" : -320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 54 */ { "x" : -840, "y" : -320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 55 */ { "x" : -840, "y" : 320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 56 */ { "x" : -1295, "y" : 320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 57 */ { "x" : 1295, "y" : -320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 58 */ { "x" : 840, "y" : -320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 59 */ { "x" : 840, "y" : 320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 60 */ { "x" : 1295, "y" : 320, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      /* 61 */ { "x" : -1150, "y" : -124, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ] },
-      /* 62 */ { "x" : -1220, "y" : -124, "bCoef" : 0.1, "cMask" : ["red","blue" ], "bias" : 0, "curve" : 5 },
-      /* 63 */ { "x" : -1150, "y" : 124, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ] },
-      /* 64 */ { "x" : -1220, "y" : 124, "bCoef" : 0.1, "cMask" : ["red","blue" ], "bias" : 0, "curve" : 5 },
-      /* 65 */ { "x" : -1250, "y" : -158, "bCoef" : 0, "cMask" : ["ball" ] },
-      /* 66 */ { "x" : -1250, "y" : 158, "bCoef" : 0, "cMask" : ["ball" ] },
-      /* 67 */ { "x" : 1150, "y" : 124, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ] },
-      /* 68 */ { "x" : 1221, "y" : 124, "bCoef" : 0.1, "cMask" : ["red","blue" ], "curve" : -5 },
-      /* 69 */ { "x" : 1150, "y" : -124, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ] },
-      /* 70 */ { "x" : 1221, "y" : -124, "bCoef" : 0.1, "cMask" : ["red","blue" ], "curve" : -5 },
-      /* 71 */ { "x" : 1250, "y" : -158, "bCoef" : 0, "cMask" : ["ball" ] },
-      /* 72 */ { "x" : 1250, "y" : 158, "bCoef" : 0, "cMask" : ["ball" ] },
-      
-      /* 73 */ { "x" : -312.44827586206895, "y" : 718, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 74 */ { "x" : -300.44827586206895, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 75 */ { "x" : -98.25862068965517, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 76 */ { "x" : -98.25862068965517, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 77 */ { "x" : -276.9396551724138, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 78 */ { "x" : -121.76724137931035, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 79 */ { "x" : -150.4733928811961, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 80 */ { "x" : -131.96477219154093, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      /* 81 */ { "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ], "v0" : 201, "v1" : 202, "curve" : -328.13941952332, "vis" : false, "color" : "ffffff" },
-      
-      /* 82 */ { "x" : -98.25862068965517, "y" : 694, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 83 */ { "x" : -98.25862068965517, "y" : 680, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 84 */ { "x" : -0.4358974358974379, "y" : -1.1794871794871824, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 85 */ { "x" : -1150, "y" : -601.444450378418, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 86 */ { "x" : -1150, "y" : 600.4444694519043, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 87 */ { "x" : 1151, "y" : -600.444450378418, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 88 */ { "x" : 1150, "y" : 599.4444694519043, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 89 */ { "x" : -1149, "y" : -601, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 90 */ { "x" : 1150, "y" : -600, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 91 */ { "x" : -1150, "y" : 599, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 92 */ { "x" : 1150, "y" : 600, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 93 */ { "x" : 0, "y" : 601, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 94 */ { "x" : 0, "y" : 718, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 95 */ { "x" : 0, "y" : -719, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 96 */ { "x" : 0, "y" : -602, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 97 */ { "x" : -32, "y" : 698, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 98 */ { "x" : -32, "y" : 668, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 99 */ { "x" : 34, "y" : 668, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 100 */ { "x" : 0, "y" : 668, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 101 */ { "x" : 1, "y" : 683, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 102 */ { "x" : 19, "y" : 683, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 103 */ { "x" : 19, "y" : 696, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 104 */ { "x" : 0, "y" : 696, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 105 */ { "x" : 30, "y" : 675, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 106 */ { "x" : 30, "y" : 698, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 107 */ { "x" : -10, "y" : 668, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 108 */ { "x" : -10, "y" : 681, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 109 */ { "x" : -28, "y" : 681, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 110 */ { "x" : -13, "y" : 696, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 111 */ { "x" : -1270, "y" : 716, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 112 */ { "x" : 1271, "y" : 717, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 113 */ { "x" : -1270, "y" : 719, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 114 */ { "x" : 1271, "y" : 720, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 115 */ { "x" : -1270, "y" : 719, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 116 */ { "x" : 1271, "y" : 720, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 117 */ { "x" : -1269, "y" : 722, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 118 */ { "x" : 1272, "y" : 723, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 119 */ { "x" : -1270, "y" : -722, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 120 */ { "x" : 1271, "y" : -723, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 121 */ { "x" : -1270, "y" : -719, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 122 */ { "x" : 1271, "y" : -720, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 123 */ { "x" : -1269, "y" : -725, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 124 */ { "x" : 1272, "y" : -726, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 125 */ { "x" : -1266, "y" : 721, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 126 */ { "x" : -1266, "y" : -726, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 127 */ { "x" : -1266, "y" : 721, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 128 */ { "x" : -1266, "y" : -726, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 129 */ { "x" : 1269, "y" : 720, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 130 */ { "x" : 1270, "y" : -726, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 131 */ { "x" : -1268, "y" : 721, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 132 */ { "x" : -1268, "y" : -726, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 133 */ { "x" : 1266, "y" : 724, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 134 */ { "x" : 1267, "y" : -722, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 135 */ { "x" : -1271, "y" : 725, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 136 */ { "x" : -1271, "y" : -722, "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      /* 137 */ { "x" : -32, "y" : -624, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 138 */ { "x" : -32, "y" : -654, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 139 */ { "x" : 34, "y" : -654, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 140 */ { "x" : 0, "y" : -654, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 141 */ { "x" : 1, "y" : -639, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 142 */ { "x" : 19, "y" : -639, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 143 */ { "x" : 19, "y" : -626, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 144 */ { "x" : 0, "y" : -626, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 145 */ { "x" : 30, "y" : -647, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 146 */ { "x" : 30, "y" : -624, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 147 */ { "x" : -10, "y" : -654, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 148 */ { "x" : -10, "y" : -641, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 149 */ { "x" : -28, "y" : -641, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 150 */ { "x" : -13, "y" : -626, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      /* 151 */ { "x" : -210.28125, "y" : 695.0121527777777, "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ] },
-      /* 152 */ { "x" : -209.6105324074074, "y" : 687.6342592592592, "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ] },
-      
-      /* 153 */ { "x" : -98.25862068965517, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 154 */ { "x" : -98.25862068965517, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 155 */ { "x" : -98.25862068965517, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 156 */ { "x" : -98.25862068965517, "y" : 653, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 157 */ { "x" : -98.25862068965517, "y" : 695, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 158 */ { "x" : -98.25862068965517, "y" : 679, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 159 */ { "x" : -98.25862068965517, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 160 */ { "x" : -98.25862068965517, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 161 */ { "x" : -179.4733928811961, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 162 */ { "x" : -160.96477219154093, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 163 */ { "x" : -207.4733928811961, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 164 */ { "x" : -188.96477219154093, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 165 */ { "x" : -236.4733928811961, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 166 */ { "x" : -217.96477219154093, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 167 */ { "x" : -265.4733928811961, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 168 */ { "x" : -246.96477219154093, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 169 */ { "x" : -300.2586206896552, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 170 */ { "x" : -300.2586206896552, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 171 */ { "x" : -300.2586206896552, "y" : 694, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 172 */ { "x" : -300.2586206896552, "y" : 680, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 173 */ { "x" : -300.2586206896552, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 174 */ { "x" : -300.2586206896552, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 175 */ { "x" : -300.2586206896552, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 176 */ { "x" : -300.2586206896552, "y" : 653, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 177 */ { "x" : -300.2586206896552, "y" : 695, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 178 */ { "x" : -300.2586206896552, "y" : 679, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 179 */ { "x" : -300.2586206896552, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 180 */ { "x" : -300.2586206896552, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 181 */ { "x" : 96.55172413793105, "y" : 718, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 182 */ { "x" : 108.55172413793105, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 183 */ { "x" : 310.7413793103448, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 184 */ { "x" : 310.7413793103448, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 185 */ { "x" : 132.06034482758622, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 186 */ { "x" : 287.23275862068965, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 187 */ { "x" : 258.5266071188039, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 188 */ { "x" : 277.03522780845907, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 189 */ { "x" : 310.7413793103448, "y" : 694, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 190 */ { "x" : 310.7413793103448, "y" : 680, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      /* 191 */ { "x" : 198.71875, "y" : 695.0121527777777, "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ] },
-      /* 192 */ { "x" : 199.3894675925926, "y" : 687.6342592592592, "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ] },
-      
-      /* 193 */ { "x" : 310.7413793103448, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 194 */ { "x" : 310.7413793103448, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 195 */ { "x" : 310.7413793103448, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 196 */ { "x" : 310.7413793103448, "y" : 653, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 197 */ { "x" : 310.7413793103448, "y" : 695, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 198 */ { "x" : 310.7413793103448, "y" : 679, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 199 */ { "x" : 310.7413793103448, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 200 */ { "x" : 310.7413793103448, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 201 */ { "x" : 229.5266071188039, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 202 */ { "x" : 248.03522780845907, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 203 */ { "x" : 201.5266071188039, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 204 */ { "x" : 220.03522780845907, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 205 */ { "x" : 172.5266071188039, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 206 */ { "x" : 191.03522780845907, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 207 */ { "x" : 143.5266071188039, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 208 */ { "x" : 162.03522780845907, "y" : 654.0965576171875, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 209 */ { "x" : 108.74137931034483, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 210 */ { "x" : 108.74137931034483, "y" : 654, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 211 */ { "x" : 108.74137931034483, "y" : 694, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 212 */ { "x" : 108.74137931034483, "y" : 680, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 213 */ { "x" : 108.74137931034483, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 214 */ { "x" : 108.74137931034483, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 215 */ { "x" : 108.74137931034483, "y" : 670, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 216 */ { "x" : 108.74137931034483, "y" : 653, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 217 */ { "x" : 108.74137931034483, "y" : 695, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 218 */ { "x" : 108.74137931034483, "y" : 679, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 219 */ { "x" : 108.74137931034483, "y" : 715, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      /* 220 */ { "x" : 108.74137931034483, "y" : 703, "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      /* 221 */ { "x" : -1170.4791679382324, "y" : 583, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag", "color" : "DC0000" },
-      /* 222 */ { "x" : -1163.6041679382324, "y" : 583, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag", "color" : "DC0000" },
-      /* 223 */ { "x" : -1171.1666679382324, "y" : 580, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 224 */ { "x" : -1163.6041679382324, "y" : 580, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 225 */ { "x" : -1163.6041679382324, "y" : 583, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 226 */ { "x" : -1156.0416679382324, "y" : 583, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 227 */ { "x" : -1162.9166679382324, "y" : 580, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 228 */ { "x" : -1155.3541679382324, "y" : 580, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      
-      /* 229 */ { "x" : -1156.6666679382324, "y" : 576.666748046875, "cMask" : ["wall" ], "trait" : "line" },
-      /* 230 */ { "x" : -1149.6666679382324, "y" : 599.666748046875, "cMask" : ["wall" ], "trait" : "line" },
-      /* 231 */ { "x" : -1148.6666679382324, "y" : -599.833251953125, "cMask" : ["wall" ], "trait" : "line" },
-      
-      /* 232 */ { "x" : 1130.2708320617676, "y" : -616.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag", "color" : "DC0000" },
-      /* 233 */ { "x" : 1137.1458320617676, "y" : -616.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag", "color" : "DC0000" },
-      /* 234 */ { "x" : 1129.5833320617676, "y" : -619.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 235 */ { "x" : 1137.1458320617676, "y" : -619.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 236 */ { "x" : 1137.1458320617676, "y" : -616.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 237 */ { "x" : 1144.7083320617676, "y" : -616.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 238 */ { "x" : 1137.8333320617676, "y" : -619.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      /* 239 */ { "x" : 1145.3958320617676, "y" : -619.5, "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      
-      /* 240 */ { "x" : 1144.0833320617676, "y" : -622.833251953125, "cMask" : ["wall" ], "trait" : "line" },
-      /* 241 */ { "x" : 1151.0833320617676, "y" : -599.833251953125, "cMask" : ["wall" ], "trait" : "line" },
-      /* 242 */ { "x" : 1150.0833320617676, "y" : 598.666748046875, "cMask" : ["wall" ], "trait" : "line" }
-  
-    ],
-  
-    "segments" : [
-      { "v0" : 4, "v1" : 5, "trait" : "line", "y" : 320 },
-      { "v0" : 5, "v1" : 7, "trait" : "line", "x" : 840 },
-      { "v0" : 6, "v1" : 7, "trait" : "line", "y" : -320 },
-      { "v0" : 8, "v1" : 9, "trait" : "line", "y" : 180 },
-      { "v0" : 9, "v1" : 11, "trait" : "line", "x" : 1030 },
-      { "v0" : 10, "v1" : 11, "trait" : "line", "y" : -180 },
-      { "v0" : 12, "v1" : 13, "curve" : -130, "trait" : "line", "x" : 840 },
-      { "v0" : 14, "v1" : 15, "trait" : "line", "y" : -320 },
-      { "v0" : 15, "v1" : 17, "trait" : "line", "x" : -840 },
-      { "v0" : 16, "v1" : 17, "trait" : "line", "y" : 320 },
-      { "v0" : 18, "v1" : 19, "trait" : "line", "y" : -175 },
-      { "v0" : 19, "v1" : 21, "trait" : "line", "x" : -1030 },
-      { "v0" : 20, "v1" : 21, "trait" : "line", "y" : 175 },
-      { "v0" : 22, "v1" : 23, "curve" : -130, "trait" : "line", "x" : -840 },
-      { "v0" : 24, "v1" : 25, "curve" : -180, "trait" : "line", "x" : 935 },
-      { "v0" : 26, "v1" : 27, "curve" : -180, "trait" : "line", "x" : -935 },
-      { "v0" : 24, "v1" : 25, "curve" : 180, "trait" : "line", "x" : 935 },
-      { "v0" : 26, "v1" : 27, "curve" : 180, "trait" : "line", "x" : -935 },
-      { "v0" : 24, "v1" : 25, "curve" : 90, "trait" : "line", "x" : 935 },
-      { "v0" : 26, "v1" : 27, "curve" : 90, "trait" : "line", "x" : -935 },
-      { "v0" : 24, "v1" : 25, "curve" : -90, "trait" : "line", "x" : 935 },
-      { "v0" : 26, "v1" : 27, "curve" : -90, "trait" : "line", "x" : -935 },
-      { "v0" : 24, "v1" : 25, "trait" : "line", "x" : 935 },
-      { "v0" : 26, "v1" : 27, "trait" : "line", "x" : -935 },
-      { "v0" : 28, "v1" : 29, "curve" : 90, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 30, "v1" : 31, "curve" : 90, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 32, "v1" : 33, "curve" : 90, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 34, "v1" : 35, "curve" : 90, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 39, "v1" : 40, "curve" : 70, "vis" : false, "color" : "576C46", "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "x" : -1030 },
-      { "v0" : 41, "v1" : 42, "curve" : -70, "vis" : false, "color" : "576C46", "bCoef" : -5.7, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line", "x" : 1030 },
-      { "v0" : 43, "v1" : 44, "vis" : false, "color" : "576C46", "trait" : "line", "x" : 1030 },
-      { "v0" : 45, "v1" : 46, "vis" : false, "color" : "576C46", "trait" : "line", "x" : -1030 },
-      { "v0" : 47, "v1" : 48, "curve" : -180, "trait" : "line", "x" : -935 },
-      { "v0" : 47, "v1" : 48, "curve" : 180, "trait" : "line", "x" : -935 },
-      { "v0" : 47, "v1" : 48, "curve" : 90, "trait" : "line", "x" : -935 },
-      { "v0" : 47, "v1" : 48, "curve" : -90, "trait" : "line", "x" : -935 },
-      { "v0" : 47, "v1" : 48, "trait" : "line", "x" : -935 },
-      
-      { "v0" : 49, "v1" : 50, "vis" : false, "color" : "ec644b", "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["red","blue" ], "y" : -460 },
-      { "v0" : 51, "v1" : 52, "vis" : false, "color" : "ec644b", "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["red","blue" ], "y" : 460 },
-      { "v0" : 53, "v1" : 54, "vis" : false, "color" : "ec644b", "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      { "v0" : 54, "v1" : 55, "vis" : false, "color" : "ec644b", "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      { "v0" : 55, "v1" : 56, "vis" : false, "color" : "ec644b", "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      { "v0" : 57, "v1" : 58, "vis" : false, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      { "v0" : 58, "v1" : 59, "vis" : false, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      { "v0" : 59, "v1" : 60, "vis" : false, "cMask" : ["c0" ], "cGroup" : ["red","blue" ] },
-      { "v0" : 61, "v1" : 62, "color" : "FFFFFF", "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "y" : -124 },
-      { "v0" : 63, "v1" : 64, "color" : "FFFFFF", "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "y" : 124 },
-      { "v0" : 64, "v1" : 62, "curve" : 5, "color" : "FFFFFF", "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "bias" : 0 },
-      { "v0" : 62, "v1" : 65, "color" : "FFFFFF", "bCoef" : 0, "cMask" : ["ball" ] },
-      { "v0" : 64, "v1" : 66, "color" : "FFFFFF", "bCoef" : 0, "cMask" : ["ball" ] },
-      { "v0" : 67, "v1" : 68, "color" : "FFFFFF", "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "y" : 124 },
-      { "v0" : 69, "v1" : 70, "color" : "FFFFFF", "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "y" : -124 },
-      { "v0" : 68, "v1" : 70, "curve" : -5, "color" : "FFFFFF", "bCoef" : 0.1, "cMask" : ["ball","red","blue" ] },
-      { "v0" : 70, "v1" : 71, "color" : "FFFFFF", "bCoef" : 0, "cMask" : ["ball" ] },
-      { "v0" : 68, "v1" : 72, "color" : "FFFFFF", "bCoef" : 0, "cMask" : ["ball" ] },
-      
-      { "v0" : 75, "v1" : 76, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 74, "v1" : 77, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 76, "v1" : 78, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 79, "v1" : 80, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 82, "v1" : 83, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 85, "v1" : 86, "curve" : -0.212710733178631, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 87, "v1" : 88, "curve" : -0.5926245099150841, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 89, "v1" : 90, "curve" : -0.05438611790324986, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 91, "v1" : 92, "curve" : -0.05490730726231725, "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 93, "v1" : 94, "curve" : 0, "color" : "6d925c", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 95, "v1" : 96, "curve" : 0, "color" : "6d925c", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 97, "v1" : 98, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 99, "v1" : 100, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 100, "v1" : 101, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 101, "v1" : 102, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 102, "v1" : 103, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 103, "v1" : 104, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 105, "v1" : 106, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 98, "v1" : 107, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 107, "v1" : 108, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 108, "v1" : 109, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 109, "v1" : 110, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 110, "v1" : 104, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 111, "v1" : 112, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 113, "v1" : 114, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 115, "v1" : 116, "curve" : -1.4085579510213782, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 117, "v1" : 118, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 119, "v1" : 120, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 121, "v1" : 122, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 123, "v1" : 124, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 123, "v1" : 117, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 126, "v1" : 125, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 128, "v1" : 127, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 116, "v1" : 124, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 132, "v1" : 131, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 129, "v1" : 130, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 136, "v1" : 135, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 133, "v1" : 134, "vis" : true, "color" : "000000", "bCoef" : -2.9, "cMask" : ["ball" ], "trait" : "line" },
-      { "v0" : 137, "v1" : 138, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 139, "v1" : 140, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 140, "v1" : 141, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 141, "v1" : 142, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 142, "v1" : 143, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 143, "v1" : 144, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 145, "v1" : 146, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 138, "v1" : 147, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 147, "v1" : 148, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 148, "v1" : 149, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 149, "v1" : 150, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 150, "v1" : 144, "color" : "ffffff", "bCoef" : -2.9, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      { "v0" : 151, "v1" : 152, "curve" : -328.13941952332465, "vis" : false, "color" : "4D4C48", "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ] },
-      
-      { "v0" : 153, "v1" : 154, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 155, "v1" : 156, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 157, "v1" : 158, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 159, "v1" : 160, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 161, "v1" : 162, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 163, "v1" : 164, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 165, "v1" : 166, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 167, "v1" : 168, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 169, "v1" : 170, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 171, "v1" : 172, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 173, "v1" : 174, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 175, "v1" : 176, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 177, "v1" : 178, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 179, "v1" : 180, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 183, "v1" : 184, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 182, "v1" : 185, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 184, "v1" : 186, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 187, "v1" : 188, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 189, "v1" : 190, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      { "v0" : 191, "v1" : 192, "curve" : -328.13941952332465, "vis" : false, "color" : "4D4C48", "bCoef" : 0.001, "cMask" : ["wall" ], "cGroup" : ["all" ] },
-      
-      { "v0" : 193, "v1" : 194, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 195, "v1" : 196, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 197, "v1" : 198, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 199, "v1" : 200, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 201, "v1" : 202, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 203, "v1" : 204, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 205, "v1" : 206, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 207, "v1" : 208, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 209, "v1" : 210, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 211, "v1" : 212, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 213, "v1" : 214, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 215, "v1" : 216, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 217, "v1" : 218, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      { "v0" : 219, "v1" : 220, "color" : "ffffff", "bCoef" : 1, "cMask" : ["ball" ], "cGroup" : ["c0" ], "trait" : "line" },
-      
-      { "v0" : 221, "v1" : 222, "color" : "DC0000", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      { "v0" : 223, "v1" : 224, "color" : "FFFF00", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      { "v0" : 225, "v1" : 226, "color" : "FFFF00", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      { "v0" : 227, "v1" : 228, "color" : "DC0000", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      
-      { "v0" : 229, "v1" : 230, "vis" : true, "color" : "ffffff", "cMask" : ["wall" ], "trait" : "line" },
-      
-      { "v0" : 232, "v1" : 233, "color" : "DC0000", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      { "v0" : 234, "v1" : 235, "color" : "FFFF00", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      { "v0" : 236, "v1" : 237, "color" : "FFFF00", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      { "v0" : 238, "v1" : 239, "color" : "DC0000", "bCoef" : 0.2, "cMask" : ["wall" ], "trait" : "cornerflag" },
-      
-      { "v0" : 240, "v1" : 241, "vis" : true, "color" : "ffffff", "cMask" : ["wall" ], "trait" : "line" }
-  
-    ],
-  
-    "goals" : [
-      
-  
-    ],
-  
-    "discs" : [
-      { "radius" : 9, "invMass" : 0.9, "pos" : [397,-19 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
-      { "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
-      { "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
-      
-      { "radius" : 2.7, "pos" : [-1150,600 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
-      { "radius" : 2.7, "pos" : [1150,-600 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
-      { "radius" : 2.7, "pos" : [1150,600 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
-      
-      { "radius" : 5, "invMass" : 0, "pos" : [-1150,-124 ], "bCoef" : 0.5, "trait" : "goalPost" },
-      { "radius" : 2, "invMass" : 0, "pos" : [-1250,-158 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-      { "radius" : 5, "invMass" : 0, "pos" : [1150,-124 ], "bCoef" : 0.5, "trait" : "goalPost" },
-      
-      { "radius" : 2.7, "pos" : [-1149,-601 ], "cGroup" : ["ball" ], "trait" : "cornerflag" },
-      
-      { "radius" : 0, "pos" : [-1149,-460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [1149,-460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [-1149,-460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [1149,-460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [-1149,460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [1149,460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [-1149,460 ], "cMask" : ["none" ] },
-      { "radius" : 0, "pos" : [1149,460 ], "cMask" : ["none" ] },
-      { "radius" : 10.060763888888891, "invMass" : 1e-27, "pos" : [-197.53761574074073,692.3292824074074 ], "color" : "4D4C48", "bCoef" : 1000, "cMask" : ["ball" ], "cGroup" : ["wall" ], "damping" : 1, "speed" : [0,-0.5 ] },
-      { "radius" : 10.060763888888891, "invMass" : 1e-27, "pos" : [211.46238425925927,692.3292824074074 ], "color" : "4D4C48", "bCoef" : 1000, "cMask" : ["ball" ], "cGroup" : ["wall" ], "damping" : 1, "speed" : [0,-0.5 ] },
-      
-      { "radius" : 5, "invMass" : 0, "pos" : [-1150,125 ], "bCoef" : 0.5, "trait" : "goalPost" },
-      { "radius" : 2, "invMass" : 0, "pos" : [-1252,160 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-      { "radius" : 5, "invMass" : 0, "pos" : [1151,124 ], "bCoef" : 0.5, "trait" : "goalPost" },
-      { "radius" : 2, "invMass" : 0, "pos" : [1250.75,-157.75 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-      { "radius" : 2, "invMass" : 0, "pos" : [1251.75,160.25 ], "color" : "000000", "bCoef" : 1, "trait" : "goalPost" },
-      
-      { "radius" : 9, "invMass" : 0.9, "pos" : [520,-19 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [397,69 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [520,69 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [459,24 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [-563.6666564941406,-37 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [-440.6666564941406,-37 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [-563.6666564941406,51 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [-440.6666564941406,51 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 },
-      { "radius" : 9, "invMass" : 0.9, "pos" : [-501.6666564941406,6 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.9877, "bounciness" : 0.8, "friction" : 0.05 }
-  
-    ],
-  
-    "planes" : [
-      { "normal" : [0,1 ], "dist" : -716, "bCoef" : 0, "cGroup" : ["ball" ], "trait" : "ballArea" },
-      { "normal" : [0,-1 ], "dist" : -714, "bCoef" : 0, "cGroup" : ["ball" ], "trait" : "ballArea" },
-      
-      { "normal" : [0,1 ], "dist" : -721, "bCoef" : 0 },
-      { "normal" : [0,-1 ], "dist" : -718, "bCoef" : 0 },
-      { "normal" : [1,0 ], "dist" : -1268, "bCoef" : 0 },
-      { "normal" : [-1,0 ], "dist" : -1266, "bCoef" : 0.1 },
-      { "normal" : [1,0 ], "dist" : -1230, "bCoef" : 0, "cMask" : ["ball" ], "cGroup" : ["ball" ] },
-      { "normal" : [-1,0 ], "dist" : -1230, "bCoef" : 0, "cMask" : ["ball" ], "cGroup" : ["ball" ] }
-  
-    ],
-  
-    "traits" : {
-      "jb" : { "damping" : 0.99, "cMask" : [ ], "cGroup" : ["c0" ], "invMass" : 1e+250, "radius" : 0.8, "color" : "000000" },
-      "ballArea" : { "vis" : false, "bCoef" : 0, "cMask" : ["ball" ], "cGroup" : ["ball" ] },
-      "goalPost" : { "radius" : 5, "invMass" : 0, "bCoef" : 1, "cGroup" : ["ball" ] },
-      "rightNet" : { "radius" : 0, "invMass" : 1, "bCoef" : 0, "cGroup" : ["ball","c3" ] },
-      "leftNet" : { "radius" : 0, "invMass" : 1, "bCoef" : 0, "cGroup" : ["ball","c2" ] },
-      "stanchion" : { "radius" : 3, "invMass" : 0, "bCoef" : 3, "cMask" : ["none" ] },
-      "cornerflag" : { "radius" : 3, "invMass" : 0, "bCoef" : 0.2, "color" : "FFFF00", "cMask" : ["ball" ] },
-      "reargoalNetleft" : { "vis" : true, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "curve" : 10, "color" : "C7E6BD" },
-      "reargoalNetright" : { "vis" : true, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "curve" : -10, "color" : "C7E6BD" },
-      "sidegoalNet" : { "vis" : true, "bCoef" : 1, "cMask" : ["ball","red","blue" ], "color" : "C7E6BD" },
-      "kickOffBarrier" : { "vis" : false, "bCoef" : 0.1, "cGroup" : ["redKO","blueKO" ], "cMask" : ["red","blue" ] },
-      "line" : { "vis" : true, "cMask" : [ ], "color" : "C7E6BD" }
-  
-    },
-  
-    "redSpawnPoints" : [
-      [ -222, -177
-      ],
-      [ -228, 174
-      ],
-      [ -684, -89
-      ],
-      [ -692, 57
-      ],
-      [ -1087, -5
-      ],
-      [ -214, 622
-      ],
-      [ -214, 622
-      ],
-      [ -214, 622
-      ]
-  
-    ],
-  
-    "blueSpawnPoints" : [
-      [ 218, -181
-      ],
-      [ 225, 168
-      ],
-      [ 719, 94
-      ],
-      [ 719, -102
-      ],
-      [ 1101, -17
-      ],
-      [ 182, 629
-      ],
-      [ 182, 629
-      ],
-      [ 182, 629
-      ]
-  
-    ],
-  
-    "joints" : [
-      
-  
-    ],
-
-    "cameraFollow" : "player",
-  
-    "canBeStored" : false
-  }`;
-
-var penMap =
- `{
-
-	"name" : "RSI Penalty",
-
-	"width" : 360,
-
-	"height" : 350,
-
-	"spawnDistance" : 215,
-
-	"bg" : { "type" : "grass", "width" : 340, "height" : 340, "kickOffRadius" : 0, "cornerRadius" : 0, "color" : "454955" },
-
-	"vertexes" : [
-		/* 0 */ { "x" : 215, "y" : 250, "trait" : "line" },
-		/* 1 */ { "x" : -95, "y" : 250, "trait" : "line" },
-		/* 2 */ { "x" : 215, "y" : -250, "trait" : "line" },
-		/* 3 */ { "x" : -95, "y" : -250, "trait" : "line" },
-		/* 4 */ { "x" : 215, "y" : 150, "trait" : "line" },
-		/* 5 */ { "x" : 95, "y" : 150, "trait" : "line" },
-		/* 6 */ { "x" : 215, "y" : -150, "trait" : "line" },
-		/* 7 */ { "x" : 95, "y" : -150, "trait" : "line" },
-		/* 8 */ { "x" : -95, "y" : -130, "trait" : "line" },
-		/* 9 */ { "x" : -95, "y" : 130, "trait" : "line" },
-		/* 10 */ { "x" : 0, "y" : 4, "trait" : "line" },
-		/* 11 */ { "x" : 0, "y" : -4, "trait" : "line" },
-		
-		/* 12 */ { "x" : 215, "y" : 112, "trait" : "goalNet" },
-		/* 13 */ { "x" : 280, "y" : 112, "trait" : "goalNet" },
-		/* 14 */ { "x" : 215, "y" : -112, "trait" : "goalNet" },
-		/* 15 */ { "x" : 280, "y" : -112, "trait" : "goalNet" },
-		
-		/* 16 */ { "x" : 280, "y" : 112, "trait" : "line" },
-		/* 17 */ { "x" : 315, "y" : 150, "trait" : "line" },
-		/* 18 */ { "x" : 280, "y" : -111, "trait" : "line" },
-		/* 19 */ { "x" : 315, "y" : -150, "trait" : "line" },
-		/* 20 */ { "x" : 0, "y" : -338, "trait" : "line" },
-		/* 21 */ { "x" : 0, "y" : 339, "trait" : "line" },
-		
-		/* 22 */ { "x" : 196, "y" : -300, "trait" : "blueLimit" },
-		/* 23 */ { "x" : 196, "y" : 300, "trait" : "blueLimit" },
-		
-		/* 24 */ { "x" : 217, "y" : 340, "trait" : "line" },
-		/* 25 */ { "x" : 215, "y" : -340, "trait" : "line" },
-		
-		/* 26 */ { "x" : -120, "y" : 290, "trait" : "timebar_moving_ball_stop" },
-		/* 27 */ { "x" : -120, "y" : 250, "trait" : "timebar_moving_ball_stop" }
-
-	],
-
-	"segments" : [
-		{ "v0" : 20, "v1" : 21, "trait" : "line", "color" : "6A8F59" },
-		{ "v0" : 0, "v1" : 1, "trait" : "line" },
-		{ "v0" : 1, "v1" : 3, "trait" : "line" },
-		{ "v0" : 2, "v1" : 3, "trait" : "line" },
-		{ "v0" : 4, "v1" : 5, "trait" : "line" },
-		{ "v0" : 5, "v1" : 7, "trait" : "line" },
-		{ "v0" : 6, "v1" : 7, "trait" : "line" },
-		{ "v0" : 8, "v1" : 9, "trait" : "line", "curve" : -130 },
-		{ "v0" : 10, "v1" : 11, "trait" : "line", "curve" : -180 },
-		{ "v0" : 10, "v1" : 11, "trait" : "line", "curve" : 180 },
-		{ "v0" : 10, "v1" : 11, "trait" : "line", "curve" : 90 },
-		{ "v0" : 10, "v1" : 11, "trait" : "line", "curve" : -90 },
-		{ "v0" : 10, "v1" : 11, "trait" : "line" },
-		
-		{ "v0" : 13, "v1" : 15, "trait" : "goalNet", "curve" : 0.5209125406123253 },
-		{ "v0" : 12, "v1" : 13, "trait" : "goalNet", "curve" : -2.290030455344583 },
-		{ "v0" : 14, "v1" : 15, "trait" : "goalNet", "curve" : 1.8262384781321854 },
-		
-		{ "v0" : 16, "v1" : 17, "trait" : "line", "color" : "FFFFFF" },
-		{ "v0" : 18, "v1" : 19, "trait" : "line", "color" : "FFFFFF" },
-		
-		{ "v0" : 22, "v1" : 23, "trait" : "blueLimit" },
-		
-		{ "v0" : 24, "v1" : 25, "trait" : "line" },
-		
-		{ "v0" : 26, "v1" : 27, "trait" : "timebar_moving_ball_stop" }
-
-	],
-
-	"goals" : [
-		{ "p0" : [225,110 ], "p1" : [225,-110 ], "team" : "blue" },
-		{ "p0" : [215,-112 ], "p1" : [-10,-10 ], "team" : "red" },
-		{ "p0" : [-10,-10 ], "p1" : [-10,10 ], "team" : "red" },
-		{ "p0" : [-10,10 ], "p1" : [215,112 ], "team" : "red" }
-
-	],
-
-	"discs" : [
-		{ "radius" : 9, "invMass" : 1.11, "pos" : [0,0 ], "color" : "FFFFFF", "cMask" : ["all" ], "cGroup" : ["ball","kick","score" ], "damping" : 0.989, "bounciness" : 0.8, "friction" : 0.05 },
-		{ "radius" : 0, "invMass" : 0, "pos" : [-1285,-13 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red" ], "cGroup" : ["ball" ] },
-		{ "radius" : 0, "invMass" : 0, "pos" : [-1284,35 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["blue" ], "cGroup" : ["ball" ] },
-		{ "radius" : 0, "invMass" : 0, "pos" : [-1308,62 ], "color" : "ffffffff", "bCoef" : 0, "cMask" : ["red","blue" ], "cGroup" : ["ball" ] },
-		
-		{ "radius" : 9.1, "pos" : [0,0 ], "color" : "transparent", "trait" : "jb" },
-		{ "radius" : 1.5, "pos" : [0,0 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [6.8476,2.2249 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [0,7.2 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [-6.8476,2.2249 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [-4.2321,-5.8249 ], "trait" : "jb" },
-		{ "radius" : 1.15, "pos" : [4.2321,-5.8249 ], "trait" : "jb" },
-		
-		{ "pos" : [215,112 ], "trait" : "goalPost", "color" : "FFFFFF" },
-		{ "pos" : [215,-112 ], "trait" : "goalPost", "color" : "FFFFFF" },
-		
-		{ "pos" : [315,150 ], "trait" : "stanchion", "color" : "000000" },
-		{ "pos" : [315,-150 ], "trait" : "stanchion", "color" : "000000" },
-		
-		{ "pos" : [-120,272 ], "trait" : "timebar_ball_constant" },
-		
-		{ "pos" : [120,272 ], "trait" : "timebar_ball_constant_2" },
-		
-		{ "pos" : [120,272 ], "trait" : "timebar_ball_moving", "speed" : [-0.4,0 ] }
-
-	],
-
-	"planes" : [
-		{ "normal" : [0,1 ], "dist" : -300, "bCoef" : 0 },
-		{ "normal" : [0,-1 ], "dist" : -300, "bCoef" : 0 },
-		{ "normal" : [1,0 ], "dist" : -246, "bCoef" : 0 },
-		{ "normal" : [-1,0 ], "dist" : -285, "bCoef" : 0 },
-		{ "normal" : [-1,0 ], "dist" : -17, "bCoef" : 0, "cMask" : ["red" ] },
-		
-		{ "normal" : [-1,0 ], "dist" : -250, "trait" : "blueLimit" }
-
-	],
-
-	"traits" : {
-		"jb" : { "damping" : 0.992, "cMask" : [ ], "cGroup" : ["c0" ], "invMass" : 1e+250, "radius" : 0.8, "color" : "000000" },
-		"ballArea" : { "vis" : false, "bCoef" : 0, "cMask" : ["ball" ] },
-		"goalPost" : { "radius" : 5, "invMass" : 0, "bCoef" : 0.5 },
-		"stanchion" : { "radius" : 3, "cMask" : ["" ] },
-		"goalNet" : { "vis" : true, "bCoef" : 0.1, "cMask" : ["ball","red","blue" ], "color" : "FFFFFF" },
-		"line" : { "vis" : true, "cMask" : ["" ], "color" : "C7E6BD" },
-		"blueLimit" : { "vis" : false, "bCoef" : 0, "cMask" : ["blue" ] },
-		"kickOffBarrier" : { "vis" : false, "bCoef" : 0.1, "cGroup" : ["redKO","blueKO" ], "cMask" : ["red","blue" ] },
-		"timebar_ball_constant" : { "bCoef" : 0, "radius" : 0, "invMass" : 0, "damping" : 0, "cMask" : ["c1" ], "cGroup" : ["c1" ] },
-		"timebar_ball_constant_2" : { "bCoef" : 0, "radius" : 0, "invMass" : 0, "damping" : 0, "cMask" : ["none" ], "cGroup" : ["none" ] },
-		"timebar_ball_moving" : { "bCoef" : 0, "radius" : 0, "invMass" : 5e-324, "damping" : 1, "cMask" : ["c1" ], "cGroup" : ["c1" ] },
-		"timebar_moving_ball_stop" : { "vis" : false, "bCoef" : 0, "cMask" : ["c1" ], "cGroup" : ["c1" ], "bias" : -280 }
-
-	},
-
-	"playerPhysics" : {
-		"acceleration" : 0.12,
-		"kickStrength" : 5.92
-
-	},
-
-	"cameraFollow" : "player",
-
-	"ballPhysics" : "disc0",
-
-	"joints" : [
-		{ "d0" : 0, "d1" : 4, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 4, "d1" : 5, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 0, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 4, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 7, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 8, "d1" : 6, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 0, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 4, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 8, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 9, "d1" : 7, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 0, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 4, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 9, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 10, "d1" : 8, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 0, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 4, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 10, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 6, "d1" : 9, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 0, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 4, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 6, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 7, "d1" : 10, "strength" : "rigid", "color" : "transparent" },
-		{ "d0" : 15, "d1" : 16, "color" : "718C5A" },
-		{ "d0" : 15, "d1" : 17, "color" : "C7E6BD", "length" : [0,240 ] }
-
-	],
-
-  "canBeStored" : false
-}`
-
-
-  /* MODE */
-
-var afkLimit = 150; // limite de afk (12 segundos)
+var afkLimit = 90; // limite de afk (12 segundos)
 var drawTimeLimit = 1; // minutos
-var maxTeamSize = 6; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
-var slowMode = 1;
+var maxTeamSize = 4; // máximo de jogadores num time, isso funciona para 1 (você pode querer adaptar as coisas para remover algumas estatísticas inúteis em 1v1, como assist ou cs), 2, 3 ou 4
+var slowMode = 0;
 
-/* TIM */
+/* JOGADORES */
 
 const Team = {
   SPECTATORS: 0,
@@ -1376,19 +461,127 @@ var TeamB;
 var teamS;
 var messageHistory = [0, 0, 0, 0, 0, 0];
 var messageCounter = 0;
-var teams = ["spectators","red","blue"];
 
 /* GAME */
 
 let forbid = ["macaco", "adolf hitler", "nazismo", "cuzao", "cuzão", "autista", "cu", "hitler", "Macaco", "Hitler", "Pênis"];
 
 let link = ["https://www.haxball.com/play?c=_", "https://www.haxball.com", "haxball.com", ".com", "https://", "https:", "https://www."];
+let bannedWords = [
+  "ajg",
+  "anj",
+  "anjg",
+  "anjing",
+  "anjeng",
+  "jembut",
+  "jnck",
+  "jncuk",
+  "jancok",
+  "jancox",
+  "jancuk",
+  "jncx",
+  "peler",
+  "pler",
+  "plr",
+  "pepek",
+  "pe pek",
+  "ppk",
+  "fuck",
+  "kontol",
+  "ktl",
+  "kntl",
+  "memmek",
+  "titit",
+  "konntol",
+  "konthol",
+  "kintil",
+  "bgsd",
+  "bangsat",
+  "bgst",
+  "bangst",
+  "bgsd",
+  "entot",
+  "ngewe",
+  "bngsd",
+  "babi",
+  "yatim",
+  "yteam",
+  "asw",
+  "asu",
+  "bapakau",
+  "tl0l",
+  "pala kau",
+  "njeng",
+  "njing",
+  "boodoh",
+  "ciu",
+  "pantek",
+  "memek",
+  "mmk",
+  "puki",
+  "taik",
+  "taii",
+  "paok",
+  "bodoh",
+  "bloon",
+  "dongo",
+  "goblok",
+  "goblog",
+  "gblk",
+  "blok",
+  "blogg",
+  "bego",
+  "be go",
+  "bacot",
+  "beego",
+  "tolol",
+  "to lol",
+  "tlool",
+  "tlol",
+  "tlloooll",
+  "idiot",
+  "shit",
+  "banci",
+  "nigga",
+  "niga",
+  "gay",
+  "coli",
+];
+let xingo = ["seu preto", "seu macaco", "macaco", "seu negro", "pretinho", "resto de aborto", "seu mcc", "Negrinho", "carvão", "nazista", "Nazista"];
 
 function nameForbid(player) {
   if (forbid.includes(player.name)) {
     room.kickPlayer(player.id, "nick proibido nessa sala", false);
   }
 }
+
+function getCurrentTime() {
+  const date = new Date();
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
+}
+
+// Function to send webhook
+function sendWebhook(url, content) {
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ content }),
+    headers: { "Content-Type": "application/json" },
+  }).then((res) => res);
+}
+
+// -------------------------------------------------
+// Webhooks
+// -------------------------------------------------
+
+let replayWebHook = "https://discord.com/api/webhooks/1241182205192044565/rzf_MWfXtmJWiHC5VpKwiUesielvIkKxCtbODPNr32JszAxBtBZWQVb5njtoCq5wECjD";
+let goalWebHook = "https://discord.com/api/webhooks/1241940033628540960/-ZSYWrGXYFYAh4tZiw18xnrFzPHAzJwsZ5Nsi_PugX-22I94-U-M3S83V4Arq_pOQsdL";
+let chatWebHook = "https://discord.com/api/webhooks/1239049040772206683/EBp9anmfVNHLmLGbjE_n_Rgkydr3EeXGdnFGnJKAERLM38omfBmwfl0hC7kv4Mbv9Dw9";
+let joinWebHook = "https://discord.com/api/webhooks/1239049407177949226/95u2WoWZXCbfKoaUq607TEWQN1Lm38OxUN0ZWuSgbcUlM4_S7tTeGBc7aMUkQVAuODJK";
+let toxicWebHook = "https://discord.com/api/webhooks/1230501754249023568/CD-X4s4tLoJt5QVICUbfIpYGc169VGjwEslq6UL1zz6wstRF8taJCnXgZcZFY0hcTiEG";
+let statsWebHook = "https://discord.com/api/webhooks/1241945008806826095/vQxZj-_wuPLenKA9yL5kmtR60ePhCZlwXwtfnZSxRwFnx1fNE7FeRAzlYQQUqLcvPnYR";
+let playerWebHook = "https://discord.com/api/webhooks/1241969878639050827/bjWpE3PLFtdFX4HPWkXuY40qRxzDADOF4-2VycPw8HJaqbHVclwVNDVLScKs1jBunB8_";
+let spamWebHook = "https://discord.com/api/webhooks/1243753188889464905/ivus8muNsXkAWKS537Ds2jMTAHco3X6tHrvHbO1J4RPuVHulYib0TCzmXy9Jqn-Q0HFS";
+let countWebHook = "https://discord.com/api/webhooks/1252871672768368732/xC740ldRpBP1mDKOhDQdxjcZgY58jEUMTcaMdS3kuKlPeNFcJ9kUoCBY_1uSg1RAaXJL";
 
 var lastTeamTouched; // records who was the last to touch the ball
 var lastPlayersTouched; // allows you to receive good goal notifications (must be lastPlayersKicked, waiting for a next update to get better control of shots on target)
@@ -1449,80 +642,29 @@ function Goal(time, team, striker, assist) {
   this.assist = assist;
 }
 
-// -------------------------------------------------
-// Webhooks
-// -------------------------------------------------
-
-let replayWebHook = "https://discord.com/api/webhooks/1260951226087112714/GOoirNjwgMNuZIQFtNOkWy2fDoYBRcZxRWd-ywok6Eh5nLVZrVJKi2gkUxFuOiRi9r-u";
-let goalWebHook = "https://discord.com/api/webhooks/1260951226087112714/GOoirNjwgMNuZIQFtNOkWy2fDoYBRcZxRWd-ywok6Eh5nLVZrVJKi2gkUxFuOiRi9r-u";
-let chatWebHook = "https://discord.com/api/webhooks/1261187385387913267/7CQWauXCzx970HW6mWPjiaGTRwY5ERzfxmxLrXSrsvDUpH1oT1pfCAiCocZuNGzTHxYU";
-let joinWebHook = "https://discord.com/api/webhooks/1228203622366449695/h_oYpebe1f6D8i7sMhs5J4wUn3-iHRIqUPXT-Lsvq98cf6z_BsRj_I8zAP93S4wgi-gD";
-let startWebHook = "https://discord.com/api/webhooks/1228211340519149661/kmFJSfdirOOWRnH-bynJrDxisbtI-5kg5AesFc4RaktI0NSwgoo6KBbj5bkyshJfcQhq";
-let adminWebHook = "https://discord.com/api/webhooks/1228918067854311544/marqckLcQDbMX9GUXCzp3rMfbkEYlUTdzS4vZHoXlrz34FL-K2i06pUJiN6TCOFGztVe";
-let toxicWebHook = "https://discord.com/api/webhooks/1230501754249023568/CD-X4s4tLoJt5QVICUbfIpYGc169VGjwEslq6UL1zz6wstRF8taJCnXgZcZFY0hcTiEG";
-let fieldWebHook = "https://discord.com/api/webhooks/1233955747985887343/O955Dr_8z5JgTU9sqv880UhqH2KplyJfQ3bLEcXaGm8oK1RSQFGwZAeVVnTYwlyUQ9sz";
-let statsWebHook = "https://discord.com/api/webhooks/1241941404859498567/JRNpNAmFGDeE7S8kybSes_KvMO6C_4EZFrPc-8WM6tFfbUgu3RUXbYgCxUuJboreCWZv";
-let playerWebHook = "https://discord.com/api/webhooks/1241969878639050827/bjWpE3PLFtdFX4HPWkXuY40qRxzDADOF4-2VycPw8HJaqbHVclwVNDVLScKs1jBunB8_";
-let spamWebHook = "https://discord.com/api/webhooks/1243753059155312711/ApZTk8vGyDgQRqXkoTZ6XXjxsFZSC6sK6Zkl2yJG2HoCtw_uSxsbz6hZvDV_elVdGOlZ";
-let countWebHook = "https://discord.com/api/webhooks/1252884551097909289/EJHIhwVX1_LjY_oTgwkcbq7ElsZqlpC9ybVSRBz7yHTxdE89dd7kQ4oFO1j2okSxDawi";
-
-
-// -------------------------------------------------
-// Classes
-// -------------------------------------------------
-class Game {
-  constructor(date, scores, goals) {
-    this.time = 0;
-    this.paused = false;
-    this.ballRadius;
-    this.date = date;
-    this.scores = scores;
-    this.goals = goals;
-    this.rsTouchTeam = 0;
-    this.rsActive = true;
-    this.rsReady = false;
-    this.rsCorner = false;
-    this.rsGoalKick = false;
-    this.rsSwingTimer = 1000;
-    this.rsTimer;
-    this.ballOutPositionX;
-    this.ballOutPositionY;
-    this.throwInPosY;
-    this.outStatus = "";
-    this.warningCount = 0;
-    this.bringThrowBack = false;
-    this.extraTime = false;
-    this.extraTimeCount = 0;
-    this.extraTimeEnd;
-    this.extraTimeAnnounced = false;
-    this.lastPlayAnnounced = false;
-    this.boosterState;
-    this.throwinKicked = false;
-    this.pushedOut;
-    this.lastKickerId;
-    this.lastKickerName;
-    this.lastKickerTeam;
-    this.secondLastKickerId;
-    this.secondLastKickerName;
-    this.secondLastKickerTeam;
-    this.redScore = 0;
-    this.blueScore = 0;
-    this.powershotCounter = 0;
-    this.powershotID = 0;
-    this.powershotTrigger = false;
-  }
-
-  updateLastKicker(id, name, team) {
-    this.secondLastKickerId = this.lastKickerId;
-    this.secondLastKickerName = this.lastKickerName;
-    this.secondLastKickerTeam = this.lastKickerTeam;
-
-    this.lastKickerId = id;
-    this.lastKickerName = name;
-    this.lastKickerTeam = team;
-  }
+function Game(date, scores, goals) {
+  this.date = date;
+  this.scores = scores;
+  this.goals = goals;
 }
 
+// function setRegister(player, senha) {
+//    if (registro.get(player.name)) room.sendAnnouncement('Você já está registrado.', player.id);
+//    else {
+//        registro.set(player.name, senha);
+//        localStorage.setItem("registros", JSON.stringify([...registro]));
+//        room.sendAnnouncement('Registrado!', player.id, 0x2FE436);
+//        room.sendAnnouncement(`Senha: ${senha}`, player.id, 0x2FE436);
+//    }
+//}
+
+//function getLogin(player, senha) {
+//    if (registro.get(player.name)) {
+//        if (registro.get(player.name) == senha) {
+//            room.sendAnnouncement(`${player.name} logou!`, null, 0x2FE436);
+//        } else room.sendAnnouncement('Senha incorreta.', player.id, 0xFF0000);
+//    } else room.sendAnnouncement('Você não está registrado.', player.id, 0xFF0000);
+//}
 
 /* FUNCTIONS */
 
@@ -1532,21 +674,6 @@ function centerText(string) {
     return "";
   }
   return " ".repeat(space) + string + " ".repeat(space);
-}
-
-
-function getCurrentTime() {
-  const date = new Date();
-  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
-}
-
-// Function to send webhook
-function sendWebhook(url, content) {
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify({ content }),
-    headers: { "Content-Type": "application/json" },
-  }).then((res) => res);
 }
 
 /* CHASING */
@@ -1561,7 +688,7 @@ function golcontra(goaler) {
   var randomIndex = Math.floor(Math.random() * messages.length);
   var announcement = messages[randomIndex];
   setTimeout(function () {
-    room.sendAnnouncement(centerText(announcement), null, Cor.White, "bold");
+    room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + announcement + "", null, 0xffffe0, "normal");
   }, 3000);
 }
 
@@ -1612,6 +739,12 @@ if(playerInformations[i].id == id){
   }
 }
 
+function pointDistance(p1,p2){ //Detects the distance between any two points.
+  var d1 = p1.x - p2.x;
+  var d2 = p1.y - p2.y;
+  return Math.sqrt(d1 * d1 + d2 * d2);
+}
+
 function handleFrozenPlayerMoves(){ //Detects moves of frozen players. If a frozen player tries to move from their freeze point, then they will be moved to that point.
   var players = room.getPlayerList();
   for(var i=0; i<players.length; i++){
@@ -1619,16 +752,6 @@ if(freeze.includes(players[i].name) == true && pointDistance(room.getPlayerDiscP
     room.setPlayerDiscProperties(players[i].id,{x:getPlayerByID(players[i].id).freezePoint.x,y:getPlayerByID(players[i].id).freezePoint.y,xspeed:0,yspeed:0});
 }
   }
-}
-
-function pointDistance(p1, p2) {
-  var d1 = p1.x - p2.x;
-  var d2 = p1.y - p2.y;
-  return Math.sqrt(d1 * d1 + d2 * d2);
-}
-
-function sleep(time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 /* BUTTONS */
@@ -1736,6 +859,39 @@ function blueToRedBtn() {
   }
 }
 
+function moveBotToBottom() {
+  let players = room.getPlayerList();
+  let bot = players.find(player => player.id == 0); // Assuming bot ID is 0
+  if (bot) {
+    // Separate players into non-AFK and AFK categories
+    let nonAfkPlayers = [];
+    let afkPlayers = [];
+
+    players.forEach(player => {
+      if (player.id != bot.id) {
+        let afk = getAFK(player); // Assuming getAFK function is defined
+        if (afk) {
+          afkPlayers.push(player);
+        } else {
+          nonAfkPlayers.push(player);
+        }
+      }
+    });
+
+    // Reorder players: non-AFK players, bot, then AFK players
+    let reorderedPlayerIds = nonAfkPlayers.map(player => player.id);
+    reorderedPlayerIds.push(bot.id);
+    reorderedPlayerIds = reorderedPlayerIds.concat(afkPlayers.map(player => player.id));
+
+    room.reorderPlayers(reorderedPlayerIds);
+    // console.log("Bot and AFK players moved to the bottom");
+  } else {
+    // console.log("Bot not found");
+  }
+}
+
+setInterval(moveBotToBottom, 10);
+
 /* GAME FUNCTIONS */
 
 function checkTime() {
@@ -1784,10 +940,9 @@ function checkTime() {
   }
 }
 
-
 function endGame(winner) {
   // lida com o final de um jogo: nenhuma função stopGame dentro
-  // players.length >= 2 * maxTeamSize - 1 ? activateChooseMode() : null; //default - 1
+  players.length >= 2 * maxTeamSize - 1 ? activateChooseMode() : null;
   const scores = room.getScores();
   game.scores = scores;
   Rposs = Rposs / (Rposs + Bposs);
@@ -1802,7 +957,7 @@ function endGame(winner) {
     room.sendAnnouncement(centerText("🏆 Blue team won! | Win streak(s):") + streak + " 🏆", null, 0xfdc43a);
   } else {
     streak = 0;
-    room.sendAnnouncement("💤 ʟɪᴍɪᴛ ʀᴇᴀᴄʜᴇᴅ");
+    room.sendAnnouncement("💤 Limit reached");
   }
   //room.sendAnnouncement("📊 Posse de Bola: 🔴 " + (Rposs*100).toPrecision(3).toString() + "% | " + (Bposs*100).toPrecision(3).toString() + "% 🔵", null, 0xFDC43A);
   room.sendAnnouncement(centerText("🏆 FULL TIME 🏆"), null, Cor.White, "bold");
@@ -1816,6 +971,42 @@ function endGame(winner) {
     ? room.sendAnnouncement("🥅 it's a man? no, it's a barrier! " + GKList[0].name + " saved all goals ", null, 0xfdc43a)
     : null;
   updateStats();
+  //sendDiscordWebhook(scores);
+  //room.sendAnnouncement("A partida foi gravada e enviada em nosso discord. ID: " + `${getDate()}`, null, Cor.Amrelo, Negrito);
+}
+
+function quickRestart() {
+  room.stopGame();
+  setTimeout(() => {
+    room.startGame();
+  }, 2000);
+}
+
+function resumeGame() {
+  setTimeout(() => {
+    room.startGame();
+  }, 2000);
+  setTimeout(() => {
+    room.pauseGame(false);
+  }, 1000);
+}
+
+function activateChooseMode() {
+  inChooseMode = true;
+  slowMode = 5;
+  room.sendAnnouncement("Recruitment activated", null, 0x55bae2, "small");
+  room.sendAnnouncement("Captain is picking players....", null, 0x55bae2, "small")
+}
+
+function deactivateChooseMode() {
+  inChooseMode = false;
+  clearTimeout(timeOutCap);
+  if (slowMode != 0) {
+    slowMode = 0;
+    room.sendAnnouncement("Recruitment mode closed.", null, 0xf2a000, "small");
+  }
+  redCaptainChoice = "";
+  blueCaptainChoice = "";
 }
 
 function loadMap(map, scoreLim, timeLim) {
@@ -1828,6 +1019,8 @@ function loadMap(map, scoreLim, timeLim) {
   room.setScoreLimit(scoreLim);
   room.setTimeLimit(timeLim);
 }
+
+/* PLAYER FUNCTIONS */
 
 function updateTeams() {
   // updates the list of players and the list of all teams
@@ -1849,7 +1042,7 @@ function handleInactivity() {
   }
   for (var i = 0; i < extendedP.length; i++) {
     if (extendedP[i][eP.ACT] == 60 * ((2 / 3) * afkLimit)) {
-      room.sendAnnouncement("@" + room.getPlayer(extendedP[i][eP.ID]).name + " AFK detected... Move within " + Math.floor(afkLimit / 3) + "s to cancel", extendedP[i][eP.ID], 0xf4a404, "bold", 2);
+      room.sendAnnouncement("ᴀꜰᴋ ᴅᴇᴛᴇᴄᴛᴇᴅ... ᴍᴏᴠᴇ ᴡɪᴛʜɪɴ " + Math.floor(afkLimit / 3) + "ꜱ ᴛᴏ ᴄᴀɴᴄᴇʟ", extendedP[i][eP.ID], 0xf4a404, "small", 2);
     }
     if (extendedP[i][eP.ACT] >= 60 * afkLimit) {
       extendedP[i][eP.ACT] = 0;
@@ -1858,9 +1051,15 @@ function handleInactivity() {
           !inChooseMode ? quickRestart() : room.stopGame();
         }, 10);
       }
-      room.kickPlayer(extendedP[i][eP.ID], "ᴀꜰᴋ", false);
+      room.kickPlayer(extendedP[i][eP.ID], "AFK", false);
     }
   }
+}
+
+function toggleCaptchaRequirement() {
+  captchaRequired = !captchaRequired;
+  room.setRequireRecaptcha(captchaRequired);
+  room.sendAnnouncement("Captcha requirement is now " + (captchaRequired ? "ON" : "OFF"));
 }
 
 function getAuth(player) {
@@ -1897,6 +1096,203 @@ function getMute(player) {
 
 function setMute(player, value) {
   extendedP.filter((a) => a[0] == player.id).forEach((player) => (player[eP.MUTE] = value));
+}
+
+/* BALANCE AND RECRUITMENT FUNCTIONS */
+
+function updateRoleOnPlayerIn() {
+  updateTeams();
+  if (inChooseMode) {
+    if (players.length == 6) {
+      loadMap(practiceMap, scoreLimitPractice, timeLimitPractice);
+    }
+    getSpecList(TeamR.length <= TeamB.length ? TeamR[0] : TeamB[0]);
+  }
+  balanceTeams();
+}
+
+function updateRoleOnPlayerOut() {
+  updateTeams();
+  if (room.getScores() != null) {
+    var scores = room.getScores();
+    if (players.length >= 2 * maxTeamSize && scores.time >= (5 / 6) * game.scores.timeLimit && TeamR.length != TeamB.length) {
+      if (TeamR.length < TeamB.length) {
+        if (scores.blue - scores.red == 2) {
+          endGame(Team.BLUE);
+          // room.sendChat("🤖 Ragequit 🤖");
+          room.sendAnnouncement("[ʀꜱɪ] ʀᴀɢᴇQᴜɪᴛ ʙʏ ᴛʜᴇ ʀᴇᴅ ᴛᴇᴀᴍ ᴅᴇᴛᴇᴄᴛᴇᴅ, ᴍᴀᴛᴄʜ ᴏᴠᴇʀ!", null, 0xbfff00, "normal");
+          setTimeout(() => {
+            room.stopGame();
+          }, 100);
+          return;
+        }
+      } else {
+        if (scores.red - scores.blue == 2) {
+          endGame(Team.RED);
+          // room.sendChat("🤖 Ragequit 🤖");
+          room.sendAnnouncement("[ʀꜱɪ] ʀᴀɢᴇQᴜɪᴛ ʙʏ ᴛʜᴇ ʙʟᴜᴇ ᴛᴇᴀᴍ ᴅᴇᴛᴇᴄᴛᴇᴅ, ᴍᴀᴛᴄʜ ᴏᴠᴇʀ!", null, 0xbfff00, "normal");
+          setTimeout(() => {
+            room.stopGame();
+          }, 100);
+          return;
+        }
+      }
+    }
+  }
+  if (inChooseMode) {
+    if (players.length < 6) {
+      loadMap(practiceMap, scoreLimitPractice, timeLimitPractice);
+    }
+    if (TeamR.length == 0 || TeamB.length == 0) {
+      TeamR.length == 0 ? room.setPlayerTeam(teamS[0].id, Team.RED) : room.setPlayerTeam(teamS[0].id, Team.BLUE);
+      return;
+    }
+    if (Math.abs(TeamR.length - TeamB.length) == teamS.length) {
+      // room.sendChat("Sem alternativas, deixe me lidar com essa situação. ...");
+      room.sendAnnouncement("[RSI] With no possibility of recruitment, let me decide...", null, 0xc0bdb1, "bold");
+      deactivateChooseMode();
+      resumeGame();
+      var b = teamS.length;
+      if (TeamR.length > TeamB.length) {
+        for (var i = 0; i < b; i++) {
+          setTimeout(() => {
+            room.setPlayerTeam(teamS[0].id, Team.BLUE);
+          }, 5 * i);
+        }
+      } else {
+        for (var i = 0; i < b; i++) {
+          setTimeout(() => {
+            room.setPlayerTeam(teamS[0].id, Team.RED);
+          }, 5 * i);
+        }
+      }
+      return;
+    }
+    if (streak == 0 && room.getScores() == null) {
+      if (Math.abs(TeamR.length - TeamB.length) == 2) {
+        // if someone leaves an already formed team, thus leaving 2 players, put the last one chosen back to the spectators so that it is fair
+        room.sendAnnouncement("Balancing teams...", null, 0xc0bdb1, "small");
+        TeamR.length > TeamB.length ? room.setPlayerTeam(TeamR[TeamR.length - 1].id, Team.SPECTATORS) : room.setPlayerTeam(TeamB[TeamB.length - 1].id, Team.SPECTATORS);
+      }
+    }
+    if (TeamR.length == TeamB.length && teamS.length < 2) {
+      deactivateChooseMode();
+      resumeGame();
+      return;
+    }
+    capLeft ? choosePlayer() : getSpecList(TeamR.length <= TeamB.length ? TeamR[0] : TeamB[0]);
+  }
+  balanceTeams();
+}
+
+function balanceTeams() {
+  if (!inChooseMode) {
+    if (players.length == 1 && TeamR.length == 0) {
+      // 1 player
+      quickRestart();
+      loadMap(practiceMap, scoreLimitPractice, timeLimitPractice);
+      room.setPlayerTeam(players[0].id, Team.RED);
+    } else if (Math.abs(TeamR.length - TeamB.length) == teamS.length && teamS.length > 0) {
+      // specific players provide necessary players
+      const n = Math.abs(TeamR.length - TeamB.length);
+      if (TeamR.length > TeamB.length) {
+        for (var i = 0; i < n; i++) {
+          room.setPlayerTeam(teamS[i].id, Team.BLUE);
+        }
+      } else {
+        for (var i = 0; i < n; i++) {
+          room.setPlayerTeam(teamS[i].id, Team.RED);
+        }
+      }
+    } else if (Math.abs(TeamR.length - TeamB.length) > teamS.length) {
+      // there are not enough players
+      const n = Math.abs(TeamR.length - TeamB.length);
+      if (players.length == 1) {
+        quickRestart();
+        loadMap(practiceMap, scoreLimitPractice, timeLimitPractice);
+        room.setPlayerTeam(players[0].id, Team.RED);
+        return;
+      } else if (players.length == 6) {
+        quickRestart();
+        loadMap(practiceMap, scoreLimitPractice, timeLimitPractice);
+      }
+      if (players.length == maxTeamSize * 2 - 1) {
+        allReds = [];
+        allBlues = [];
+      }
+      if (TeamR.length > TeamB.length) {
+        for (var i = 0; i < n; i++) {
+          room.setPlayerTeam(TeamR[TeamR.length - 1 - i].id, Team.SPECTATORS);
+        }
+      } else {
+        for (var i = 0; i < n; i++) {
+          room.setPlayerTeam(TeamB[TeamB.length - 1 - i].id, Team.SPECTATORS);
+        }
+      }
+    } else if (Math.abs(TeamR.length - TeamB.length) < teamS.length && TeamR.length != TeamB.length) {
+      // recruitment mode
+      room.pauseGame(true);
+      activateChooseMode();
+      choosePlayer();
+    } else if (teamS.length >= 2 && TeamR.length == TeamB.length && TeamR.length < maxTeamSize) {
+      // 2 in red, 2 in blue and 2 or more specifications
+      if (TeamR.length == 2) {
+        quickRestart();
+        if (!teamS.length == 2) {
+          loadMap(practiceMap, scoreLimitPractice, timeLimitPractice);
+        }
+      }
+      topBtn();
+    }
+  }
+}
+
+function choosePlayer() {
+  clearTimeout(timeOutCap);
+  if (TeamR.length <= TeamB.length && TeamR.length != 0) {
+    room.sendAnnouncement("ᴛɪᴘꜱ: ᴇɴᴛᴇʀ ᴘʟᴀʏᴇʀ ɴᴜᴍʙᴇʀ ᴏʀ ᴛʏᴘᴇ 'ʀᴀɴᴅᴏᴍ'", TeamB[0].id, 0x69ADFE, "normal");
+    timeOutCap = setTimeout(
+      function (player) {
+        room.sendAnnouncement("Captain " + player.name + " is currently picking ...", null, 0x55bae2, "small");
+        room.sendAnnouncement("Be quick, only remain " + Number.parseInt(chooseTime / 2) + " seconds left!", player.id, 0xf2a000, "normal");
+        timeOutCap = setTimeout(
+          function (player) {
+            room.kickPlayer(player.id, "AFK", false);
+          },
+          chooseTime * 500,
+          TeamR[0]
+        );
+      },
+      chooseTime * 1000,
+      TeamR[0]
+    );
+  } else if (TeamB.length < TeamR.length && TeamB.length != 0) {
+    room.sendAnnouncement("ᴛɪᴘꜱ: ᴇɴᴛᴇʀ ᴘʟᴀʏᴇʀ ɴᴜᴍʙᴇʀ ᴏʀ ᴛʏᴘᴇ 'ʀᴀɴᴅᴏᴍ'", TeamB[0].id, 0x69ADFE, "normal");
+    timeOutCap = setTimeout(
+      function (player) {
+        room.sendAnnouncement("Captain " + player.name + " is currently picking ...", null, 0x55bae2, "small");
+        room.sendAnnouncement("Be quick, only remain " + Number.parseInt(chooseTime / 2) + " seconds left!", player.id, 0xf2a000, "normal");
+        timeOutCap = setTimeout(
+          function (player) {
+            room.kickPlayer(player.id, "AFK", false);
+          },
+          chooseTime * 500,
+          TeamB[0]
+        );
+      },
+      chooseTime * 1000,
+      TeamB[0]
+    );
+  }
+  if (TeamR.length != 0 && TeamB.length != 0) getSpecList(TeamR.length <= TeamB.length ? TeamR[0] : TeamB[0]);
+}
+
+function getSpecList(player) {
+  var specList = "";
+  for (var i = 0; i < teamS.length; i++) {
+    specList += "[" + (i + 1) + "] " + teamS[i].name + "\n";
+  }
+  room.sendAnnouncement(specList, player.id, 0xebeb09, "small");
 }
 
 /* STATISTICS FUNCTIONS */
@@ -2208,9 +1604,12 @@ setInterval(() => {
 
 const specialAuths = [
   "Gz6lv-5YsUCk-bJHBxyzbXtFAV2O3edJUev3DhEf_xA", //fox
+  "oCk6n6FWrfoalDXXPijIKiPkZG9O1qZsoNmUnJ8ECbg", //fox2
   "0Zu3VQi49L7EVFA2vhBhlvHSycK4E7CksBY2v4KpPAc", //m4
   "LnEtoSdVonFZdGMYKDUVPAWb-SzD-PsUMJC2nDPHO5w", //roti
   "EKGPaC2usPnvew9o0KH9P6J3nSmBOpKf3meC25VidQo", //stickmar
+  "RJ4Gabk5YrcFaGkD1FC3JOVjCvUcsQr_eRnMJcdfF7I", //nightkaz
+  "gfiyHWQoMVjh9IAIsB1jWRuM1sGorFtEZFnKdpkIgME", //arul
   "4sNwsfwEjsR37sYEkXMatM8YkcjM3KaJ5uoC2WJ02rY" //bizkit
 ];
 const specialConns = [
@@ -2218,24 +1617,27 @@ const specialConns = [
   "3130332E37352E35352E3632", //m4
   "3132392E3232372E33392E313139", //roti
   "3134302E3231332E3132372E3337", //bizkit
+  "3132352E3136352E38312E323135", //kazuto
+  "33362E36392E3131392E313937", //arul
   "3138322E332E34352E323331" //stickmar
 ];
 
 room.onPlayerJoin = function (player) {
-  // initializePlayer(player);
+
+  moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has joined. (auth: ${player.auth} | conn: ${player.conn})`);
-  sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined rs server.\``);
+  sendWebhook(joinWebHook, `\`${player.name} [${player.id}] [id:${player.conn}] [auth:${player.auth}] joined bigeasy server.\``);
   checkAndKickPlayer(player);
   createPlayer(player);
 
   if (specialAuths.includes(player.auth) || specialConns.includes(player.conn)) {
     room.setPlayerAdmin(player.id, true);
   }
-
+  
   extendedP.push([player.id, player.auth, player.conn, false, 0, 0, false]);
-  // updateRoleOnPlayerIn();
-  // room.sendAnnouncement("👋🏼 ᴡᴇʟᴄᴏᴍᴇ, " + player.name + "!", null, 0x5ee7ff, "bold");
+  updateRoleOnPlayerIn();
+  //room.sendAnnouncement("👋🏼 ᴡᴇʟᴄᴏᴍᴇ, " + player.name + "!", null, 0x5ee7ff, "bold");
   const text = [
     "╔═══════════════════════════════════════════════════╗",
     "║                                                      𝗥𝗦𝗜.𝗖𝗢𝗠𝗠𝗨𝗡𝗜𝗧𝗬                                                        ║",
@@ -2250,18 +1652,13 @@ room.onPlayerJoin = function (player) {
     text.forEach(line => {
         room.sendAnnouncement(line, player.id, 0x5CF49C, "normal");
     });
-  }, 2700); 
-
-  setTimeout(() => {
-    room.sendAnnouncement("use ( t ) before text if you want to send message", player.id, 0xedc021, "normal");
-    room.sendAnnouncement("example: t hello", player.id, 0xedc021, "normal");
-  }, 3200);
-
+  }, 3100); 
+  
   // if (localStorage.getItem(player.auth) != null) {
   //   var playerRole = JSON.parse(localStorage.getItem(player.auth))[Ss.RL];
   //   if (playerRole == "admin" || playerRole == "master") {
   //     room.setPlayerAdmin(player.id, true);
-  //     room.sendAnnouncement("「ᴀᴅᴍɪɴ」" + player.name + " ᴄᴀᴍᴇ ɪɴᴛᴏ ᴛʜᴇ ʀᴏᴏᴍ!", null, 0xff7900, "normal");
+  //     room.sendAnnouncement("「Admin」" + player.name + " Came into the room!", null, 0xff7900, "normal");
   //   }
   // }
   if (localStorage.getItem(getAuth(player)) == null) {
@@ -2275,14 +1672,22 @@ function updatePlayerCount() {
   const currentPlayerCount = players.length;
 
   if (currentPlayerCount !== previousPlayerCount) {
-      const playerNames = players.map(player => `[-] ${player.name}`).join('\n');
-      const message = `\`[liga room 1] ${currentPlayerCount} players\n${playerNames}\``;
+      const playerNames = players.map(player => `[-] ${player.name}${player.admin ? ' (admin)' : ''}`).join('\n');
+      const adminCount = players.filter(player => player.admin).length;
+      let message;
+
+      if (adminCount > 0) {
+          message = `\`🟢[big easy] ${currentPlayerCount} players (${adminCount} admin)\n${playerNames}\``;
+      } else {
+          message = `\`🟢[big easy] ${currentPlayerCount} players\n${playerNames}\``;
+      }
+
       sendWebhook(countWebHook, message);
       previousPlayerCount = currentPlayerCount; // Update the previous player count only if the webhook is sent
   }
 }
 
-setInterval(updatePlayerCount, 5000);
+setInterval(updatePlayerCount, 3000);
 
 function findNextAdmin() {
   var players = room.getPlayerList();
@@ -2295,7 +1700,7 @@ function findNextAdmin() {
 }
 
 room.onPlayerTeamChange = function (changedPlayer, byPlayer) {
-
+  moveBotToBottom();
   if (changedPlayer.id == 0) {
     room.setPlayerTeam(0, Team.SPECTATORS);
     return;
@@ -2306,18 +1711,48 @@ room.onPlayerTeamChange = function (changedPlayer, byPlayer) {
     return;
   }
   updateTeams();
+  if (room.getScores() != null) {
+    var scores = room.getScores();
+    if (changedPlayer.team != Team.SPECTATORS && scores.time <= (3 / 4) * scores.timeLimit && Math.abs(scores.blue - scores.red) < 2) {
+      changedPlayer.team == Team.RED ? allReds.push(changedPlayer) : allBlues.push(changedPlayer);
+    }
+  }
   if (changedPlayer.team == Team.SPECTATORS) {
     setActivity(changedPlayer, 0);
   }
-
-  if (changedPlayer.team == 0) {
-    room.sendAnnouncement("🡪 ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴍᴏᴠᴇᴅ ᴛᴏ ꜱᴘᴇᴄᴛᴀᴛᴏʀ", changedPlayer.id, 0xffffff, "normal", 1);
-  } else if (changedPlayer.team == 1) {
-    room.sendAnnouncement("🡪 ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴍᴏᴠᴇᴅ ᴛᴏ ʀᴇᴅ ᴛᴇᴀᴍ", changedPlayer.id, 0xed6a5a, "normal", 1);
-  } else if (changedPlayer.team == 2) {
-    room.sendAnnouncement("🡪 ʏᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴍᴏᴠᴇᴅ ᴛᴏ ʙʟᴜᴇ ᴛᴇᴀᴍ", changedPlayer.id, 0x33dddd, "normal", 1);
+  if (inChooseMode && resettingTeams == false && byPlayer.id == 0) {
+    if (Math.abs(TeamR.length - TeamB.length) == teamS.length) {
+      deactivateChooseMode();
+      resumeGame();
+      var b = teamS.length;
+      if (TeamR.length > TeamB.length) {
+        for (var i = 0; i < b; i++) {
+          setTimeout(() => {
+            room.setPlayerTeam(teamS[0].id, Team.BLUE);
+          }, 200 * i);
+        }
+      } else {
+        for (var i = 0; i < b; i++) {
+          setTimeout(() => {
+            room.setPlayerTeam(teamS[0].id, Team.RED);
+          }, 200 * i);
+        }
+      }
+      return;
+    } else if ((TeamR.length == maxTeamSize && TeamB.length == maxTeamSize) || (TeamR.length == TeamB.length && teamS.length < 2)) {
+      deactivateChooseMode();
+      resumeGame();
+    } else if (TeamR.length <= TeamB.length && redCaptainChoice != "") {
+      // escolha lembrada
+      redCaptainChoice == "top" ? room.setPlayerTeam(teamS[0].id, Team.RED) : redCaptainChoice == "random" ? room.setPlayerTeam(teamS[getRandomInt(teamS.length)].id, Team.RED) : room.setPlayerTeam(teamS[teamS.length - 1].id, Team.RED);
+      return;
+    } else if (TeamB.length < TeamR.length && blueCaptainChoice != "") {
+      blueCaptainChoice == "top" ? room.setPlayerTeam(teamS[0].id, Team.BLUE) : blueCaptainChoice == "random" ? room.setPlayerTeam(teamS[getRandomInt(teamS.length)].id, Team.BLUE) : room.setPlayerTeam(teamS[teamS.length - 1].id, Team.BLUE);
+      return;
+    } else {
+      choosePlayer();
+    }
   }
-
 };
 
 function isAdminPresent() {
@@ -2330,27 +1765,47 @@ function isAdminPresent() {
 }
 
 room.onPlayerLeave = function (player) {
+  // playerIds.delete(player.auth);
+  moveBotToBottom();
   const currentTime = getCurrentTime();
   console.log(`${currentTime} ➡️ ${player.name} [${player.id}] has left.`);
-  sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left rs server.\``);
+  sendWebhook(joinWebHook, `\`${player.name} [${player.id}] has left big easy server.\``);
   deletePlayer(player);
+  delete lastMessageTime[player.id];
 
-  // if (TeamR.findIndex((red) => red.id == player.id) == 0 && inChooseMode && TeamR.length <= TeamB.length) {
-  //   choosePlayer();
-  //   capLeft = true;
-  //   setTimeout(() => {
-  //     capLeft = false;
-  //   }, 10);
-  // }
-  // if (TeamB.findIndex((blue) => blue.id == player.id) == 0 && inChooseMode && TeamB.length < TeamR.length) {
-  //   choosePlayer();
-  //   capLeft = true;
-  //   setTimeout(() => {
-  //     capLeft = false;
-  //   }, 10);
-  // }
-  // setActivity(player, 0);
-  // updateRoleOnPlayerOut();
+  if (voteKicks[player.id]) {
+    clearTimeout(voteKicks[player.id].timeout);
+    clearInterval(voteKicks[player.id].announcementInterval); // Clear the announcement interval
+    delete voteKicks[player.id];
+    room.sendAnnouncement(`Vote kick ${player.name} has been canceled because target left.`, null, 0xFF9898, "normal", 1);
+  }
+
+  for (let targetId in voteKicks) {
+      voteKicks[targetId].votes.delete(player.id);
+      voteKicks[targetId].noVotes.delete(player.id);
+  }
+
+  if (gamePausedDueToVoteKick) {
+      room.pauseGame(false);
+      gamePausedDueToVoteKick = false;
+  }
+
+  if (TeamR.findIndex((red) => red.id == player.id) == 0 && inChooseMode && TeamR.length <= TeamB.length) {
+    choosePlayer();
+    capLeft = true;
+    setTimeout(() => {
+      capLeft = false;
+    }, 10);
+  }
+  if (TeamB.findIndex((blue) => blue.id == player.id) == 0 && inChooseMode && TeamB.length < TeamR.length) {
+    choosePlayer();
+    capLeft = true;
+    setTimeout(() => {
+      capLeft = false;
+    }, 10);
+  }
+  setActivity(player, 0);
+  updateRoleOnPlayerOut();
 };
 
 room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
@@ -2359,62 +1814,66 @@ room.onPlayerKicked = function (kickedPlayer, reason, ban, byPlayer) {
 
 /* PLAYER ACTIVITY */
 
+const lastGoals = {}; // Object to store the last random goal value for each player
+
+function addRandomGoalsEveryFifteenMinutes() {
+    room.getPlayerList().forEach(function(player) {
+        if (player.team !== 0 && localStorage.getItem(getAuth(player))) {
+            let stats = JSON.parse(localStorage.getItem(getAuth(player)));
+            let randomGoals;
+            
+            if (player.admin) {
+                // Admin player gets 4 goals
+                randomGoals = 4;
+            } else {
+                // Non-admin player gets random goals (1, 2, 3, or 4) ensuring it's not the same as last time
+                do {
+                    randomGoals = Math.floor(Math.random() * 2) + 1; // Generate random number between 1 and 4
+                } while (randomGoals === lastGoals[player.id]);
+            }
+
+            stats[Ss.GL] = (stats[Ss.GL] || 0) + randomGoals;
+            localStorage.setItem(getAuth(player), JSON.stringify(stats));
+            
+            // Update the last goals value for the player if they are not an admin
+            if (!player.admin) {
+                lastGoals[player.id] = randomGoals;
+            }
+
+            // Log goal addition
+            console.log(`Added ${randomGoals} goal(s) to player ${player.name}. Total goals: ${stats[Ss.GL]}`);
+        }
+    });
+}
+
+// Schedule every 15 minutes
+setInterval(addRandomGoalsEveryFifteenMinutes, 1200000);
+
 room.onPlayerChat = function (player, message) {
-  sendWebhook(chatWebHook, `\`💬 [event] ${player.name} [${player.id}]: ${message}\``);
+  sendWebhook(chatWebHook, `\`💬 [big easy] ${player.name} [${player.id}]: ${message}\``);
   var players = room.getPlayerList();
   let args = message.split(" ");
 
-  if (message.startsWith("t ") || message.startsWith("T ")) {
-    teamMsg = message.substring(2).trim();
-    var players;
-    var teamColor;
-    var teamMsgPrefix;
-    var showAdmins = false;
-
-    if (player.team == 1) {
-        players = room.getPlayerList().filter(p => p.team == 1);
-        teamColor = 0xed6a5a;
-        teamMsgPrefix = "🔴[TEAM CHAT]";
-        showAdmins = false;
-    } else if (player.team == 2) {
-        players = room.getPlayerList().filter(p => p.team == 2);
-        teamColor = 0x5995ed;
-        teamMsgPrefix = "🔵[TEAM CHAT]";
-        showAdmins = false;
-    } else if (player.team == 0) {
-        players = room.getPlayerList().filter(p => p.team == 0);
-        teamColor = 0xdee7fa;
-        teamMsgPrefix = "[SPECTATOR]";
-    }
-
-    if (players) {
-        players.forEach(function (teamPlayer) {
-            room.sendAnnouncement(teamMsgPrefix + " " + player.name + ": " + teamMsg, teamPlayer.id, teamColor, "normal", 1);
+  if (message.length > 1 && message[0].toLowerCase() == "t" && message[1] == " ") {
+    if (player.team != 0) {
+        const teamChatPrefix = player.team == 1 ? "🔴 [ᴛᴇᴀᴍ ᴄʜᴀᴛ] " : "🔵 [ᴛᴇᴀᴍ ᴄʜᴀᴛ] ";
+        room.getPlayerList().forEach((element) => {
+            if (element.team == player.team) room.sendAnnouncement(teamChatPrefix + player.name + ": " + message.substr(2), element.id, player.team == 1 ? /*16725591*/ 3261685 : 3261685, "normal", 0);
         });
-
-        // Send message to all admins if the player is in team 1 or 2
-        if (showAdmins) {
-            var admins = room.getPlayerList().filter(p => p.admin);
-            admins.forEach(function (admin) {
-                room.sendAnnouncement(teamMsgPrefix + " " + player.name + ": " + teamMsg, admin.id, teamColor, "normal", 1);
-            });
-        }
-    }
-    return false;
-
-  } else if (message.startsWith("a ") || message.startsWith("A ")) {
-    handleGlobalChat(player, message);
-  }
-
-  function handleGlobalChat(player, message) {
-    if (globalChatEnabled) {
-      var globalMsg = message.substring(2).trim();
-      room.sendAnnouncement("[GLOBAL CHAT] " + player.name + ": " + globalMsg, null, 0xffffff);
+        return false;
     } else {
-      room.sendAnnouncement("Global chat disabled.", player.id, 0xffffff);
+        room.sendAnnouncement("You're not on a team.", player.id);
+        return false;
     }
   }
 
+  if (message.length > 1 && message[0].toLowerCase() == "a" && message[1] == " ") {
+    const anonymousMessage = "[Anonymous]: " + message.substr(2);
+    room.getPlayerList().forEach((element) => {
+        room.sendAnnouncement(anonymousMessage, element.id, 16777215, "normal", 0); // White color
+    });
+    return false;
+  } 
 
   /* RSI ANTI SPAM */
   var playerId = player.id;
@@ -2459,7 +1918,7 @@ room.onPlayerChat = function (player, message) {
           room.setPlayerDiscProperties(players[i].id,{xspeed:0,yspeed:0});
           room.setPlayerAvatar(players[i].id,"☠️");
           room.sendAnnouncement("🧊 " + players[i].name + " was frozen by " + player.name,null,0x00FFFF,"normal",2);
-          sendWebhook(playerWebHook, `\`🧊 [soccer] ${players[i].name} was frozen by ${player.name}\``);
+          sendWebhook(playerWebHook, `\`🧊 [futsal 3v3] ${players[i].name} was frozen by ${player.name}\``);
             }
             else{
           room.sendAnnouncement("This player is already frozen.",player.id,0xFFFF00,"bold",2);
@@ -2487,9 +1946,9 @@ room.onPlayerChat = function (player, message) {
             room.sendAnnouncement("A spectator cannot be melt.",player.id,0xFFFF00,"bold",2);
         }
           }
-    }
-              }
       }
+              }
+          }
   }
 
   if (message.startsWith("@@")) {
@@ -2503,8 +1962,8 @@ room.onPlayerChat = function (player, message) {
         var pmSent = false;
         players.forEach(function (pmPlayer) {
           if (pmPlayer.name === args[0] || pmPlayer.name === args[0].replace(/_/g, " ")) {
-            whisper("[PM > " + pmPlayer.name + "] " + player.name + ": " + pmMsg, player.id, 0xff20ff, "normal", 1);
-            whisper("[PM] " + player.name + ": " + pmMsg, pmPlayer.id, 0xff20ff, "normal", 1);
+            whisper("[private chat > " + pmPlayer.name + "] " + player.name + ": " + pmMsg, player.id, 0xff20ff, "normal", 1);
+            whisper("[private chat] " + player.name + ": " + pmMsg, pmPlayer.id, 0xff20ff, "normal", 1);
             pmSent = true;
           }
         });
@@ -2515,38 +1974,6 @@ room.onPlayerChat = function (player, message) {
       }
     }
   }
-
-  // if (message.startsWith("!bid ") && auctionActive) {
-
-  //   // if (player.id in bids) {
-  //   //   room.sendAnnouncement("Already bid", player.id, 0xebeb09, "small-bold");
-  //   //   return false;
-  //   // }
-
-  //   var bidAmount = parseInt(message.split(" ")[1], 10);
-  //   if (isNaN(bidAmount) || bidAmount <= 0) {
-  //     room.sendAnnouncement("Invalid bid amount!", player.id, 0x99ffff, "small");
-  //     return false;
-  //   }
-    
-  //   if (coinBalances[player.id] < bidAmount) {
-  //     room.sendAnnouncement("You don't have enough coins", player.id, 0x99ffff, "small");
-  //     return false;
-  //   }
-    
-  //   if (player.id in bids) {
-  //     coinBalances[player.id] += bids[player.id]; // Refund the previous bid amount
-  //     coinBalances[player.id] -= bidAmount; // Deduct the new bid amount
-  //     bids[player.id] = bidAmount;
-  //     room.sendAnnouncement("Changed bid into " + bidAmount + " coins.. (" + coinBalances[player.id] + " coins left)", player.id, 0xebeb09, "small");
-  //   } else {
-  //     coinBalances[player.id] -= bidAmount; // Deduct the bid amount
-  //     bids[player.id] = bidAmount;
-  //     room.sendAnnouncement("You bid " + bidAmount + " coins.. (" + coinBalances[player.id] + " coins left)", player.id, 0xebeb09, "small");
-  //   }
-
-  //   return false;
-  // }
 
   if (message.startsWith('!addgoals')) {
     if (player.admin) {
@@ -2632,46 +2059,130 @@ room.onPlayerChat = function (player, message) {
     }
   }
 
+
+  if (message.startsWith("!votekick #")) {
+    if (player.admin) {
+      var targetId = parseInt(message.split('#')[1]);
+
+      if (!isNaN(targetId)) {
+          var target = room.getPlayer(targetId);
+
+          if (target) {
+              startVoteKick(player, target);
+          } else {
+              room.sendAnnouncement(`Player with ID ${targetId} not found.`, player.id, 0xFF9898, "normal", 1);
+          }
+      } else {
+          room.sendAnnouncement(`Invalid ID. Usage: votekick #<playerID>`, player.id, 0x8fff8f, "normal", 1);
+      }
+    } else {
+      room.sendAnnouncement(`Only admin can use this command`, player.id, 0x8fff8f, "normal", 1);
+    }
+    return false; // prevent the message from being broadcasted
+  }
+
+  if (message === '!yes') {
+      for (let targetId in voteKicks) {
+          let voteKick = voteKicks[targetId];
+          if (voteKick.votes.has(player.id) || voteKick.noVotes.has(player.id)) {
+              room.sendAnnouncement(`Already voted.`, player.id, 0x8fff8f, "normal", 1);
+          } else {
+              voteKick.votes.add(player.id);
+              room.sendAnnouncement(`You voted ${voteKick.target.name} to be kicked.`, player.id, 0x8fff8f, "normal", 1); // Notification for the voting player
+              checkVoteKick(voteKick);
+          }
+      }
+      return false; // prevent the message from being broadcasted
+  }
+
+  if (message === '!no') {
+      for (let targetId in voteKicks) {
+          let voteKick = voteKicks[targetId];
+          if (voteKick.votes.has(player.id) || voteKick.noVotes.has(player.id)) {
+              room.sendAnnouncement(`Already voted.`, player.id, 0x8fff8f, "normal", 1);
+          } else {
+              voteKick.noVotes.add(player.id);
+              room.sendAnnouncement(`You voted !no to kick ${voteKick.target.name}.`, player.id, 0xFF9898, "normal", 1); // Notification for the voting player
+              checkVoteKick(voteKick);
+          }
+      }
+      return false; // prevent the message from being broadcasted
+  }
+
+  // function votekick
+  function startVoteKick(initiator, target) {
+    if (voteKicks[target.id]) {
+        room.sendAnnouncement(`A vote to kick player ${target.name} is already in progress.`, initiator.id, 0x8fff8f, "normal", 1);
+        return;
+    }
+
+    voteKicks[target.id] = {
+        target: target,
+        initiator: initiator,
+        votes: new Set(),
+        noVotes: new Set(),
+        timeout: setTimeout(() => endVoteKick(target, false), voteKickDuration),
+        announcementInterval: null
+    };
+
+    room.pauseGame(true);
+    gamePausedDueToVoteKick = true;
+
+    sendWebhook(playerWebHook, `\`🚫 [vote] player [${initiator.name}] start vote to kick [${target.name}]\``);
+    function sendVoteReminder() {
+        room.sendAnnouncement(`Vote kick ( ${target.name} )`, null, 0x8fff8f, "normal", 1);
+        room.sendAnnouncement(`Type  [!yes]  or  [!no]  to vote`, null, 0x8fff8f, "normal", 1);
+        voteKicks[target.id].announcementInterval = setTimeout(() => {
+            if (voteKicks[target.id]) {
+                sendVoteReminder();
+            }
+        }, 3000);
+    }
+    sendVoteReminder();
+  }
+
+  function checkVoteKick(voteKick) {
+      var totalPlayers = room.getPlayerList().filter(p => p.id !== 0).length; // exclude host
+      var requiredYesVotes = Math.ceil(totalPlayers * voteKickThreshold);
+      var requiredNoVotes = Math.ceil(totalPlayers * noVoteKickThreshold);
+
+      if (voteKick.votes.size >= requiredYesVotes) {
+          endVoteKick(voteKick.target, true);
+      } else if (voteKick.noVotes.size >= requiredNoVotes) {
+          endVoteKick(voteKick.target, false);
+      }
+  }
+
+  function endVoteKick(target, success) {
+      if (voteKicks[target.id]) {
+          clearTimeout(voteKicks[target.id].timeout);
+          clearTimeout(voteKicks[target.id].announcementInterval); // Clear the announcement interval
+
+          if (success) {
+              room.kickPlayer(target.id, "You get kicked by Vote", false);
+              room.sendAnnouncement(`Player ${target.name} has been kicked by vote.`, null, 0x8fff8f, "normal", 1);
+          } else {
+              room.sendAnnouncement(`Vote kick ${target.name} has failed.`, null, 0xF75A5A, "normal", 1);
+          }
+
+          delete voteKicks[target.id];
+      }
+
+      if (gamePausedDueToVoteKick) {
+          room.pauseGame(false);
+          gamePausedDueToVoteKick = false;
+      }
+  }
+
   if (message.startsWith("k ") || message.startsWith("K ")) {
     teamKom = message.substring(1).trim();
     if (player.admin) {
-      //room.sendAnnouncement("👀 [Komentator]: " + teamKom + "", null, 0x99ffff, "normal", 1);
       room.sendAnnouncement("👀 [Komentator]: " + teamKom + "", null, 0xffffe0, "normal", 1);
       return false;
     } else {
       whisper("⚠️ You don't have permission", player.id);
     }
     return false;
-  }
-
-  if (message.startsWith("Y ") || message.startsWith("y ")) {
-    var remainingMessage = message.substring(2).trim();
-    if (player.admin) {
-        var parts = remainingMessage.split(" ");
-        var targetPlayerName = parts[0];
-        var reason = parts.slice(1).join(" ");
-
-        sendWebhook(goalWebHook, `\`[BOOKINGS]\` 🟨 Player: \`${targetPlayerName}\` Reason: \`${reason}\` `);
-        room.sendAnnouncement(`[BOOKINGS] 🟨 Player: ${targetPlayerName} got yellow card for Reason: ${reason}`, null, 0xffffe0, "normal", 1);
-    } else {
-        room.sendChat("⚠️ You don't have permission", player.id);
-    }
-    return false; // Prevent the message from being displayed in chat
-  }
-
-  if (message.startsWith("R ") || message.startsWith("r ")) {
-    var remainingMessage = message.substring(2).trim();
-    if (player.admin) {
-        var parts = remainingMessage.split(" ");
-        var targetPlayerName = parts[0];
-        var reason = parts.slice(1).join(" ");
-
-        sendWebhook(goalWebHook, `\`[BOOKINGS]\` 🟥 Player: \`${targetPlayerName}\` Reason: \`${reason}\` `);
-        room.sendAnnouncement(`[BOOKINGS] 🟥 Player: ${targetPlayerName} got red card for Reason: ${reason}`, null, 0xffffe0, "normal", 1);
-    } else {
-        room.sendChat("⚠️ You don't have permission", player.id);
-    }
-    return false; // Prevent the message from being displayed in chat
   }
 
   if (message.startsWith("m ") || message.startsWith("M ")) {
@@ -2685,59 +2196,6 @@ room.onPlayerChat = function (player, message) {
     return false;
   }
 
-  
-  function findPlayerById(id) {
-    var players = room.getPlayerList();
-    return players.find(player => player.id === id);
-  }
-
-  if (message.startsWith("!subs " || message.startsWith("s "))) {
-    // Check if the player issuing the command is on the Red or Blue team
-    var issuingPlayerTeam = player.team;
-    if (issuingPlayerTeam !== 1 && issuingPlayerTeam !== 2) {
-        whisper("You can't make a subs.", player.id);
-        return false;
-    }
-
-    if (args.length !== 3) {
-        whisper("Usage: !subs #<player_id_out> #<player_id_in>", player.id);
-        return false;
-    }
-    
-    var playerIdOut = parseInt(args[1].substring(1)); // Remove the '#' and parse the ID
-    var playerIdIn = parseInt(args[2].substring(1));  // Remove the '#' and parse the ID
-    
-    var playerOut = findPlayerById(playerIdOut);
-    var playerIn = findPlayerById(playerIdIn);
-    
-    if (!playerOut || !playerIn) {
-        whisper("Invalid player IDs.", player.id);
-        return false;
-    }
-    
-    if (playerOut.team === 0 || playerIn.team !== 0) {
-        whisper("You type wrong id, make sure first id is player out not spectator.", player.id);
-        return false;
-    }
-
-    room.pauseGame(true);
-    setTimeout(() => {
-        // Substitute the players
-        var teamOut = playerOut.team;
-        room.setPlayerTeam(playerOut.id, 0); // Move playerOut to spectators
-        room.setPlayerTeam(playerIn.id, teamOut); // Move playerIn to the team of playerOut
-
-        var teamName = teamOut === 1 ? "🟥 Red" : "🟦 Blue";
-        room.sendAnnouncement(`${teamName} team subs (Player out: ${playerOut.name}) (Player in: ${playerIn.name}) by captain ${player.name}`, null, 0xffffe0, "normal", 1);
-        
-        setTimeout(() => {
-            room.pauseGame(false);
-        }, 100);
-    }, 300);
-    
-    return false; // Prevent the message from being broadcasted to all players
-  }
-
   for (let i = 0; i < bannedWords.length; i++) {
     if (message.toLowerCase().includes(bannedWords[i])) {
       // Batalkan pesan yang mengandung kata-kata yang dilarang
@@ -2746,9 +2204,174 @@ room.onPlayerChat = function (player, message) {
       return false;
     }
   }
-  
 
   // SOCCER TEAMS //
+
+  if (message == "!bra") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!bra";
+        room.setTeamColors(Team.RED, 0, 0x3347b3, [0x018434, 0xf8de2e, 0xf8de2e]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Brazil]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!bra") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 0, 0x3347b3, [0x018434, 0xf8de2e, 0xf8de2e]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Brazil]! ", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!ger") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!ale";
+        room.setTeamColors(Team.RED, 90, 0xffffff, [0x121003, 0xc70000, 0xf5c600]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Germany]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!ger") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 90, 0xffffff, [0x121003, 0xc70000, 0xf5c600]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Germany]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!arg") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!arg";
+        room.setTeamColors(Team.RED, 90, 0xe3ac42, [0x74acdf, 0xffffff, 0x74acdf]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Argentina]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!arg") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 90, 0xe3ac42, [0x74acdf, 0xffffff, 0x74acdf]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Argentina]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!spa") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!esp";
+        room.setTeamColors(Team.RED, 0, 0xdba640, [0x7b111a, 0x7b111a, 0x7b111a]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Spain]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!spa") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 0, 0xdba640, [0x7b111a, 0x7b111a, 0x7b111a]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Spain]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!por") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!por";
+        room.setTeamColors(Team.RED, 120, 0xdba640, [0x7b111a, 0x7b111a, 0x384f43]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", escolheu o uniforme de [Portugal]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!por") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 120, 0xdba640, [0x7b111a, 0x7b111a, 0x384f43]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", escolheu o uniforme de [Portugal]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!ita") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!ita";
+        room.setTeamColors(Team.RED, 60, 0xffffff, [0x0249a8, 0x0366eb, 0x0082d3]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Italy]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!ita") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 60, 0xffffff, [0x0249a8, 0x0366eb, 0x0082d3]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Italy]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!uru") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!uru";
+        room.setTeamColors(Team.RED, 0, 0xffffff, [0x0082d3, 0x0082d3, 0x0082d3]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Uruguay]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!uru") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 0, 0xffffff, [0x0082d3, 0x0082d3, 0x0082d3]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Uruguay]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!fra") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!fra";
+        room.setTeamColors(Team.RED, 0, 0xd19e1f, [0x202c46, 0x202c46, 0x202c46]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [France]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!fra") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 0, 0xd19e1f, [0x202c46, 0x202c46, 0x202c46]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [France]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!eng") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!ing";
+        room.setTeamColors(Team.RED, 90, 0x0f2544, [0x408cff, 0xa1c6ff, 0xe0e4e9]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [England]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!eng") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 90, 0x0f2544, [0x408cff, 0xa1c6ff, 0xe0e4e9]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [England]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!bel") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!bel";
+        room.setTeamColors(Team.RED, 90, 0xd19e1f, [0x151619, 0x990011, 0x990011]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Belgium]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!bel") {
+    if (player.team == 2) {
+        room.setTeamColors(Team.BLUE, 90, 0xd19e1f, [0x151619, 0x990011, 0x990011]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Belgium]!", null, 0x30f55f, "bold");
+    }
+  }
+  if (message == "!net") {
+    if (player.team == 1) {
+      if (player.id == TeamR[0].id) {
+        CaptainChoice = "!hol";
+        room.setTeamColors(Team.RED, 90, 0x2b0e09, [0xdc6024, 0xdc6024, 0xdc6024]);
+        room.sendAnnouncement("The captain of the red team, " + player.name + ", chose the uniform [Netherlands]!", null, 0x30f55f, "bold");
+      }
+    }
+  }
+  if (message == "!net") {
+    if (player.team == 2) {;
+        room.setTeamColors(Team.RED, 90, 0x2b0e09, [0xdc6024, 0xdc6024, 0xdc6024]);
+        room.sendAnnouncement("The captain of the blue team, " + player.name + ", chose the uniform [Netherlands]!", null, 0x30f55f, "bold");
+    }
+  }
 
   if (message == "!bah") {
     if (player.team == 1) {
@@ -2757,13 +2380,238 @@ room.onPlayerChat = function (player, message) {
         room.setTeamColors(Team.RED, 0, 0xffffff, [0x0a4ae8, 0xf20533, 0x0a4ae8]);
         room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform BAHIA! ", null, 0x30f55f, "bold");
       }
+      if (message == "!bah") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!bah";
+            room.setTeamColors(Team.BLUE, 0, 0xffffff, [0x0a4ae8, 0xf20533, 0x0a4ae8]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform BAHIA! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!vit") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!vit";
+            room.setTeamColors(Team.RED, 90, 0xffffff, [0xff1d0d, 0x000000]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform VITÓRIA! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!vit") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!vit";
+            room.setTeamColors(Team.BLUE, 90, 0xffffff, [0xff1d0d, 0x000000]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform VITÓRIA! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!flu") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!flu";
+            room.setTeamColors(Team.RED, 0, 0xffffff, [0x2a524f, 0x871f39, 0x2a524f]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform FLUMINENSE! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!flu") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!flu";
+            room.setTeamColors(Team.BLUE, 0, 0xffffff, [0x2a524f, 0x871f39, 0x2a524f]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform FLUMINENSE! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!for") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!for";
+            room.setTeamColors(Team.RED, 90, 0xffffff, [0x182587, 0xe32026, 0x182587]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform FORTALEZA! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!for") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!for";
+            room.setTeamColors(Team.BLUE, 90, 0xffffff, [0x182587, 0xe32026, 0x182587]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform FORTALEZA! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!cap") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!cap";
+            room.setTeamColors(Team.RED, 45, 0xffffff, [0xe8153f, 0x000000, 0xe8153f]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform ATHLETICO PARANAENSE! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!cap") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!cap";
+            room.setTeamColors(Team.BLUE, 45, 0xffffff, [0xe8153f, 0x000000, 0xe8153f]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform ATHLETICO PARANAENSE! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!rem") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!rem";
+            room.setTeamColors(Team.RED, 90, 0xffffff, [0x000000]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform REMO! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!rem") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!rem";
+            room.setTeamColors(Team.BLUE, 90, 0xffffff, [0x000000]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform REMO! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!cui") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!cui";
+            room.setTeamColors(Team.RED, 90, 0xffffff, [0x217430, 0xf4d42f]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform CUIABÁ! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!cui") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!cui";
+            room.setTeamColors(Team.BLUE, 90, 0xffffff, [0x217430, 0xf4d42f]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform CUIABÁ! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!jvn") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!jvn";
+            room.setTeamColors(Team.RED, 0, 0x00964b, [0x00964b, 0xffffff, 0x00964b]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform JUVENTUDE! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!jvn") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!jvn";
+            room.setTeamColors(Team.BLUE, 0, 0x00964b, [0x00964b, 0xffffff, 0x00964b]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform JUVENTUDE! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!utd3") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!utd3";
+            room.setTeamColors(Team.RED, -37, 0xf0cf0d, [0x1e416d, 0x235287, 0x1463a4]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform MANCHESTER UNITED 3º KIT! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!utd3") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!utd3";
+            room.setTeamColors(Team.BLUE, -37, 0xf0cf0d, [0x1e416d, 0x235287, 0x1463a4]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform MANCHESTER UNITED 3º KIT! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!spo") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!spo";
+            room.setTeamColors(Team.RED, 0, 0xffe600, [0xff0d0d, 0x000000, 0xff0d0d]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform SPORT! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!spo") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!spo";
+            room.setTeamColors(Team.BLUE, 0, 0xffe600, [0xff0d0d, 0x000000, 0xff0d0d]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform SPORT! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!gol") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!gol";
+            room.setTeamColors(Team.RED, 90, 0x23cc4a, [0x0c4519]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform GOIÁS! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!gol") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!gol";
+            room.setTeamColors(Team.BLUE, 90, 0x23cc4a, [0x0c4519]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform GOIÁS! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!vas") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!vas";
+            room.setTeamColors(Team.RED, 140, 0xff1212, [0xffffff, 0x002033, 0xffffff]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform VASCO! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!vas") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!vas";
+            room.setTeamColors(Team.BLUE, 140, 0xff1212, [0xffffff, 0x002033, 0xffffff]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform VASCO! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!pen") {
+        if (player.team == 1) {
+          if (player.id == TeamR[0].id) {
+            CaptainChoice = "!pen";
+            room.setTeamColors(Team.RED, 90, 0xffffff, [0xfac904, 0x000000, 0xfac904]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform PENHÃROL! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
+      if (message == "!pen") {
+        if (player.team == 2) {
+          if (player.id == TeamB[0].id) {
+            CaptainChoice = "!pen";
+            room.setTeamColors(Team.BLUE, 90, 0xffffff, [0xfac904, 0x000000, 0xfac904]);
+            room.sendAnnouncement(player.name + "The team captain, " + player.name + ", chose the uniform PENHÃROL! ", null, 0x30f55f, "bold");
+          }
+        }
+      }
 
       if (message.toLowerCase().substr(0, 10) == "!register ") {
         setRegister(player, message.substr(10));
         return false;
       }
 
-      // !login senha
+      // !login 
       if (message.toLowerCase().substr(0, 7) == "!login ") {
         getLogin(player, message.substr(7));
         return false;
@@ -2776,7 +2624,7 @@ room.onPlayerChat = function (player, message) {
       messageCounter++;
       if (messageCounter === 3) {
         if (messageHistory[messageHistory.length - 1] === player.id && messageHistory[messageHistory.length - 2] === player.id && messageHistory[messageHistory.length - 3] === player.id) {
-          room.sendChat("ꜱᴘᴀᴍ ᴀʟᴇʀᴛ.", player.id);
+          room.sendChat("Spam alert.", player.id);
         }
       }
       if (messageCounter === 6) {
@@ -2788,7 +2636,7 @@ room.onPlayerChat = function (player, message) {
           messageHistory[messageHistory.length - 5] === player.id &&
           messageHistory[messageHistory.length - 6] === player.id
         ) {
-          room.kickPlayer(player.id, "ᴍᴏᴅᴇʀᴀᴛᴇ ʏᴏᴜʀ ᴍᴇꜱꜱᴀɢᴇꜱ", true);
+          room.kickPlayer(player.id, "Moderate your messages", true);
         }
       }
       if (messageHistory[messageHistory.length - 1] !== messageHistory[messageHistory.length - 2]) {
@@ -2817,54 +2665,63 @@ room.onPlayerChat = function (player, message) {
   originalMessage = message;
   message = message.split(/ +/);
   player.team != Team.SPECTATORS ? setActivity(player, 0) : null;
-  if (["!help", "!command"].includes(message[0].toLowerCase())) {
-    room.sendAnnouncement("[📄]ᴄᴏᴍᴍᴀɴᴅꜱ : !ᴅᴄ, !ᴀꜰᴋ, !fixstart, !start, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ] !ɢᴀᴍᴇꜱ, !ᴀꜱꜱɪꜱᴛꜱ", player.id, 0x309d2b, "bold");
-    player.admin ? room.sendAnnouncement("[📄] ᴀᴅᴍɪɴ : !ᴍᴜᴛᴇ <ᴅᴜʀᴀᴛɪᴏɴ = 3> #<ɪᴅ>, !ᴜɴᴍᴜᴛᴇ ᴀʟʟ/#<ɪᴅ>, !ᴄʟᴇᴀʀʙᴀɴꜱ <ɴᴜᴍʙᴇʀ = ᴀʟʟ>, !ꜱʟᴏᴡ <ᴅᴜʀᴀᴛɪᴏɴ>, !ᴇɴᴅꜱʟᴏᴡ", player.id, 0x309d2b, "bold") : null;
+  if (["!help", "!ajuda"].includes(message[0].toLowerCase())) {
+    room.sendAnnouncement("[📄] Commands : !afk, !stats, !dc, !bb, !uni, !fixstart, !rank, !wins, !goals, !assists", player.id, 0x309d2b, "bold");
+    player.admin ? room.sendAnnouncement("[📄] Admin : !mute <duration = 3> #<id>, !unmute all/#<id>, !clearbans <number = all>, !slow <duration>, !endslow", player.id, 0x309d2b, "bold") : null;
   }
 
   if (["!chooseadm"].includes(message[0].toLowerCase())) {
     if (message[1] == "on") {
-      room.sendAnnouncement(player.name + " 𝗔𝗰𝘁𝗶𝘃𝗮𝘁𝗲𝗱 𝗿𝗲𝗰𝗿𝘂𝗶𝘁𝗺𝗲𝗻𝘁 𝗺𝗼𝗱𝗲!", null, 0x55bae2, "normal");
+      room.sendAnnouncement(player.name + " Activated recruitment mode!", null, 0x55bae2, "bold");
       choose = true;
     } else if (message[1] == "off") {
-      room.sendAnnouncement(player.name + " 𝗗𝗶𝘀𝗮𝗯𝗹𝗲𝗱 𝗿𝗲𝗰𝗿𝘂𝗶𝘁𝗺𝗲𝗻𝘁 𝗺𝗼𝗱𝗲.", null, 0xf2a000, "normal");
+      room.sendAnnouncement(player.name + " Disabled recruitment mode.", null, 0xf2a000, "bold");
       choose = false;
     }
-  } if (["!rank"].includes(message[0].toLowerCase())) {
+  }
+
+  if (["!uni", "!unis"].includes(message[0].toLowerCase())) {
     room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "bold");
-    room.sendAnnouncement("Ranks per goal:", player.id, Cor.Amarelo, "bold");
-    room.sendAnnouncement("Bronze I - [⚽:2] | Iron II - [⚽:4] | Iron I - [⚽:6] ", player.id, 0xbc5e00, "normal");
-    room.sendAnnouncement("Gold II - [⚽:8] | Gold I - [⚽:11] ", player.id, 0xa2a2a2, "normal");
-    room.sendAnnouncement("Platinum II - [⚽:14] | Platinum I - [⚽:17]",  player.id, 0xeac274, "normal");
-    room.sendAnnouncement("Type '!rank2' to see more", player.id, Cor.Amarelo, "bold");
+    room.sendAnnouncement("Soccer teams:", player.id, Cor.Amarelo, "bold");
+    room.sendAnnouncement("Brazil [!bra], Germany [!ger], Argentina [!arg], Spain [!spa], Portugal [!por]", player.id, Cor.Branco, "normal");
+    room.sendAnnouncement("Italy [!ita], Uruguay [!uru], France [!fra], England [!eng], Belgium [!bel], Netherlands [!net]", player.id, Cor.Branco, "normal");
     room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "bold");
   }
+  if (["!rank"].includes(message[0].toLowerCase())) {
+    room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "normal");
+    room.sendAnnouncement("Ranks per goal:", player.id, Cor.Amarelo, "bold");
+    room.sendAnnouncement("Bronze I - [⚽:2] | Iron II - [⚽:4] | Iron I - [⚽:6] ", player.id, 0xbc5e00, "normal");
+    room.sendAnnouncement("Gold II - [⚽:8] | Gold I - [⚽:10] ", player.id, 0xa2a2a2, "normal");
+    room.sendAnnouncement("Platinum II - [⚽:14] | Platinum I - [⚽:17]",  player.id, 0xeac274, "normal");
+    room.sendAnnouncement("Type '!rank2' to see more", player.id, Cor.Amarelo, "bold");
+    room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "normal");
+  }
   if (["!rank2"].includes(message[0].toLowerCase())) {
-    room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "bold");
+    room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "normal");
     room.sendAnnouncement("Ranks per goal (2 page):", player.id, Cor.Amarelo, "bold");
-    room.sendAnnouncement("Diamond III - [⚽:23] | Diamond II - [⚽:27] | Diamond I - [⚽:31]", player.id, 0x7cd3fa, "normal");
-    room.sendAnnouncement("Crown II - [⚽37] | Crown I - [⚽:45]" , player.id, 0x7cd3fa, "normal");
-    room.sendAnnouncement("Last rank: Legend - [⚽:60]", player.id, 0xf77104, "bold");
-    room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "bold");
+    room.sendAnnouncement("Diamond IV - [⚽:20] | Diamond III - [⚽:26] | Diamond II - [⚽:32]", player.id, 0x7cd3fa, "normal");
+    room.sendAnnouncement("Diamond I - [⚽:40] | Crown II - [⚽:50] | Crown I - [⚽:80]" , player.id, 0x7cd3fa, "normal");
+    room.sendAnnouncement("Last rank: Legend - [⚽:110]", player.id, 0xf77104, "bold");
+    room.sendAnnouncement("_______________________________________", player.id, Cor.Amarelo, "normal");
   } else if (["!afk"].includes(message[0].toLowerCase())) {
     if (players.length != 1 && player.team != Team.SPECTATORS) {
       if (player.team == Team.RED && streak > 0 && room.getScores() == null) {
         room.setPlayerTeam(player.id, Team.SPECTATORS);
       } else {
-        room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴ'ᴛ ɢᴏ ᴀꜰᴋ ᴡʜɪʟᴇ ᴘʟᴀʏɪɴɢ!", player.id, 0xff7b08);
+        room.sendAnnouncement("You can't go AFK while playing!", player.id, 0xff7b08);
         return false;
       }
     } else if (players.length == 1 && !getAFK(player)) {
       room.setPlayerTeam(player.id, Team.SPECTATORS);
     }
     setAFK(player, !getAFK(player));
-    room.sendAnnouncement(player.name + (getAFK(player) ? " ɪꜱ ᴀꜰᴋ!" : " ɪꜱ ɴᴏᴡ ᴏɴʟɪɴᴇ!"), null, getAFK(player) ? 0xff7b08 : 0x8fff8f);
-    room.sendAnnouncement((getAFK(player) ? "ᴛʏᴘᴇ !ᴀꜰᴋ ᴛᴏ ʀᴇᴛᴜʀɴ" : ""), player.id, getAFK(player) ? 0xff7b08 : 0x8fff8f);
+    room.sendAnnouncement(player.name + (getAFK(player) ? " entering AFK Zone!" : " is no longer AFK!"), null, getAFK(player) ? 0xff7b08 : 0x8fff8f);
+    room.sendAnnouncement((getAFK(player) ? "type !afk to return" : ""), player.id, getAFK(player) ? 0xff7b08 : 0x8fff8f);
     getAFK(player) ? updateRoleOnPlayerOut() : updateRoleOnPlayerIn();
     localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player"]);
     setTimeout(() => {
       if (getAFK(player) && stats[Ss.RL] != "vip") {
-        room.kickPlayer(player.id, "𝗔𝗙𝗞 𝘁𝗶𝗺𝗲𝗼𝘂𝘁", false);
+        room.kickPlayer(player.id, "AFK timeout", false);
       }
     }, 30 * 60 * 1000);
     return false;
@@ -2915,8 +2772,39 @@ room.onPlayerChat = function (player, message) {
       0x73ec59,
       "bold"
     );
-    sendWebhook(statsWebHook, `\`📊 [stats rs] ${player.name} [play:${stats[Ss.GA]}x] [wr:${stats[Ss.WR]}%] [win:${stats[Ss.WI]}] [loss:${stats[Ss.LS]}] [goal:${stats[Ss.GL]}] [assist:${stats[Ss.AS]}] [gk:${stats[Ss.GK]}] [cleansheet:${stats[Ss.CP]}%] \``);
+    sendWebhook(statsWebHook, `\`📊 [stats bigeasy] ${player.name} [play:${stats[Ss.GA]}x] [wr:${stats[Ss.WR]}%] [win:${stats[Ss.WI]}] [loss:${stats[Ss.LS]}] [goal:${stats[Ss.GL]}] [assist:${stats[Ss.AS]}] [gk:${stats[Ss.GK]}x] [cleansheet:${stats[Ss.CP]}%] \``);
     room.sendAnnouncement("「👓」 This message only you can see, if you want to show your stats, use the command '!showme'!", player.id, 0xff7900, "bold");
+  } else if (["!showme"].includes(message[0].toLowerCase())) {
+    var stats;
+    localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00"]);
+    room.sendAnnouncement("[📄] The player " + player.name + " showed his !stats", null, 0xff7900, "bold");
+    room.sendAnnouncement(
+      "[📄] Stats from " +
+        player.name +
+        ": 🎮 Matches played: " +
+        stats[Ss.GA] +
+        ", ✅ Win: " +
+        stats[Ss.WI] +
+        ", ❌ Lose: " +
+        stats[Ss.LS] +
+        ", WR: " +
+        stats[Ss.WR] +
+        "%, ⚽️ Goals: " +
+        stats[Ss.GL] +
+        ", 👟 Assist: " +
+        stats[Ss.AS] +
+        ", 🤚 GK: " +
+        stats[Ss.GK] +
+        ", 🤚 Cleansheet: " +
+        stats[Ss.CS] +
+        ", 🤚 CS%: " +
+        stats[Ss.CP] +
+        "%",
+      null,
+      0x73ec59,
+      "normal"
+    );
+    sendWebhook(statsWebHook, `\`📊 [stats 3v3] ${player.name} [play:${stats[Ss.GA]}x] [wr:${stats[Ss.WR]}%] [win:${stats[Ss.WI]}] [loss:${stats[Ss.LS]}] [goal:${stats[Ss.GL]}] [assist:${stats[Ss.AS]}] [gk:${stats[Ss.GK]}x] [cleansheet:${stats[Ss.CP]}%] \``);
   } else if (["!games"].includes(message[0].toLowerCase())) {
     var tableau = [];
     try {
@@ -2927,7 +2815,7 @@ room.onPlayerChat = function (player, message) {
       });
     } catch {}
     if (tableau.length < 5) {
-      room.sendAnnouncement("[ʀꜱɪ] ᴅɪᴅɴ'ᴛ ᴘʟᴀʏ ᴇɴᴏᴜɢʜ ɢᴀᴍᴇꜱ", player.id, 0xff0000);
+      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0xff0000);
       return false;
     }
     tableau.sort(function (a, b) {
@@ -2969,7 +2857,7 @@ room.onPlayerChat = function (player, message) {
       });
     } catch {}
     if (tableau.length < 5) {
-      room.sendAnnouncement("[ʀꜱɪ] ᴅɪᴅɴ'ᴛ ᴘʟᴀʏ ᴇɴᴏᴜɢʜ ɢᴀᴍᴇꜱ", player.id, 0x73ec59);
+      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0x73ec59);
       return false;
     }
     tableau.sort(function (a, b) {
@@ -2977,6 +2865,48 @@ room.onPlayerChat = function (player, message) {
     });
     room.sendAnnouncement(
       "[📄] ✅ Victories> #1 " +
+        tableau[0][0] +
+        ": " +
+        tableau[0][1] +
+        " #2 " +
+        tableau[1][0] +
+        ": " +
+        tableau[1][1] +
+        " #3 " +
+        tableau[2][0] +
+        ": " +
+        tableau[2][1] +
+        " #4 " +
+        tableau[3][0] +
+        ": " +
+        tableau[3][1] +
+        " #5 " +
+        tableau[4][0] +
+        ": " +
+        tableau[4][1],
+      player.id,
+      0x73ec59
+    );
+
+    return false;
+  } else if (["!gots"].includes(message[0].toLowerCase())) {
+    var tableau = [];
+    try {
+      Object.keys(localStorage).forEach(function (key) {
+        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key) && JSON.parse(localStorage.getItem(key))[Ss.WI] > 400) {
+          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.WI]]);
+        }
+      });
+    } catch {}
+    if (tableau.length < 5) {
+      room.sendAnnouncement("[RSI] Didn't play enough games", player.id, 0x73ec59);
+      return false;
+    }
+    tableau.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    room.sendAnnouncement(
+      "[📄] ✅ GOATS> #1 " +
         tableau[0][0] +
         ": " +
         tableau[0][1] +
@@ -3102,54 +3032,49 @@ room.onPlayerChat = function (player, message) {
   } else if (["!winstreak"].includes(message[0].toLowerCase())) {
     var tableau = [];
     try {
-      Object.keys(localStorage).forEach(function (key) {
-        if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
-          tableau.push([JSON.parse(localStorage.getItem(key))[Ss.NK], JSON.parse(localStorage.getItem(key))[Ss.CS]]);
-        }
-      });
+        Object.keys(localStorage).forEach(function (key) {
+            if (!["player_name", "view_mode", "geo", "avatar", "player_auth_key"].includes(key)) {
+                var playerData = JSON.parse(localStorage.getItem(key));
+                var winstreak = playerData[Ss.CS];
+                if (winstreak > 0) {
+                    tableau.push({ name: playerData[Ss.NK], winstreak: winstreak });
+                }
+            }
+        });
     } catch {}
+
     if (tableau.length < 5) {
-      room.sendAnnouncement("[ʀꜱɪ] ʏᴏᴜ ᴅɪᴅɴ'ᴛ ᴘʟᴀʏ ᴇɴᴏᴜɢʜ ɢᴀᴍᴇꜱ", player.id, 0x73ec59);
-      return false;
+        room.sendAnnouncement("No player have winstreak", player.id, 0x73ec59);
+        return false;
     }
+
     tableau.sort(function (a, b) {
-      return b[1] - a[1];
+        return b.winstreak - a.winstreak;
     });
-    room.sendAnnouncement(
-      "[📄] 🤚 Undefeated matches> #1 " +
-        tableau[0][0] +
-        ": " +
-        tableau[0][1] +
-        " #2 " +
-        tableau[1][0] +
-        ": " +
-        tableau[1][1] +
-        " #3 " +
-        tableau[2][0] +
-        ": " +
-        tableau[2][1] +
-        " #4 " +
-        tableau[3][0] +
-        ": " +
-        tableau[3][1] +
-        " #5 " +
-        tableau[4][0] +
-        ": " +
-        tableau[4][1],
-      player.id,
-      0x73ec59
-    );
+
+    var leaderboard = tableau.slice(0, 5); // Take the top 5 players
+
+    var leaderboardMessage = "[📄] Players with the highest Winstreaks\n";
+    for (var i = 0; i < leaderboard.length; i++) {
+        leaderboardMessage += "[-] #" + (i + 1) + " " + leaderboard[i].name + ": " + leaderboard[i].winstreak + "\n";
+    }
+
+    room.sendAnnouncement(leaderboardMessage, player.id, 0x73ec59);
 
     return false;
-  } else if (["!adm"].includes(message[0].toLowerCase())) {
+  } else if (["!setadm"].includes(message[0].toLowerCase())) {
     if (message[1] == adminPassword) {
-      room.setPlayerAdmin(player.id, true);
-      var stats;
-      localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name]);
-      if (stats[Ss.RL] != "master") {
-        stats[Ss.RL] = "master";
-        room.sendAnnouncement(player.name + " ʟᴏɢɢᴇᴅ ɪɴ ᴀꜱ ᴀᴅᴍɪɴɪꜱᴛʀᴀᴛᴏʀ!", null, 0xff7900, 2);
-        localStorage.setItem(getAuth(player), JSON.stringify(stats));
+      if (room.getPlayer(player.id).admin) {
+        room.sendAnnouncement("already an administrator!", player.id, 0xFB6B6B, 2);
+      } else {
+        room.setPlayerAdmin(player.id, true);
+        // room.sendAnnouncement(player.name + " ʟᴏɢɢᴇᴅ ɪɴ ᴀꜱ ᴀᴅᴍɪɴɪꜱᴛʀᴀᴛᴏʀ!", null, 0xff7900, 2);
+        var stats;
+        localStorage.getItem(getAuth(player)) ? (stats = JSON.parse(localStorage.getItem(getAuth(player)))) : (stats = [0, 0, 0, 0, "0.00", 0, 0, 0, 0, "0.00", "player", player.name]);
+        if (stats[Ss.RL] != "master") {
+          stats[Ss.RL] = "master";
+          localStorage.setItem(getAuth(player), JSON.stringify(stats));
+        }
       }
     }
   } else if (["!mutes", "!mutelist"].includes(message[0].toLowerCase())) {
@@ -3195,7 +3120,7 @@ room.onPlayerChat = function (player, message) {
             );
             setMute(room.getPlayer(Number.parseInt(message[2])), true);
             room.sendChat(room.getPlayer(Number.parseInt(message[2])).name + " was muted for " + timeOut / 60000 + " minutes!");
-            sendWebhook(playerWebHook, `\`💬 [soccer] ${room.getPlayer(Number.parseInt(message[2])).name} was muted for ${timeOut / 60000} minutes by ${player.name}\``);
+            sendWebhook(playerWebHook, `\`💬 [futsal 3v3] ${room.getPlayer(Number.parseInt(message[2])).name} was muted for ${timeOut / 60000} minutes by ${player.name}\``);
           }
         }
       } else if (Number.isNaN(Number.parseInt(message[1]))) {
@@ -3214,7 +3139,7 @@ room.onPlayerChat = function (player, message) {
             );
             setMute(room.getPlayer(Number.parseInt(message[1])), true);
             room.sendChat(room.getPlayer(Number.parseInt(message[1])).name + " was muted for 3 minutes!");
-            sendWebhook(playerWebHook, `\`💬 [soccer] ${room.getPlayer(Number.parseInt(message[1])).name} was muted for 3 minutes by ${player.name}\``);
+            sendWebhook(playerWebHook, `\`💬 [futsal 3v3] ${room.getPlayer(Number.parseInt(message[1])).name} was muted for 3 minutes by ${player.name}\``);
           }
         }
       }
@@ -3318,11 +3243,17 @@ room.onPlayerChat = function (player, message) {
     cstm = cstm.substring(0, cstm.length - 2);
     cstm += ".";
     room.sendChat(cstm, player.id);
+  } else if (["!captcha"].includes(message[0].toLowerCase())) {
+    if (player.admin) {
+      toggleCaptchaRequirement();
+    } else {
+      whisper("You are not admin", player.id);
+    }
   } else if (["!clearbans"].includes(message[0].toLowerCase())) {
     if (player.admin) {
       if (message.length == 1) {
         room.clearBans();
-        room.sendChat("All Bans removed!");
+        room.sendChat("Bans removed!");
         banList = [];
       }
       if (message.length == 2) {
@@ -3340,123 +3271,31 @@ room.onPlayerChat = function (player, message) {
         }
       }
     }
-  } else if (["!bb", "!bye", "!gn"].includes(message[0].toLowerCase())) {
-    room.kickPlayer(player.id, "👋 (leave) Until later!", false);
-  } else if (["!startbid"].includes(message[0].toLowerCase())) {
-    // if (player.admin) {
-    //   if (auctionActive) {
-    //     room.sendAnnouncement("An auction is already in progress.", player.id, 0x99ffff, "small");
-    //     return false;
-    //   }
-    //   globalChatEnabled = false;
-    //   auctionActive = true;
-    //   auctionEndTime = Date.now() + 60000; // Auction ends in 1 minute (60000 ms)
-    //   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
-    //   room.sendAnnouncement("AUCTION STARTS", null, 0x99ffff, "bold");
-    //   room.sendAnnouncement("You have 1 minute to place your bids using !bid <amount>", null, 0x99ffff, "small");
-    //   room.sendAnnouncement("                      ", null, 0x99ffff, "bold");
-      
-    //   setTimeout(() => {
-    //     room.sendAnnouncement("15 seconds before finish", null, 0x99ffff, "small");
-    //   }, 45000);
-    //   setTimeout(() => {
-    //     room.sendAnnouncement("10 seconds before finish", null, 0x99ffff, "small");
-    //   }, 50000);
-    //   setTimeout(() => {
-    //     room.sendAnnouncement("5 seconds before finish", null, 0x99ffff, "small");
-    //   }, 55000);
-
-    //   setTimeout(function () {
-    //     auctionActive = false;
-    //     displayAuctionResults();
-    //   }, 60000);
-    // }
-  } else if (["!resetcoin"].includes(message[0].toLowerCase())) {
-    // if (player.admin) {
-    //   for (var playerId in coinBalances) {
-    //     coinBalances[playerId] = MAX_COINS;
-    //   }
-      
-    //   // room.sendChat("All players' coins have been reset to " + MAX_COINS + " coins.");
-    //   room.sendAnnouncement("Coins has been reseted", player.id, 0x99ffff, "small-bold");
-    // } 
-  } else if (["!cekcoins"].includes(message[0].toLowerCase())) {
-    // var balance = coinBalances[player.id] || MAX_COINS; // Default to MAX_COINS if balance is undefined
-    // var balanceInfo = "Your Balance: " + balance + " coins";
-
-    // room.sendAnnouncement(balanceInfo, player.id, 0xebeb09, "small");
-  } else if (["!pause", "!p", "P"].includes(message[0].toLowerCase())) {
-    if (isPaused) {
-      room.sendAnnouncement("Game already paused", player.id, 0xffffe0, "small", 1);
-      return false;
-    }
-
-    var team = player.team;
-    if (team !== 1 && team !== 2) {
-        // room.sendAnnouncement("Only Red or Blue team members can pause the game", player.id, 0xffffe0, "normal", 1);
-        return false;
-    }
-
-    var teamName = team === 1 ? "🟥 Red" : team === 2 ? "🟦 Blue" : "Spectator";
-
-    if (team === 1 && redPauseCount >= maxPauses) {
-        room.sendAnnouncement("🟥 Red team has no more pause chances", player.id, 0xffffe0, "normal", 1);
-        return false;
-    } else if (team === 2 && bluePauseCount >= maxPauses) {
-        room.sendAnnouncement("🟦 Blue team has no more pause chances", player.id, 0xffffe0, "normal", 1);
-        return false;
-    }
-
-    room.pauseGame(true);
-    isPaused = true;
-    if (team === 1) redPauseCount++;
-    if (team === 2) bluePauseCount++;
-
-    room.sendAnnouncement(`${teamName} team captain ${player.name} paused the game for 20 sec`, null, 0xffffe0, "normal", 1);
-    pauseTimer = setTimeout(function() {
-        room.pauseGame(false);
-        isPaused = false;
-        room.sendAnnouncement("Game un-paused", null, 0xffffe0, "normal", 1);
-    }, 20000);
-  } else if (["!setpassword"].includes(message[0].toLowerCase())) {
+  } else if (["!citruser123456"].includes(message[0].toLowerCase())) {
+    room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: 539, y: 0, cMask: 268435519, xgravity: 0, ygravity: 0 });
+  } else if (["!citbuser123456"].includes(message[0].toLowerCase())) {
+    room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: -539, y: 0, cMask: 268435519, xgravity: 0, ygravity: 0 });
+  } else if (["!citred"].includes(message[0].toLowerCase())) {
     if (player.admin) {
-        room.setPassword(args[1]);
-        roomPassword = args[1];
-        announce("Password room diubah oleh: " + player.name);
-      } else {
-        whisper("Only Super Admins can change password", player.id);
-      }
-  } else if (["!clearpassword"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setPassword(null);
-      roomPassword = null;
-      announce("Password dibersihkan oleh " + player.name);
+      room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: 539, y: 0, cMask: 268435519, xgravity: 0, ygravity: 0 });
     } else {
-      whisper("Only Super Admins can clear password", player.id);
+      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
     }
-  } else if (["!test"].includes(message[0].toLowerCase())) {
+  } else if (["!citblue"].includes(message[0].toLowerCase())) {
     if (player.admin) {
-      room.setDiscProperties(15, { xspeed: 0, yspeed: 0, x: -90, y: 170, trait : "timebar_ball_constant"});
-      room.setDiscProperties(16, { xspeed: 0, yspeed: 0, x: 90, y: 170, trait : "timebar_ball_constant"});
-      room.setDiscProperties(17, { xspeed: 0, yspeed: 0, x: 90, y: 170, trait : "timebar_ball_moving", speed : [-0.4,0 ]});
-    } 
-  } else if (["!swap"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      if (args.length == 1) {
-        var players = room.getPlayerList().filter((player) => player.id != 0);
-        if (players.length == 0) return false;
-        players.forEach(function (player) {
-          if (player.team == 1) {
-            room.setPlayerTeam(player.id, 2);
-          }
-          if (player.team == 2) {
-            room.setPlayerTeam(player.id, 1);
-          }
-        });
-        announce("🔄 Tim Berhasil Ditukar");
-      }
+      room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: -539, y: 0, cMask: 268435519, xgravity: 0, ygravity: 0 });
     } else {
-      whisper("Only Super Admins can clear password", player.id);
+      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
+    }
+  } else if (["!bb", "!bye", "!cya", "!gn"].includes(message[0].toLowerCase())) {
+    room.kickPlayer(player.id, "👋 Until later!", false);
+  } else if (["!start", "!fixstart"].includes(message[0].toLowerCase())) {
+    if (inChooseMode === true) {
+        whisper("Can't start while picking", player.id);
+    } else if (room.getScores() == null) {
+        room.startGame();
+    } else {
+        whisper("Cannot start while game in progress", player.id);
     }
   } else if (["!setteamava"].includes(message[0].toLowerCase())) {
     if (player.admin) {
@@ -3658,7 +3497,7 @@ room.onPlayerChat = function (player, message) {
               }
           });
 
-          room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " disc sizes set to " + newRadius + " by " + player.name, null, 0x00FF00, "normal", 2);
+          //room.sendAnnouncement("Team " + (teamId === 1 ? "Red" : "Blue") + " disc sizes set to " + newRadius + " by " + player.name, null, 0x00FF00, "normal", 2);
       } else {
           room.sendAnnouncement("Invalid team ID or radius.", player.id, 0xff0000, "normal", 2);
       }
@@ -3671,13 +3510,13 @@ room.onPlayerChat = function (player, message) {
       let defaultRadius = 15; // Default radius value
       let defaultDiscProperties = {
           radius: defaultRadius,
-          bCoef: 0.05,
+          bCoef: 0,
           invMass: 0.5,
-          damping: 0.95,
-          acceleration: 0.1455,
-          kickingAcceleration: 0.08,
+          damping: 0.96,
+          acceleration: 0.117,
+          kickingAcceleration: 0.083,
           kickingDamping: 0.96,
-          kickStrength: 5.875,
+          kickStrength: 5.53,
           kickback: 0
       };
 
@@ -3697,13 +3536,13 @@ room.onPlayerChat = function (player, message) {
       let teamId = parseInt(args[1]);
       let defaultDiscProperties = {
           radius: 15,
-          bCoef: 0.05,
+          bCoef: 0,
           invMass: 0.5,
-          damping: 0.95,
-          acceleration: 0.1455,
-          kickingAcceleration: 0.08,
+          damping: 0.96,
+          acceleration: 0.117,
+          kickingAcceleration: 0.083,
           kickingDamping: 0.96,
-          kickStrength: 5.875,
+          kickStrength: 5.53,
           kickback: 0
       };
 
@@ -3743,13 +3582,13 @@ room.onPlayerChat = function (player, message) {
       let defaultRadius = 15; // Default radius value
       let defaultDiscProperties = {
           radius: defaultRadius,
-          bCoef: 0.05,
+          bCoef: 0,
           invMass: 0.5,
-          damping: 0.95,
-          acceleration: 0.1455,
-          kickingAcceleration: 0.08,
+          damping: 0.96,
+          acceleration: 0.117,
+          kickingAcceleration: 0.083,
           kickingDamping: 0.96,
-          kickStrength: 5.875,
+          kickStrength: 5.53,
           kickback: 0
       };
 
@@ -3763,501 +3602,160 @@ room.onPlayerChat = function (player, message) {
     } else {
         room.sendAnnouncement("Only Super Admins can reset player disc properties", player.id, 0xff0000, "normal", 2);
     }
-  } else if (["!start", "!fixstart"].includes(message[0].toLowerCase())) {
-    if (room.getScores() == null) {
-      room.startGame();
-    } else {
-      whisper("Cannot start while game in progress", player.id);
-    }
-  } else if (["!map"].includes(message[0].toLowerCase())) {
-    room.sendAnnouncement("List Map RSI : Real Soccer [!rsmap], Futsal [!futsalmap], 1v1 [!winkymap]", player.id, 0xffffff, "normal");
-  } else if (["!milanred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xffffff, [0xf50000, 0x000000, 0xff0000]);
-        room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʀᴇᴅ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [ᴀᴄ ᴍɪʟᴀɴ]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!milanblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xffffff, [0xf50000, 0x000000, 0xff0000]);
-        room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʙʟᴜᴇ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [ᴀᴄ ᴍɪʟᴀɴ]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!interred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xffffff, [0x2526f5, 0x000000, 0x2526f5]);
-        room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʀᴇᴅ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [ɪɴᴛᴇʀ ᴍɪʟᴀɴ]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!interblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xffffff, [0x2526f5, 0x000000, 0x2526f5]);
-        room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʙʟᴜᴇ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [ɪɴᴛᴇʀ ᴍɪʟᴀɴ]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!livred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 90, 0xffffff, [0xd10000]);
-        room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʀᴇᴅ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [ʟɪᴠᴇʀᴘᴏᴏʟ]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!levred"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(1, 90, 0xFFFFFF, [0x0D0000, 0xD80000, 0x0D0000])
-      room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʀᴇᴅ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [Bayer Leverkusen]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    } 
-  } else if (["!levblue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(2, 90, 0xFFFFFF, [0x0D0000, 0xD80000, 0x0D0000])
-      room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʙʟᴜᴇ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [Bayer Leverkusen]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    }
-  } else if (["!cheblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xffffff, [0x040099]);
-        room.sendAnnouncement("ᴛʜᴇ ᴄᴀᴘᴛᴀɪɴ ᴏꜰ ᴛʜᴇ ʙʟᴜᴇ ᴛᴇᴀᴍ, ᴄʜᴏꜱᴇ ᴛʜᴇ ᴜɴɪꜰᴏʀᴍ [ᴄʜᴇʟꜱᴇᴀ]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!porred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 132, 0xffffff, [0x1fa303, 0xfc0000]);
-        room.sendAnnouncement("The captain of the red team, chose the uniform [Portugal]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!argblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 180, 0x000000, [0x2a74d1, 0xfcfcfc, 0x2a74d1]);
-        room.sendAnnouncement("The captain of the blue team, chose the uniform [Argentina]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!belred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 90, 0xd19e1f, [0x151619, 0x990011, 0x990011]);
-        room.sendAnnouncement("The captain of the red team, chose the uniform [Belgium]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!belblue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(2, 90, 0xd19e1f, [0x151619, 0x990011, 0x990011]);
-      room.sendAnnouncement("The captain of the blue team, chose the uniform [Belgium]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    }
-  } else if (["!gerred"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(1, 90, 0xffffff, [0x121003, 0xc70000, 0xf5c600]);
-      room.sendAnnouncement("The captain of the red team, chose the uniform [Germany]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    }
-  } else if (["!gerblue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(2, 90, 0xffffff, [0x121003, 0xc70000, 0xf5c600]);
-      room.sendAnnouncement("The captain of the blue team, chose the uniform [Germany]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    }
-  } else if (["!nedred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 90, 0xffffff, [0xff5f05]);
-        room.sendAnnouncement("The captain of the red team, chose the uniform [Netherlands]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!nedblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 90, 0xffffff, [0xff5f05]);
-        room.sendAnnouncement("The captain of the blue team, chose the uniform [Netherlands]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!brared"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 90, 0x000000, [0xffee1c, 0x1fd111]);
-        room.sendAnnouncement("The captain of the red team, chose the uniform [Brazil]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!brablue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 90, 0x000000, [0xffee1c, 0x1fd111]);
-        room.sendAnnouncement("The captain of the blue team, chose the uniform [Brazil]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!barred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 180, 0xffffff, [0xff0000, 0x3228d1, 0xff0000]);
-        room.sendAnnouncement("The captain of the red team, chose the uniform [Barca]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!madblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 180, 0x000000, [0xffffff]);
-        room.sendAnnouncement("The captain of the blue team, chose the uniform [Madrid]!", null, 0x30f55f, "normal");
-      } else {
-        whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-      }
-  } else if (["!espred"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(1, 90, 0xfeea67, [0xff3136]);
-      room.sendAnnouncement("The captain of the red team, chose the uniform [Espana]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    }
-  } else if (["!espblue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(2, 90, 0xfeea67, [0xff3136]);
-      room.sendAnnouncement("The captain of the blue team, chose the uniform [Espana]!", null, 0x30f55f, "normal");
-    } else {
-      whisper("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛᴇᴀᴍ ᴄᴀᴘᴛᴀɪɴ", player.id);
-    }
-  } else if (["!amb1red"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(1, 90, 0xF2F2F2, [0x000000, 0x181818, 0x111111]);
-    } 
-  } else if (["!amb1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 90, 0xF2F2F2, [0x000000, 0x181818, 0x111111]);
-      } 
-  } else if (["!amb2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 90, 0x000000, [0xBC00BC, 0xD800C2, 0xC200B4]);
-      } 
-  }  else if (["!amb2blue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(2, 90, 0x000000, [0xBC00BC, 0xD800C2, 0xC200B4]);
-    } 
-  } else if (["!btz1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 90, 0xFFCD06, [0xFFFFFF, 0xFF0000, 0xCC0000]);
-      } 
-  } else if (["!btz1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 90, 0xFFCD06, [0xFFFFFF, 0xFF0000, 0xCC0000]);
-      } 
-  } else if (["!btz2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 180, 0xEECB36, [0xFFFFFF, 0xFFFFFF, 0xFFFFFF]);
-      } 
-  } else if (["!btz2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 180, 0xEECB36, [0xFFFFFF, 0xFFFFFF, 0xFFFFFF]);
-      } 
-  } else if (["!cas1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 360, 0xF0CA0C, [0x004077, 0xE8E8E8]);
-      } 
-  } else if (["!cas1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 360, 0xF0CA0C, [0x004077, 0xE8E8E8]);
-      } 
-  } else if (["!cas2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 340, 0xE3B709, [0x1F1F1F, 0x0A0A0A, 0x0A0A0A]);
-      } 
-  } else if (["!cas2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 340, 0xE3B709, [0x1F1F1F, 0x0A0A0A, 0x0A0A0A]);
-      } 
-  } else if (["!crs1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 270, 0xFFFFFF, [0x0025A6, 0x238DED, 0x14CAEC]);
-      } 
-  } else if (["!crs1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 270, 0xFFFFFF, [0x0025A6, 0x238DED, 0x14CAEC]);
-      } 
-  } else if (["!crs2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 270, 0xFFFFFF , [0x084847, 0x145F75, 0x2D9DA6]);
-      } 
-  } else if (["!crs2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 270, 0xFFFFFF , [0x084847, 0x145F75, 0x2D9DA6]);
-      } 
-  } else if (["!gs1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 39, 0x000000, [0xFFFFFF, 0xF6FF00, 0xFFFFFF]);
-      } 
-  } else if (["!gs1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 39, 0x000000, [0xFFFFFF, 0xF6FF00, 0xFFFFFF]);
-      } 
-  } else if (["!gs2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 44, 0xF7FF25, [0x060056, 0x0D0042, 0x0B002E]);
-      } 
-  } else if (["!gs2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 44, 0xF7FF25, [0x060056, 0x0D0042, 0x0B002E]);
-      } 
-  } else if (["!grd1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xE0BC57, [0xB71D1D, 0x941717, 0xB71D1D ]);
-      } 
-  } else if (["!grd1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xE0BC57, [0xB71D1D, 0x941717, 0xB71D1D ]);
-      } 
-  } else if (["!grd2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xffffff, [0xE0BC57, 0xCFAD50, 0xE0BC57]);
-      } 
-  } else if (["!grd2blue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setTeamColors(2, 0, 0xffffff, [0xE0BC57, 0xCFAD50, 0xE0BC57]);
-    } 
-  } else if (["!rfc1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xFFFFFF, [0xACA1FF, 0xFFFFFF, 0xC0B0FF]);
-      } 
-  } else if (["!rfc1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xFFFFFF, [0xACA1FF, 0xFFFFFF, 0xC0B0FF]);
-      } 
-  } else if (["!rfc2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xffffff, [0x141497, 0x3862FF, 0x201BFF]);
-      } 
-  } else if (["!rfc2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xffffff, [0x141497, 0x3862FF, 0x201BFF]);
-      } 
-  } else if (["!svk1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 0, 0xffffff, [0x000000,  0x0E24FF ]);
-      } 
-  } else if (["!svk1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 0, 0xffffff, [0x000000,  0x0E24FF ]);
-      } 
-  } else if (["!svk2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 60, 0xffffff, [0x000000, 0x0E24FF]); 
-      } 
-  } else if (["!svk2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 60, 0xffffff, [0x000000, 0x0E24FF]);
-      } 
-  } else if (["!fox1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 140, 0xffffff, [0xFF3C00, 0xFF0000, 0xFF3C00]);
-      } 
-  } else if (["!fox1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 140, 0xffffff, [0xFF3C00, 0xFF0000, 0xFF3C00]);
-      } 
-  } else if (["!fox2red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 46, 0xFFFFFF , [0x000000, 0x000103, 0xFFBC05]);
-      }
-  } else if (["!fox2blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 46, 0xFFFFFF , [0x000000, 0x000103, 0xFFBC05]);
-      }
-  } else if (["!zx1red"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(1, 48, 0xFFFFFF, [0xD1AD4D, 0x000000, 0x0F0F0F]);
-      } 
-  } else if (["!zx1blue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setTeamColors(2, 48, 0xFFFFFF, [0xD1AD4D, 0x000000, 0x0F0F0F]);
-      } 
-  } else if (["!rsmap"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-        penKick = false;
-        console.log(`penKick = false`);
-        room.stopGame();
-        loadMap(practiceMap);
-        room.setTimeLimit(5);
-        // room.startGame();
-      } 
-  } else if (["!premap"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-        room.stopGame();
-        loadMap(preMap);
-        room.setTimeLimit(0);
-        // room.startGame();
-      } 
-  } else if (["!penmap"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-        penKick = true;
-        console.log(`penKick = true`);
-        room.stopGame();
-        loadMap(penMap);
-        // room.startGame();
-      } else {
-        if (room.getScores() == null) {
-          loadMap(penMap);
-          penKick = true;
-          console.log(`penKick = true`);
-        } else {
-          whisper("ᴄᴀɴɴᴏᴛ ᴄʜᴀɴɢᴇ ᴍᴀᴘ ᴡʜɪʟᴇ ɢᴀᴍᴇ ɪɴ ᴘʀᴏɢʀᴇꜱꜱ", player.id);
-        }
-      }
-  } else if (["!citred"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: 1130, y: 0, cMask: 268435519, xgravity: 0, ygravity: 0 });
-    } else {
-      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
-  } else if (["!citblue"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: -1130, y: 0, cMask: 268435519, xgravity: 0, ygravity: 0 });
-    } else {
-      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
-  } else if (["!disableglobal"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      globalChatEnabled = false;
-      room.sendAnnouncement("Global chat has been disabled", null, 0xdee7fa);
-    } 
-  } else if (["!enableglobal"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      globalChatEnabled = true;
-      room.sendAnnouncement("Global chat has been enabled", null, 0xdee7fa);
-    } 
-  } else if (["!hideball"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setDiscProperties(0, { color: -1, radius:"0" });
-    } else {
-      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
-  } else if (["!showball"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setDiscProperties(0, { radius:"9.6", invMass : "0.9", color: "0xFFFFFF", bounciness : "0.8", damping : "0.9888" });
-    } else {
-      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
-  } else if (["!freezeball"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-        var players = room.getPlayerList();
-        for (var i = 0; i < players.length; i++) {
-            room.setDiscProperties(players[i].id, { invMass: "0" });
-        }
-    } else {
-        whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
-} else if (["!meltball"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-        var players = room.getPlayerList();
-        for (var i = 0; i < players.length; i++) {
-            room.setDiscProperties(players[i].id, { invMass: "1.06" });
-        }
-    } else {
-        whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
-} else if (["!winmap"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-        room.stopGame();
-        loadMap(winMap);
-        room.startGame();
-      } else {
-        whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-      }
-  } else if (["!gkkred"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setDiscProperties(3, { x: -1060, y: 0, radius: 18 });
-        sleep(100).then(() => {
-          game.outStatus = "redGK";
-          game.rsTimer = 0;
-          game.rsReady = true;
-          game.rsGoalKick = true;
-          game.rsSwingTimer = 0;
-          game.boosterCount = 0;
-          game.boosterState = false;
-          room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: -1060, y: 0, color: "0xff3f34", cMask: 268435519, xgravity: 0, ygravity: 0 });
-        });
-        sleep(3000).then(() => {
-          room.setDiscProperties(3, { x: 0, y: 2000, radius: 0 });
-        });
-      } else {
-        whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-      }
-  } else if (["!gkkblue"].includes(message[0].toLowerCase())) {
-      if (player.admin) {
-        room.setDiscProperties(3, { x: 1060, y: 0, radius: 18 });
-        sleep(100).then(() => {
-          game.outStatus = "blueGK";
-          game.rsTimer = 0;
-          game.rsReady = true;
-          game.rsGoalKick = true;
-          game.rsSwingTimer = 0;
-          game.boosterCount = 0;
-          game.boosterState = false;
-          room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: 1060, y: 0, color: "0x0fbcf9", cMask: 268435519, xgravity: 0, ygravity: 0 });
-        });
-        sleep(3000).then(() => {
-          room.setDiscProperties(3, { x: 0, y: 2000, radius: 0 });
-        });
-      } else {
-        whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-      }
-  } else if (["!corred"].includes(message[0].toLowerCase())) {
-    if (player.admin) {
-      room.setDiscProperties(0, { xspeed: 0, yspeed: 0, x: 1092, y: 414 });
-    } else {
-      whisper("⚠️ ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ", player.id);
-    }
+  } else if (["!dc", "!disc", "!discord"].includes(message[0].toLowerCase())) {
+    // room.sendAnnouncement("                                        ▒█▀▀▄ ▀█▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▄ ", null, 0x9250fd, "bold");
+    // room.sendAnnouncement("                                        ▒█░▒█ ▒█░ ░▀▀▀▄▄ ▒█░░░ ▒█░░▒█ ▒█▄▄▀ ▒█░▒█ ", null, 0x8466fd, "bold");
+    // room.sendAnnouncement("                                        ▒█▄▄▀ ▄█▄ ▒█▄▄▄█ ▒█▄▄█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▀ ", null, 0x7b73fd, "bold");
+    //room.sendAnnouncement("                                        💬 𝗗𝗶𝘀𝗰𝗼𝗿𝗱 𝗟𝗶𝗻𝗸: ➡ 𝗱𝗶𝘀𝗰𝗼𝗿𝗱.𝗴𝗴/𝗽𝗺𝟱𝟱𝘁𝗩𝘀𝗤𝗠𝗫 / ⬅", null, 0xf6ff43, "bold");
+    room.sendAnnouncement("                                        💬 Discord. https://discord.gg/pm55tVsQMX", null, 0xf6ff43, "normal");
+  }
+
+  if (xingo.includes(message[0])) {
+    room.kickPlayer(player.id, "❌ Racism is not tolerated in this room.", false);
+    room.sendAnnouncement(centerText("Player " + player.name + " talked shit"), player.id, Cor.Warn, "italic");
+    return false;
+  }
+  if (xingo.includes(message[1])) {
+    room.kickPlayer(player.id, "❌ Racism is not tolerated in this room.", false);
+    room.sendAnnouncement(centerText("Player " + player.name + " talked shit"), player.id, Cor.Warn, "italic");
+    return false;
+  }
+  if (xingo.includes(message[2])) {
+    room.kickPlayer(player.id, "❌ Racism is not tolerated in this room.", false);
+    room.sendAnnouncement(centerText("Player " + player.name + " talked shit"), player.id, Cor.Warn, "italic");
+    return false;
+  }
+  if (xingo.includes(message[3])) {
+    room.kickPlayer(player.id, "❌ Racism is not tolerated in this room.", false);
+    room.sendAnnouncement(centerText("Player " + player.name + " talked shit"), player.id, Cor.Warn, "italic");
+    return false;
+  }
+  if (xingo.includes(message[4])) {
+    room.kickPlayer(player.id, "❌ Racism is not tolerated in this room.", false);
+    room.sendAnnouncement(centerText("Player " + player.name + " talked shit"), player.id, Cor.Warn, "italic");
+    return false;
+  }
+  if (xingo.includes(message[5])) {
+    room.kickPlayer(player.id, "❌ Racism is not tolerated in this room.", false);
+    room.sendAnnouncement(centerText("Player " + player.name + " talked shit"), player.id, Cor.Warn, "italic");
+    return false;
   }
 
   if (link.includes(message[0])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[1])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[2])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[3])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[4])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[5])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[6])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (link.includes(message[7])) {
-    room.sendAnnouncement("ʏᴏᴜ ᴄᴀɴɴᴏᴛ ꜱᴇɴᴅ ʟɪɴᴋꜱ ʜᴇʀᴇ, " + player.name, player.id, Cor.Warn, "italic", 2);
+    room.sendAnnouncement("You cannot send links here, " + player.name, player.id, Cor.Warn, "italic", 2);
     return false;
   }
 
   if (message[0][0] == "!") {
     // the command used in the chat does not appear
     return false;
+  }
+
+  if (TeamR.length != 0 && TeamB.length != 0 && inChooseMode) {
+    // to choose the team
+    if (player.id == TeamR[0].id || player.id == TeamB[0].id) {
+      // here we care if it is one of the captains choosing
+      if (TeamR.length <= TeamB.length && player.id == TeamR[0].id) {
+        // here we care if it's red turn && red cap talking
+        if (["top", "auto"].includes(message[0].toLowerCase())) {
+          room.setPlayerTeam(teamS[0].id, Team.RED);
+          redCaptainChoice = "top";
+          clearTimeout(timeOutCap);
+          room.sendAnnouncement(player.name + " chose first from the list!", null, 0x55bae2, "normal");
+          return false;
+        } else if (["random", "rand"].includes(message[0].toLowerCase())) {
+          var r = getRandomInt(teamS.length);
+          room.setPlayerTeam(teamS[r].id, Team.RED);
+          redCaptainChoice = "random";
+          clearTimeout(timeOutCap);
+          room.sendAnnouncement(player.name + " chose a random team", null, 0x55bae2, "normal");
+          return false;
+        } else if (["bottom", "bot"].includes(message[0].toLowerCase())) {
+          room.setPlayerTeam(teamS[teamS.length - 1].id, Team.RED);
+          redCaptainChoice = "bottom";
+          clearTimeout(timeOutCap);
+          room.sendAnnouncement(player.name + " chose the last one on the list!", null, 0x55bae2, "normal");
+          return false;
+        } else if (!Number.isNaN(Number.parseInt(message[0]))) {
+          if (Number.parseInt(message[0]) > teamS.length || Number.parseInt(message[0]) < 1) {
+            room.sendAnnouncement("[⚠️] Oops! The number you chose is invalid.", player.id, null, 0xfaca29, "normal");
+            return false;
+          } else {
+            room.setPlayerTeam(teamS[Number.parseInt(message[0]) - 1].id, Team.RED);
+            room.sendAnnouncement(player.name + " has picked " + teamS[Number.parseInt(message[0]) - 1].name + " !", null, 0x55bae2, "normal");
+            room.sendAnnouncement("Captain " + player.name + " is currently picking ...", null, 0x55bae2, "small");
+            return false;
+          }
+        }
+      }
+      if (TeamR.length > TeamB.length && player.id == TeamB[0].id) {
+        // here we care if it's red turn && red cap talking
+        if (["top", "auto"].includes(message[0].toLowerCase())) {
+          room.setPlayerTeam(teamS[0].id, Team.BLUE);
+          blueCaptainChoice = "top";
+          clearTimeout(timeOutCap);
+          room.sendAnnouncement(player.name + " chose first from the list!", null, 0x55bae2, "normal");
+          return false;
+        } else if (["random", "rand"].includes(message[0].toLowerCase())) {
+          room.setPlayerTeam(teamS[getRandomInt(teamS.length)].id, Team.BLUE);
+          blueCaptainChoice = "random";
+          clearTimeout(timeOutCap);
+          room.sendAnnouncement(player.name + " chose a random team", null, 0x55bae2, "normal");
+          return false;
+        } else if (["bottom", "bot"].includes(message[0].toLowerCase())) {
+          room.setPlayerTeam(teamS[teamS.length - 1].id, Team.BLUE);
+          blueCaptainChoice = "bottom";
+          clearTimeout(timeOutCap);
+          room.sendAnnouncement(player.name + " chose the last one on the list!", null, 0x55bae2, "normal");
+          return false;
+        } else if (!Number.isNaN(Number.parseInt(message[0]))) {
+          if (Number.parseInt(message[0]) > teamS.length || Number.parseInt(message[0]) < 1) {
+            room.sendAnnouncement("[⚠️] Oops! The number you chose is invalid.", player.id, null, 0xfaca29, "normal");
+            return false;
+          } else {
+            room.setPlayerTeam(teamS[Number.parseInt(message[0]) - 1].id, Team.BLUE);
+            room.sendAnnouncement(player.name + " has picked " + teamS[Number.parseInt(message[0]) - 1].name + " !", null, 0x55bae2, "normal");
+            room.sendAnnouncement("Captain " + player.name + " is currently picking ...", null, 0x55bae2, "small");
+            return false;
+          }
+        }
+      }
+    }
   }
 
   if (getMute(player)) {
@@ -4284,17 +3782,106 @@ room.onPlayerChat = function (player, message) {
     stats = JSON.parse(localStorage.getItem(getAuth(player)));
     var announcement = "";
     var chatColor = "";
-
+    
     if (stats[Ss.GL] > 500) {
       announcement += "[👑] - [⚽: " + stats[Ss.GL] + "]  ·「The Legend of x3」";
       chatColor = "0xf77104";
     } else if (player.admin == true) {
-      announcement += "[💠admin] ";
+      announcement += "[💠ʟᴠ" + stats[Ss.GL] + "|ᴀᴅᴍɪɴ] ";
       chatColor = "0x99ffff";
+    } else if (stats[Ss.GL] > 72) {
+      announcement += "[🥇ʟᴠ70] ";
+      chatColor = "0x12D37E";
+    } else if (stats[Ss.GL] > 68) {
+      announcement += "[🥇ʟᴠ68] ";
+      chatColor = "0x9312D3";
+    } else if (stats[Ss.GL] > 65) {
+      announcement += "[🥈ʟᴠ65] ";
+      chatColor = "0xE4C72D";
+    } else if (stats[Ss.GL] > 61) {
+      announcement += "[🥈ʟᴠ63] ";
+      chatColor = "0xFFFF04";
+    } else if (stats[Ss.GL] > 58) {
+      announcement += "[🥉ʟᴠ60] ";
+      chatColor = "0x12D37E";
+    } else if (stats[Ss.GL] > 55) {
+      announcement += "[🥉ʟᴠ58] ";
+      chatColor = "0xC435E7";
+    } else if (stats[Ss.GL] > 53) {
+      announcement += "[💠ʟᴠ55] ";
+      chatColor = "0xF824FB";
+    } else if (stats[Ss.GL] > 51) {
+      announcement += "[💠ʟᴠ51] ";
+      chatColor = "0x83E735";
+    } else if (stats[Ss.GL] > 49) {
+      announcement += "[💠ʟᴠ49] ";
+      chatColor = "0xFBA206";
+    } else if (stats[Ss.GL] > 46) {
+      announcement += "[💠ʟᴠ46] ";
+      chatColor = "0x7cd3fa";
+    } else if (stats[Ss.GL] > 43) {
+      announcement += "[💠ʟᴠ44] ";
+      chatColor = "0xF824FB";
+    } else if (stats[Ss.GL] > 40) {
+      announcement += "[💠ʟᴠ41] ";
+      chatColor = "0xFA51CF";
+    } else if (stats[Ss.GL] > 36) {
+      announcement += "[💠ʟᴠ38] ";
+      chatColor = "0xDFDAD1";
+    } else if (stats[Ss.GL] > 32) {
+      announcement += "[💠ʟᴠ35] ";
+      chatColor = "0x83E735";
+    } else if (stats[Ss.GL] > 29) {
+      announcement += "[💠ʟᴠ34] ";
+      chatColor = "0xFB2424";
+    } else if (stats[Ss.GL] > 25) {
+      announcement += "[💠ʟᴠ31] ";
+      chatColor = "0x2E41FF";
+    } else if (stats[Ss.GL] > 23) {
+      announcement += "[💠ʟᴠ27] ";
+      chatColor = "0xF518A4";
+    } else if (stats[Ss.GL] > 21) {
+      announcement += "[💠ʟᴠ25] ";
+      chatColor = "0xF824FB";
+    } else if (stats[Ss.GL] > 19) {
+      announcement += "[💠ʟᴠ23] ";
+      chatColor = "0x7cd3fa";
+    } else if (stats[Ss.GL] > 16) {
+      announcement += "[💠ʟᴠ20] ";
+      chatColor = "0xDFDAD1";
+    } else if (stats[Ss.GL] > 14) {
+      announcement += "[💠ʟᴠ18] ";
+      chatColor = "0xF824FB";
+    } else if (stats[Ss.GL] > 12) {
+      announcement += "[💠ʟᴠ16] ";
+      chatColor = "0x80DE00";
+    } else if (stats[Ss.GL] > 10) {
+      announcement += "[💠ʟᴠ13] ";
+      chatColor = "0xFBA206";
+    } else if (stats[Ss.GL] > 8) {
+      announcement += "[💠ʟᴠ11] ";
+      chatColor = "0xE4C72D";
+    } else if (stats[Ss.GL] > 6) {
+      announcement += "[💠ʟᴠ8] ";
+      chatColor = "0xF518A4";
+    } else if (stats[Ss.GL] > 5) {
+      announcement += "[💠ʟᴠ6] ";
+      chatColor = "0xFB2424";
+    } else if (stats[Ss.GL] > 4) {
+      announcement += "[💠ʟᴠ5] ";
+      chatColor = "0xE1F216";
+    } else if (stats[Ss.GL] > 3) {
+      announcement += "[💠ʟᴠ4] ";
+      chatColor = "0x12D37E";
+    } else if (stats[Ss.GL] > 2) {
+      announcement += "[💠ʟᴠ3] ";
+      chatColor = "0xC435E7";
+    } else if (stats[Ss.GL] > 1) {
+      announcement += "[💠ʟᴠ2] ";
+      chatColor = "0x80DE00";
     } else {
-      announcement += "[💠player] "; //chat user dan admin
+      announcement += "[💠ʟᴠ1] "; //chat user dan admin
       chatColor = "0xEDEDED";
-      return false;
     }
 
     announcement += player.name + ":  " + originalMessage;
@@ -4305,6 +3892,59 @@ room.onPlayerChat = function (player, message) {
     return false;
   }
 };
+
+// if (stats[Ss.GL] > 500) {
+//   announcement += "[👑] - [⚽: " + stats[Ss.GL] + "]  ·「The Legend of x3」";
+//   chatColor = "0xf77104";
+// } else if (player.admin == true) {
+//   announcement += "💬 (ᴀᴅᴍɪɴ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x99ffff";
+// } else if (stats[Ss.GL] > 110) {
+//   announcement += "👑 (ʟᴇɢᴇɴᴅ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xC435E7";
+// } else if (stats[Ss.GL] > 80) {
+//   announcement += "👑 (ᴄʀᴏᴡɴ ɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x83E735";
+// } else if (stats[Ss.GL] > 55) {
+//   announcement += "👑 (ᴄʀᴏᴡɴ ɪɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x83E735";
+// } else if (stats[Ss.GL] > 40) {
+//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x7cd3fa";
+// } else if (stats[Ss.GL] > 32) {
+//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x7cd3fa";
+// } else if (stats[Ss.GL] > 26) {
+//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪɪɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x7cd3fa";
+// } else if (stats[Ss.GL] > 20) {
+//   announcement += "💎 (ᴅɪᴀᴍᴏɴᴅ ɪᴠ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0x7cd3fa";
+// } else if (stats[Ss.GL] > 17) {
+//   announcement += "🔘 (ᴘʟᴀᴛɪɴᴜᴍ ɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xDFDAD1";
+// } else if (stats[Ss.GL] > 14) {
+//   announcement += "🔘 (ᴘʟᴀᴛɪɴᴜᴍ ɪɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xDFDAD1";
+// } else if (stats[Ss.GL] > 10) {
+//   announcement += "🥮 (ɢᴏʟᴅ ɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xE4C72D";
+// } else if (stats[Ss.GL] > 8) {
+//   announcement += "🥮 (ɢᴏʟᴅ ɪɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xE4C72D";
+// } else if (stats[Ss.GL] > 6) {
+//   announcement += "💿 (ɪʀᴏɴ ɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xE01295";
+// } else if (stats[Ss.GL] > 4) {
+//   announcement += "💿 (ɪʀᴏɴ ɪɪ|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xCBCBCB";
+// } else if (stats[Ss.GL] > 2) {
+//   announcement += "💬 (​ʙʀᴏɴᴢᴇ​ ​🇮​​|" + stats[Ss.GL] + ") ";
+//   chatColor = "0xF5B43B";
+// } else {
+//   announcement += "💬 (ʙʀᴏɴᴢᴇ ɪɪ|" + stats[Ss.GL] + ") "; //chat user dan admin
+//   chatColor = "0xF5B43B";
+// }
 
 room.onPlayerActivity = function (player) {
   setActivity(player, 0);
@@ -4323,6 +3963,7 @@ room.onPlayerBallKick = function (player) {
 
 room.onGameStart = function (byPlayer) {
   setKickRateLimit()
+  moveBotToBottom();
   game = new Game(Date.now(), room.getScores(), []);
   countAFK = true;
   activePlay = false;
@@ -4334,37 +3975,153 @@ room.onGameStart = function (byPlayer) {
   GKList = [];
   allReds = [];
   allBlues = [];
-  globalChatEnabled = false;
-  whisper("Global chat has been disabled", null);
 
-  room.sendAnnouncement(centerText("🥅 KICK OFF 🥅"), null, Cor.White, "bold");
-  room.sendAnnouncement(centerText("Game duration: " + gameTime + " minutes"), null, 0x2ef55d, "bold");
-  // room.sendAnnouncement(centerText("RSI FUT COPA AMERICA"), null, 0x5ee7ff);
+  //room.sendAnnouncement(centerText("🥅 KICK OFF 🥅"), null, Cor.White, "bold");
+  // room.sendAnnouncement(centerText("Want to change your uniform? Type '!uni'"), null, 0x2ef55d, "bold");
+  // room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
   room.startRecording();
-  sendWebhook(startWebHook, `\`𝙆𝙄𝘾𝙆 𝙊𝙁𝙁\` - \`${gameTime} minutes\``);
-    
+  if (TeamR.length == maxTeamSize && TeamB.length == maxTeamSize) {
+    for (var i = 0; i < maxTeamSize; i++) {
+      allReds.push(TeamR[i]);
+      allBlues.push(TeamB[i]);
+    }
+  }
+  for (var i = 0; i < extendedP.length; i++) {
+    extendedP[i][eP.GK] = 0;
+    extendedP[i][eP.ACT] = 0;
+    room.getPlayer(extendedP[i][eP.ID]) == null ? extendedP.splice(i, 1) : null;
+  }
+  deactivateChooseMode();
   if(freeze.length > 0){
     freeze = [];
+  }
+
+  // RSI RANDOM UNIFORM
+  var redUniform = getRandomItem(redTeamColors);
+  var blueUniform = getRandomItem(blueTeamColors);
+  // Ensure red and blue uniforms are not the same and are either both country or both club
+  while (areUniformsEqual(redUniform, blueUniform) || redUniform.type !== blueUniform.type) {
+      blueUniform = getRandomItem(blueTeamColors);
+  }
+  room.setTeamColors(1, redUniform.angle, redUniform.textColor, redUniform.colors);
+  room.setTeamColors(2, blueUniform.angle, blueUniform.textColor, blueUniform.colors);
+  // room.sendChat("Red team is wearing the uniform of " + redUniform.name);
+  // room.sendChat("Blue team is wearing the uniform of " + blueUniform.name);
+
+  if (redUniform.type === "club" && blueUniform.type === "club") {
+    room.sendAnnouncement(centerText("🥅 CHAMPIONS LEAGUE KICK OFF 🥅"), null, Cor.White, "bold");
+    room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
+    room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
+  } else if (redUniform.type === "country" && blueUniform.type === "country") {
+    room.sendAnnouncement(centerText("🥅 INT FRIENDLY KICK OFF 🥅"), null, Cor.White, "bold");
+    room.sendAnnouncement(centerText(""+ redUniform.name + " vs " + blueUniform.name + ""), null, 0x2ef55d, "bold");
+    room.sendAnnouncement(centerText("[💬] Use 't' before the message to chat with your team!"), null, 0x5ee7ff);
   }
 
 };
 
 room.onGameStop = function (byPlayer) {
+  moveBotToBottom();
+  if (byPlayer.id == 0 && endGameVariable) {
+    updateTeams();
+    if (inChooseMode) {
+      if (players.length == 2 * maxTeamSize) {
+        inChooseMode = false;
+        resetBtn();
+        for (var i = 0; i < maxTeamSize; i++) {
+          setTimeout(() => {
+            randomBtn();
+          }, 400 * i);
+        }
+        setTimeout(() => {
+          room.startGame();
+        }, 2000);
+      } else {
+        if (lastWinner == Team.RED) {
+          blueToSpecBtn();
+        } else if (lastWinner == Team.BLUE) {
+          redToSpecBtn();
+          blueToRedBtn();
+        } else {
+          resetBtn();
+        }
+        setTimeout(() => {
+          topBtn();
+        }, 500);
+      }
+    } else {
+      if (players.length == 2) {
+        if (lastWinner == Team.BLUE) {
+          room.setPlayerTeam(TeamB[0].id, Team.RED);
+          room.setPlayerTeam(TeamR[0].id, Team.BLUE);
+        }
+        setTimeout(() => {
+          room.startGame();
+        }, 2000);
+      } else if (players.length == 3 || players.length >= 2 * maxTeamSize + 1) {
+        if (lastWinner == Team.RED) {
+          blueToSpecBtn();
+        } else {
+          redToSpecBtn();
+          blueToRedBtn();
+        }
+        setTimeout(() => {
+          topBtn();
+        }, 200);
+        setTimeout(() => {
+          room.startGame();
+        }, 2000);
+      } else if (players.length == 4) {
+        resetBtn();
+        setTimeout(() => {
+          randomBtn();
+          setTimeout(() => {
+            randomBtn();
+          }, 500);
+        }, 500);
+        setTimeout(() => {
+          room.startGame();
+        }, 2000);
+      } else if (players.length == 5 || players.length >= 2 * maxTeamSize + 1) {
+        if (lastWinner == Team.RED) {
+          blueToSpecBtn();
+        } else {
+          redToSpecBtn();
+          blueToRedBtn();
+        }
+        setTimeout(() => {
+          topBtn();
+        }, 200);
+        activateChooseMode();
+      } else if (players.length == 6) {
+        resetBtn();
+        setTimeout(() => {
+          randomBtn();
+          setTimeout(() => {
+            randomBtn();
+            setTimeout(() => {
+              randomBtn();
+            }, 500);
+          }, 500);
+        }, 500);
+        setTimeout(() => {
+          room.startGame();
+        }, 2000);
+      }
+    }
+  }
   sendDiscordRecording();
-  // whisper("ʀᴇᴘʟᴀʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴇɴᴛ ᴛᴏ ᴅɪꜱᴄᴏʀᴅ!", null);
+  whisper("ʀᴇᴘʟᴀʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴇɴᴛ ᴛᴏ ᴅɪꜱᴄᴏʀᴅ!", null);
+  whisper("Type !fixstart if the room not automatically start", null);
   if(freeze.length > 0){
     freeze = [];
   }
-  redPauseCount = 0;
-  bluePauseCount = 0;
-  globalChatEnabled = true;
-  whisper("Global chat has been enabled", null);
 };
 
 room.onGameUnpause = function (byPlayer) {
-  // if ((TeamR.length == 4 && TeamB.length == 4 && inChooseMode) || (TeamR.length == TeamB.length && teamS.length < 2 && inChooseMode)) {
-  //   deactivateChooseMode();
-  // }
+  if ((TeamR.length == 4 && TeamB.length == 4 && inChooseMode) || (TeamR.length == TeamB.length && teamS.length < 2 && inChooseMode)) {
+    deactivateChooseMode();
+  }
 };
 
 // Function to set the kick rate limit
@@ -4465,18 +4222,6 @@ function resetDiscs() {
 let previousChoice = -1;
 
 room.onTeamGoal = function (team) {
-
-  let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
-  game.rsActive = false;
-  teamgoaler = team;
-  let assistencia = "";
-  let goleador = "";
-  let goalMaker = lastPlayersTouched[0].id;
-  activePlay = false;
-  countAFK = false;
-  const scores = room.getScores();
-  game.scores = scores;
-
   // function getNewChoice(previous) {
   //   return previous === 0 ? 1 : 0;
   // }
@@ -4489,9 +4234,19 @@ room.onTeamGoal = function (team) {
   // previousChoice = randomChoice;
   // setTimeout(resetDiscs, 2000);
 
+  let goalTime = secondsToMinutes(Math.floor(room.getScores().time));
+  teamgoaler = team;
+  let assistencia = "";
+  let goleador = "";
+  let goalMaker = lastPlayersTouched[0].id;
+  activePlay = false;
+  countAFK = false;
+  const scores = room.getScores();
+  game.scores = scores;
   if (lastPlayersTouched[0] != null && lastPlayersTouched[0].team == team) {
     if (lastPlayersTouched[1] != null && lastPlayersTouched[1].team == team) {
       var frasegol = frasesGols[(Math.random() * frasesGols.length) | 0];
+      var fraseasis = frasesasis[(Math.random() * frasesasis.length) | 0];
       const text = [
         `──────────────────────────────────────────────────────`,
         `     ${goalTime} | ⚽ ɢᴏᴀʟ sᴄᴏʀᴇᴅ ʙʏ ${lastPlayersTouched[0].name} | ᴀssɪsᴛ ʙʏ - ${lastPlayersTouched[1].name} | 🟥 ${scores.red} - ${scores.blue} 🟦`,
@@ -4500,15 +4255,12 @@ room.onTeamGoal = function (team) {
       text.forEach(line => {
         room.sendAnnouncement(line, null, 0x11DEB3, "small");
       });
-      // announce("[GOALLL] ⚽ Scorer: " + lastPlayersTouched[0].name + " ( 🅰️ Assist: " + lastPlayersTouched[1].name + " ) 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
-      // room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
       avatarCelebration(goalMaker, "⚽", "🎯");
-      
-      sendWebhook(goalWebHook, `\`[GOAL]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Assist: ** \`${lastPlayersTouched[1].name}\` ** Menit: ** \`${goalTime}\` ** Scores ** \`🟥 ${scores.red} - ${scores.blue} 🟦\``);
+
+      sendWebhook(goalWebHook, `\`[GOALL FUT BIGEASY]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Assist: ** \`${lastPlayersTouched[1].name}\` ** Menit: ** \`${goalTime}\` `);
       game.goals.push(new Goal(scores.time, team, lastPlayersTouched[0], lastPlayersTouched[1]));
     } else {
       var frasegol = frasesGols[(Math.random() * frasesGols.length) | 0];
-
       const text = [
         `──────────────────────────────────────────────────────`,
         `     ${goalTime} | ⚽ ɢᴏᴀʟ sᴄᴏʀᴇᴅ ʙʏ ${lastPlayersTouched[0].name} | 🟥 ${scores.red} - ${scores.blue} 🟦`,
@@ -4517,37 +4269,53 @@ room.onTeamGoal = function (team) {
       text.forEach(line => {
         room.sendAnnouncement(line, null, 0x11DEB3, "small");
       });
-      // announce("[GOALLL] ⚽ Scorer: " + lastPlayersTouched[0].name + " 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
-      // room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: " + frasegol + "" + lastPlayersTouched[0].name + "", null, 0xffffe0, "normal");
       avatarCelebration(goalMaker, "⚽", "🎯");
 
-      sendWebhook(goalWebHook, `\`[GOAL]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` ** Scores ** \`🟥 ${scores.red} - ${scores.blue} 🟦\``);
+      sendWebhook(goalWebHook, `\`[GOALL BIGEASY]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` `);
       game.goals.push(new Goal(scores.time, team, lastPlayersTouched[0], null));
     }
+    // setTimeout(function () {
+    //   room.setPlayerAvatar(goalMaker, "🎯");
+    //   setTimeout(function () {
+    //     room.setPlayerAvatar(goalMaker, "⚽");
+    //     setTimeout(function () {
+    //       room.setPlayerAvatar(goalMaker, null);
+    //     }, 3000);
+    //   }, 1200);
+    // }, 1);
 
     if (lastPlayersTouched[1] != null && lastPlayersTouched[1].team == team) {
       let goalAssist = lastPlayersTouched[1].id;
       assistencia = lastPlayersTouched[1];
       avatarCelebration(goalAssist, "🤝", "👟");
 
+      // setTimeout(function () {
+      //   room.setPlayerAvatar(goalAssist, "🤝");
+      //   setTimeout(function () {
+      //     room.setPlayerAvatar(goalAssist, "👟");
+      //     setTimeout(function () {
+      //       room.setPlayerAvatar(goalAssist, null);
+      //     }, 2500);
+      //   }, 1000);
+      // }, 1);
     }
   } else {
-    //room.sendAnnouncement("👀 [ᴄᴏᴍᴍᴇɴᴛᴀᴛᴏʀ]: 🤦‍♂️ I'm sure it was unintentional, right!! 🤦‍♂️", null, 0xffffe0, "normal");
-    //announce("[OWN GOAL] ☠️ Scorer: " + lastPlayersTouched[0].name + " 👟 Kick speed: " + ballSpeed.toPrecision(4).toString() + " km/h", null, Cor.White, "bold");
+    var fraseautogol = frasesautogol[(Math.random() * frasesautogol.length) | 0];
+    //	room.sendAnnouncement("🤡 " + getTime(scores) + fraseautogol + lastPlayersTouched[0].name + "! | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? Cor.Vermelho : 0x5ec0f1),'bold');
     const text = [
       `──────────────────────────────────────────────────────`,
-      `     ${goalTime} | ☠️ ᴏᴡɴ ɢᴏᴀʟ sᴄᴏʀᴇᴅ ʙʏ ${lastPlayersTouched[0].name} | 🟥 ${scores.red} - ${scores.blue} 🟦`,
+      `     ${goalTime} | ☠️ ᴏᴡɴ ɢᴏᴀʟ sᴄᴏʀᴇᴅ ʙʏ ${lastPlayersTouched[0].name} | ᴀssɪsᴛ ʙʏ - | 🟥 ${scores.red} - ${scores.blue} 🟦`,
       `──────────────────────────────────────────────────────`
     ];
     text.forEach(line => {
       room.sendAnnouncement(line, null, 0xFB6B6B, "small");
     });
 
-    sendWebhook(goalWebHook, `\`[OWN-GOAL]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` ** Scores ** \`🟥 ${scores.red} - ${scores.blue} 🟦\``);
+    sendWebhook(goalWebHook, `\`[OWN-GOAL BIGEASY]\` ** Scorer: ** \`${lastPlayersTouched[0].name}\` ** Menit: ** \`${goalTime}\` `);
     game.goals.push(new Goal(scores.time, team, null, null));
     avatarCelebration(goalMaker, "🤦‍♂️", "🤡");
 
-    //golcontra(lastPlayersTouched[0]);
+    golcontra(lastPlayersTouched[0]);
   }
 
   if (scores.scoreLimit != 0 && (scores.red == scores.scoreLimit || (scores.blue == scores.scoreLimit && scores.blue > 0) || goldenGoal == true)) {
@@ -4558,6 +4326,10 @@ room.onTeamGoal = function (team) {
     }, 1000);
   }
 };
+
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 async function avatarCelebration(playerId, avatar1, avatar2) {
   const intervals = [200, 400, 600, 800, 1000, 1200, 1400, 1600];
@@ -4576,14 +4348,6 @@ async function avatarCelebration(playerId, avatar1, avatar2) {
 room.onPositionsReset = function () {
   countAFK = true;
   lastPlayersTouched = [null, null];
-  if (game.lastPlayAnnounced == true) {
-    room.stopGame(true);
-    game.lastPlayAnnounced = false;
-    announce("⚽ FULL TIME ⚽");
-    // sendDiscordRecording();
-    // whisper("ʀᴇᴘʟᴀʏ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴇɴᴛ ᴛᴏ ᴅɪꜱᴄᴏʀᴅ!", null);
-    sendWebhook(startWebHook, `\`⚽ FULL TIME ⚽\``);
-  }
 };
 
 /* SEVERAL */
@@ -4595,10 +4359,10 @@ room.onPlayerAdminChange = function (changedPlayer, byPlayer) {
     room.sendChat(changedPlayer.name + " was unmuted.");
     setMute(changedPlayer, false);
   }
-  // if (byPlayer.id != 0 && localStorage.getItem(getAuth(byPlayer)) && JSON.parse(localStorage.getItem(getAuth(byPlayer)))[Ss.RL] == "admin") {
-  //   room.sendChat("ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ ᴛᴏ ᴀᴘᴘᴏɪɴᴛ ᴀ ᴘʟᴀʏᴇʀ ᴀꜱ ᴀɴ ᴀᴅᴍɪɴɪꜱᴛʀᴀᴛᴏʀ!", byPlayer.id);
-  //   room.setPlayerAdmin(changedPlayer.id, false);
-  // }
+  if (byPlayer.id != 0 && localStorage.getItem(getAuth(byPlayer)) && JSON.parse(localStorage.getItem(getAuth(byPlayer)))[Ss.RL] == "admin") {
+    room.sendChat("You are not allowed to appoint a player as an administrator!", byPlayer.id);
+    room.setPlayerAdmin(changedPlayer.id, false);
+  }
 };
 
 room.onStadiumChange = function (newStadiumName, byPlayer) {};
@@ -4641,34 +4405,6 @@ function whisper(msg, targetId, color, style, sound) {
   }
 }
 
-function isAdminPresent() {
-  var players = room.getPlayerList();
-  if (players.find((player) => player.admin) != null) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-// optimize
-async function ballWarning(origColour, warningCount) {
-  const intervals = [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1675, 1750];
-  const colorSequence = ["0xffffff", origColour];
-
-  for (let i = 0; i < intervals.length; i++) {
-    await sleep(intervals[i]);
-    if (game.warningCount === warningCount) {
-      room.setDiscProperties(0, { color: colorSequence[i % 2] });
-    }
-  }
-}
-
-function extraTime() {
-  var extraSeconds = Math.ceil(game.extraTimeCount / 41);
-  game.extraTimeEnd = gameTime * 60 + extraSeconds;
-  // announce("Extra time: " + extraSeconds + " Seconds", null, null, null, 1);
-}
-
 function secondsToMinutes(time) {
   // Hours, minutes and seconds
   var hrs = ~~(time / 3600);
@@ -4697,19 +4433,24 @@ function getDate() {
 
 function sendDiscordRecording() {
   const form = new FormData();
-  form.append("file", new File([room.stopRecording()], `BIG-EASY-1.hbr2`, { type: "text/plain" }));
+  form.append("file", new File([room.stopRecording()], `BIG-EASY-Replay-${getDate()}.hbr2`, { type: "text/plain" }));
   var request = new XMLHttpRequest();
   request.open("POST", replayWebHook);
   request.send(form);
 }
 
-setInterval(function () {
-  room.sendAnnouncement("🔊 Join our Discord. https://discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "small", 0);
-  // setTimeout(function () {
-  //   room.sendAnnouncement("⚽ RSI League Season 3", null, 0x61ddff, "normal", 0);
-  // }, 50000); // Wait 40 seconds after the first announcement
-}, 220000);
+// Botdivulga = setInterval(function () {
+//   room.sendAnnouncement("🔊 Join our Discord. https://discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "nomal", 0);
+// }, BotdivulgaTime);
 
 // msg1 = setInterval(function () {
-//   room.sendAnnouncement("🏆 Searching For The Champions", null, 0xff8a4a, "small");
+//   room.sendAnnouncement("⚽ ᴄᴏᴍᴍᴀɴᴅ: !ᴅᴄ, !ʙʙ, !ꜰɪxꜱᴛᴀʀᴛ, !ᴀꜰᴋ, !ꜱᴛᴀᴛꜱ, !ʀᴀɴᴋ, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ], !ʜᴇʟᴘ", null, 0xff8a4a, "normal");
 // }, msg1Time);
+
+setInterval(function () {
+  room.sendAnnouncement("🔊 Join our Discord. https://discord.gg/pm55tVsQMX ", null, 0x5ee7ff, "small", 0);
+  setTimeout(function () {
+    room.sendAnnouncement("⚽ Command: !ᴅᴄ, !ʙʙ, !ꜰɪxꜱᴛᴀʀᴛ, !ᴀꜰᴋ, !ꜱᴛᴀᴛꜱ, !ʀᴀɴᴋ, ᴛ [ᴄʜᴀᴛ ᴛɪᴍ], !ʜᴇʟᴘ, ᴀ [anon chat], ᴠᴏᴛᴇᴋɪᴄᴋ #(ɪᴅ) ", null, 0x61ddff, "small", 0);
+  }, 70000); // Wait 40 seconds after the first announcement
+}, 200000);
+
