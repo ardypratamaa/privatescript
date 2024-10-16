@@ -1,1 +1,0 @@
-http://shell.cloud.google.com/?fromcloudshell=true&shoH=terminal&pli=l 
