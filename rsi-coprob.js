@@ -43,7 +43,8 @@ var roomObject = {
     emojis: ["👀", "👤", "👨‍✈️"],
     gamePauseState: false,
     geo: {
-        en: { "code": "id", "lat":-6.17, "lon": 106.859858 }
+        // en: { "code": "id", "lat":-6.17, "lon": 106.859858 }
+        en: { "code": "id", "lat": 10.7748, "lon": 106.647 }
     },
     isRoomSet: false,
     join: {
